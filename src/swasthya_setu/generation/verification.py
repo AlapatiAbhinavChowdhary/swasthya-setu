@@ -14,6 +14,18 @@ PRESCRIPTION_REFUSAL = (
     "Please ask a doctor, ASHA worker or health centre."
 )
 
+_DEVANAGARI_RANGE = re.compile(r"[\u0900-\u097f]")
+_ODIA_RANGE = re.compile(r"[\u0b00-\u0b7f]")
+
+
+def is_language_consistent(text: str, language: str) -> bool:
+    """Check that the answer uses the requested script."""
+    if language == "hi":
+        return bool(_DEVANAGARI_RANGE.search(text)) and not _ODIA_RANGE.search(text)
+    if language == "or":
+        return bool(_ODIA_RANGE.search(text)) and not _DEVANAGARI_RANGE.search(text)
+    return not _DEVANAGARI_RANGE.search(text) and not _ODIA_RANGE.search(text)
+
 
 def verify_citations(text: str, documents: list[Document]) -> tuple[str, list[int]]:
     """Keep only citations that refer to retrieved documents.

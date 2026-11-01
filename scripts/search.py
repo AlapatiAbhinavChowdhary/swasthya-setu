@@ -2,6 +2,9 @@ import sys
 
 from swasthya_setu.retrieval.vectorstore import load_index
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 query = " ".join(sys.argv[1:])
 store = load_index()
 

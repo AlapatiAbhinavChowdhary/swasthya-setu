@@ -12,7 +12,10 @@ from swasthya_setu.retrieval.vectorstore import load_index
 answer_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", SYSTEM_PROMPT),
-        ("human", "Context:\n{context}\n\nQuestion: {question}"),
+        (
+            "human",
+            "Answer language: {language}\n\nContext:\n{context}\n\nQuestion: {question}",
+        ),
     ]
 )
 
@@ -62,5 +65,7 @@ def answer(question: str, k: int = 4) -> tuple[str, list[Document], str]:
     search_query = rewrite_query(question)
     docs = _store().similarity_search(search_query, k=k)
     chain = answer_prompt | _llm() | StrOutputParser()
-    text = chain.invoke({"context": format_context(docs), "question": question})
+    text = chain.invoke(
+        {"context": format_context(docs), "question": question, "language": "en"}
+    )
     return text, docs, search_query

@@ -22,6 +22,7 @@ from swasthya_setu.config import settings
 from swasthya_setu.generation.safety import EMERGENCY_RESPONSE, is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
+    is_language_consistent,
     verify_citations,
 )
 
@@ -128,8 +129,13 @@ def _safety_check(state: AgentState) -> AgentState:
             "answer": EMERGENCY_RESPONSE,
             "documents": [],
             "citations": [],
+            "language": _detect_language(state["question"]),
         }
-    return {**state, "emergency": False}
+    return {
+        **state,
+        "emergency": False,
+        "language": _detect_language(state["question"]),
+    }
 
 
 def _intent_router(state: AgentState) -> AgentState:
@@ -194,6 +200,7 @@ def _generate_answer(state: AgentState) -> AgentState:
         {
             "context": format_context(state.get("documents", [])),
             "question": state["question"],
+            "language": state.get("language", "en"),
         }
     )
     answer, citations = verify_citations(text, state.get("documents", []))
@@ -209,6 +216,15 @@ def _verify_answer(state: AgentState) -> AgentState:
     answer, citations = verify_citations(
         state.get("answer", ""), state.get("documents", [])
     )
+    if not is_language_consistent(answer, state.get("language", "en")):
+        logger.warning(
+            "agent language mismatch expected=%s; retrying generation",
+            state.get("language", "en"),
+        )
+        retry = _generate_answer({**state, "answer": answer, "citations": citations})
+        answer, citations = verify_citations(
+            retry.get("answer", ""), retry.get("documents", [])
+        )
     return {**state, "answer": answer, "citations": citations}
 
 
@@ -234,12 +250,16 @@ def _format_response(state: AgentState) -> AgentState:
                 "snippet": document.page_content[:240].strip(),
             }
         )
-    language = _detect_language(state["question"])
+    language = state.get("language", _detect_language(state["question"]))
+    language_consistent = is_language_consistent(state["answer"], language)
+    if not language_consistent:
+        logger.warning("agent node=format_response language_consistent=false")
     response = {
         "answer": state["answer"],
         "language": language,
         "intent": state.get("intent", "emergency"),
         "emergency": state.get("emergency", False),
+        "language_consistent": language_consistent,
         "sources": sources,
     }
     logger.info("agent node=format_response language=%s sources=%d", language, len(sources))

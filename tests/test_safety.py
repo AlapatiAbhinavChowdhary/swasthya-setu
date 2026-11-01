@@ -1,6 +1,9 @@
 from langchain_core.documents import Document
+from langchain_core.runnables import RunnableLambda
 
 from swasthya_setu.generation.agent import (
+    _generate_answer,
+    _verify_answer,
     _format_response,
     is_prescription_or_diagnosis,
     route_intent,
@@ -9,6 +12,7 @@ from swasthya_setu.generation.safety import is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
     SAFE_REFUSAL,
+    is_language_consistent,
     verify_citations,
 )
 
@@ -90,3 +94,63 @@ def test_hindi_format_response_detects_language():
         }
     )
     assert result["response"]["language"] == "hi"
+
+
+def test_personal_paracetamol_question_uses_cited_guideline(monkeypatch):
+    question = "Can I take paracetamol for dengue fever?"
+    response = (
+        "The dengue guideline says paracetamol may be used for fever and body "
+        "ache [1]. Do not self-medicate; check with a doctor or health worker."
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: response),
+    )
+    state = _generate_answer(
+        {
+            "question": question,
+            "intent": "disease_info",
+            "language": "en",
+            "documents": [
+                Document(
+                    page_content="Fever and body ache are best treated with paracetamol.",
+                    metadata={"source": "dengue.pdf", "page_label": "47"},
+                )
+            ],
+        }
+    )
+    assert route_intent(question, "out_of_scope") == "disease_info"
+    assert "paracetamol" in state["answer"]
+    assert state["citations"] == [1]
+
+
+def test_english_answer_is_retried_when_model_returns_hindi(monkeypatch):
+    responses = iter(
+        [
+            "डेंगू में कुछ दर्दनिवारक दवाओं से बचें [1].",
+            "Avoid salicylates and other NSAIDs in dengue [1].",
+        ]
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: next(responses)),
+    )
+    state = _verify_answer(
+        {
+            "question": "Which painkillers should be avoided in dengue?",
+            "intent": "disease_info",
+            "language": "en",
+            "answer": next(responses),
+            "citations": [1],
+            "documents": [
+                Document(
+                    page_content="Avoid salicylates and NSAIDs.",
+                    metadata={"source": "dengue.pdf", "page_label": "47"},
+                )
+            ],
+        }
+    )
+    formatted = _format_response(state)
+    assert is_language_consistent(state["answer"], "en")
+    assert formatted["response"]["language_consistent"] is True
+    assert "Avoid" in state["answer"]
