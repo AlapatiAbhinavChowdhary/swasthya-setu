@@ -12,3 +12,4 @@ wheels/
 data/processed/
 vectorstore/
 data/raw/*.pdf
+.pytest_cache/
