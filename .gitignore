@@ -11,3 +11,4 @@ wheels/
 .env
 data/processed/
 vectorstore/
+data/raw/*.pdf
