@@ -3,8 +3,9 @@ import sys
 from swasthya_setu.generation.chain import answer
 
 question = " ".join(sys.argv[1:])
-text, docs = answer(question)
+text, docs, search_query = answer(question)
 
+print(f"\n=== SEARCH QUERY ===\n{search_query}")
 print("\n=== ANSWER ===")
 print(text)
 print("\n=== SOURCES ===")
