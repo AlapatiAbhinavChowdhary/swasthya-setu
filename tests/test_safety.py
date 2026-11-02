@@ -8,11 +8,12 @@ from swasthya_setu.generation.agent import (
     is_prescription_or_diagnosis,
     route_intent,
 )
-from swasthya_setu.generation.safety import is_emergency
+from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
     SAFE_REFUSAL,
     is_language_consistent,
+    normalize_mixed_script_tokens,
     verify_citations,
 )
 
@@ -27,6 +28,50 @@ def test_citations_are_limited_to_retrieved_documents():
     answer, citations = verify_citations("Fact [1] and fake [9].", documents)
     assert answer == "Fact [1] and fake ."
     assert citations == [1]
+
+
+def test_grouped_citations_and_sources_match_exactly():
+    documents = [
+        Document(page_content="one"),
+        Document(page_content="two"),
+        Document(page_content="three"),
+    ]
+    answer, citations = verify_citations("Evidence [1, 2, 3].", documents)
+    assert answer == "Evidence [1, 2, 3]."
+    assert citations == [1, 2, 3]
+
+
+def test_mocked_grouped_llm_citations_produce_matching_sources(monkeypatch):
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: "Evidence [1, 2, 3]."),
+    )
+    documents = [
+        Document(page_content=f"Evidence {number}.", metadata={"source": f"{number}.pdf"})
+        for number in range(1, 4)
+    ]
+    state = _generate_answer(
+        {
+            "question": "What is documented?",
+            "language": "en",
+            "intent": "disease_info",
+            "documents": documents,
+        }
+    )
+    result = _format_response(state)
+    assert state["citations"] == [1, 2, 3]
+    assert [source["source"] for source in result["response"]["sources"]] == [
+        "1.pdf",
+        "2.pdf",
+        "3.pdf",
+    ]
+
+
+def test_invalid_grouped_citations_are_removed_from_text():
+    documents = [Document(page_content="one"), Document(page_content="two")]
+    answer, citations = verify_citations("Evidence [1, 2, 3].", documents)
+    assert answer == "Evidence [1, 2]."
+    assert citations == [1, 2]
 
 
 def test_uncited_answer_becomes_safe_refusal():
@@ -94,6 +139,59 @@ def test_hindi_format_response_detects_language():
         }
     )
     assert result["response"]["language"] == "hi"
+
+
+def test_hindi_ratio_allows_latin_medicine_terms():
+    text = "डेंगू में paracetamol और NSAIDs से बचें।"
+    assert is_language_consistent(text, "hi", "paracetamol NSAIDs dengue")
+    assert not is_language_consistent("I do not have verified information.", "hi")
+    assert not is_language_consistent("सैलicylates से बचें।", "hi")
+    assert normalize_mixed_script_tokens("सैलicylates से बचें।") == "salicylates से बचें।"
+
+
+def test_fixed_messages_are_localized():
+    answer, _ = verify_citations("No citation.", [], language="hi")
+    assert "सत्यापित जानकारी" in answer
+    assert "अस्पताल" in emergency_response("hi")
+    prescription = _generate_answer(
+        {"question": "मुझे दवा बताइए", "language": "hi", "intent": "out_of_scope"}
+    )
+    assert "निदान" in prescription["answer"]
+
+
+def test_medicine_answer_gets_localized_disclaimer(monkeypatch):
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: "paracetamol से बुखार में मदद मिलती है [1]."),
+    )
+    state = _verify_answer(
+        {
+            "question": "डेंगू में paracetamol के बारे में बताइए",
+            "language": "hi",
+            "intent": "disease_info",
+            "answer": "paracetamol से बुखार में मदद मिलती है [1].",
+            "documents": [
+                Document(page_content="paracetamol is used for fever.")
+            ],
+        }
+    )
+    assert "खुद से दवा न लें" in state["answer"]
+
+
+def test_existing_disclaimer_is_not_duplicated():
+    state = _verify_answer(
+        {
+            "question": "Can I take paracetamol?",
+            "language": "en",
+            "intent": "disease_info",
+            "answer": (
+                "The guideline mentions paracetamol [1]. "
+                "Do not self-medicate; ask a doctor."
+            ),
+            "documents": [Document(page_content="paracetamol for fever.")],
+        }
+    )
+    assert state["answer"].count("self-medicate") == 1
 
 
 def test_personal_paracetamol_question_uses_cited_guideline(monkeypatch):

@@ -19,10 +19,12 @@ from swasthya_setu.generation.chain import (
     rewrite_query,
 )
 from swasthya_setu.config import settings
-from swasthya_setu.generation.safety import EMERGENCY_RESPONSE, is_emergency
+from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
     is_language_consistent,
+    localized_message,
+    normalize_mixed_script_tokens,
     verify_citations,
 )
 
@@ -126,7 +128,7 @@ def _safety_check(state: AgentState) -> AgentState:
         return {
             **state,
             "emergency": True,
-            "answer": EMERGENCY_RESPONSE,
+            "answer": emergency_response(_detect_language(state["question"])),
             "documents": [],
             "citations": [],
             "language": _detect_language(state["question"]),
@@ -190,7 +192,11 @@ def _relevance_filter(
 
 def _generate_answer(state: AgentState) -> AgentState:
     if state["intent"] == "out_of_scope":
-        return {**state, "answer": PRESCRIPTION_REFUSAL, "citations": []}
+        return {
+            **state,
+            "answer": localized_message("prescription_refusal", state.get("language", "en")),
+            "citations": [],
+        }
     if state["intent"] == "greeting_smalltalk":
         return {**state, "answer": (
             "Namaste. I can help with verified information about disease symptoms, "
@@ -203,7 +209,9 @@ def _generate_answer(state: AgentState) -> AgentState:
             "language": state.get("language", "en"),
         }
     )
-    answer, citations = verify_citations(text, state.get("documents", []))
+    answer, citations = verify_citations(
+        text, state.get("documents", []), state.get("language", "en")
+    )
     return {**state, "answer": answer, "citations": citations}
 
 
@@ -213,19 +221,45 @@ def _verify_answer(state: AgentState) -> AgentState:
         "greeting_smalltalk",
     }:
         return state
+    documents = state.get("documents", [])
+    context = "\n".join(document.page_content for document in documents)
+    language = state.get("language", "en")
     answer, citations = verify_citations(
-        state.get("answer", ""), state.get("documents", [])
+        state.get("answer", ""), documents, language
     )
-    if not is_language_consistent(answer, state.get("language", "en")):
+    answer = normalize_mixed_script_tokens(answer)
+    if not is_language_consistent(answer, language, context):
         logger.warning(
             "agent language mismatch expected=%s; retrying generation",
             state.get("language", "en"),
         )
         retry = _generate_answer({**state, "answer": answer, "citations": citations})
-        answer, citations = verify_citations(
-            retry.get("answer", ""), retry.get("documents", [])
+        retry_answer, retry_citations = verify_citations(
+            retry.get("answer", ""), retry.get("documents", []), language
         )
+        if retry_citations:
+            answer, citations = normalize_mixed_script_tokens(
+                retry_answer
+            ), retry_citations
+    answer = _append_medicine_disclaimer(answer, language, context)
     return {**state, "answer": answer, "citations": citations}
+
+
+def _append_medicine_disclaimer(answer: str, language: str, context: str) -> str:
+    """Append localized self-medication guidance when a sourced medicine is named."""
+    medicine_terms = ("paracetamol", "aspirin", "salicylate", "nsaid", "ibuprofen")
+    answer_lower = answer.lower()
+    context_lower = context.lower()
+    if any(term in answer_lower and term in context_lower for term in medicine_terms):
+        disclaimer = localized_message("disclaimer", language)
+        existing_disclaimer = (
+            "self-medicate" in answer_lower
+            or "खुद से दवा" in answer
+            or "स्वयं दवा" in answer
+        )
+        if not existing_disclaimer:
+            return f"{answer.rstrip()} {disclaimer}"
+    return answer
 
 
 def _detect_language(question: str) -> str:
@@ -251,7 +285,8 @@ def _format_response(state: AgentState) -> AgentState:
             }
         )
     language = state.get("language", _detect_language(state["question"]))
-    language_consistent = is_language_consistent(state["answer"], language)
+    context = "\n".join(document.page_content for document in documents)
+    language_consistent = is_language_consistent(state["answer"], language, context)
     if not language_consistent:
         logger.warning("agent node=format_response language_consistent=false")
     response = {

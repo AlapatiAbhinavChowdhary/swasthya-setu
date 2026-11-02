@@ -2,10 +2,24 @@
 
 import re
 
-EMERGENCY_RESPONSE = (
+EMERGENCY_RESPONSES = {
+    "en": (
     "This may be an emergency. Go to the nearest hospital immediately or call 108. "
     "Do not wait for an online answer."
-)
+    ),
+    "hi": (
+        "यह आपातकाल हो सकता है। तुरंत नजदीकी अस्पताल जाएँ या 108 पर कॉल करें। "
+        "ऑनलाइन जवाब के लिए इंतजार न करें।"
+    ),
+}
+
+
+def emergency_response(language: str) -> str:
+    """Return the emergency message in the user's language."""
+    return EMERGENCY_RESPONSES.get(language, EMERGENCY_RESPONSES["en"])
+
+
+EMERGENCY_RESPONSE = EMERGENCY_RESPONSES["en"]
 
 _EMERGENCY_PATTERNS = (
     re.compile(
