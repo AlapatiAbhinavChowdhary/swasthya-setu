@@ -18,6 +18,10 @@ dependencies = [
     "pydantic-settings>=2.16.2",
     "pypdf>=6.21.4",
     "sentence-transformers>=6.2.0",
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
+    "sqlalchemy>=2.1.6",
+    "pymupdf>=2.0",
 ]
 
 [project.scripts]

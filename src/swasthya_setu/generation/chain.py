@@ -42,6 +42,7 @@ def _llm() -> ChatGoogleGenerativeAI:
     return ChatGoogleGenerativeAI(
         model=settings.gemini_model,
         google_api_key=settings.gemini_api_key,
+        max_retries=settings.gemini_max_retries,
     )
 
 
