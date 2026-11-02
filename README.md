@@ -53,3 +53,17 @@ user to a doctor, ASHA worker, or health centre.
 The current repository contains the RAG core and CLI. API, frontend, structured
 health tools, and deployment surfaces are intentionally separate follow-up
 phases; no sample medical facts are presented as verified data.
+
+## API (Phase 4)
+
+Run the backend in PowerShell:
+
+```powershell
+uv run uvicorn swasthya_setu.api.app:app --reload
+```
+
+Endpoints are `GET /health`, `GET /sources`, `POST /chat`,
+`POST /chat/stream` (SSE), and `POST /feedback`. The API keeps only hashed
+session/message identifiers and feedback records in SQLite; do not include
+personal medical details in feedback. Configure CORS, rate limits, cache
+behavior, and the SQLite path through `.env`.
