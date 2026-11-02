@@ -13,6 +13,7 @@ dependencies = [
     "langchain-community>=0.4.2",
     "langchain-google-genai>=4.4.2",
     "langchain-huggingface>=1.2.3",
+    "langgraph>=1.0.0",
     "langchain-text-splitters>=1.1.3",
     "pydantic-settings>=2.16.2",
     "pypdf>=6.21.4",
@@ -28,3 +29,8 @@ build-backend = "uv_build"
 
 [tool.uv]
 link-mode = "copy"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
