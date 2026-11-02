@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
@@ -11,8 +12,9 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 
 from swasthya_setu.api.db import Database
@@ -31,6 +33,8 @@ logger = logging.getLogger(__name__)
 _cache: dict[tuple[str, str | None], tuple[float, ChatResponse]] = {}
 _requests: defaultdict[str, deque[float]] = defaultdict(deque)
 CACHE_TTL_SECONDS = 300
+_PAGE_RESIDUE = re.compile(r"(?m)^\s*(?:page\s+)?\d+\s*$", re.IGNORECASE)
+_INFOGRAPHIC_MARKS = re.compile(r"(?m)^\s*[•▪◦■□]+\s*$")
 
 
 @asynccontextmanager
@@ -53,6 +57,16 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, _exc: RequestValidationError):
+    language = request.headers.get("accept-language", "").lower()
+    if language.startswith("hi"):
+        message = "कृपया सही संदेश और अनुरोध विवरण भेजें।"
+    else:
+        message = "Please provide a valid message and request."
+    return JSONResponse(status_code=422, content={"detail": message})
 
 
 @app.middleware("http")
@@ -89,10 +103,23 @@ def _check_rate_limit(request: Request, session_id: str | None) -> None:
 
 def _response_from_state(state: dict, request_id: str) -> ChatResponse:
     response = state["response"]
+    sources = []
+    for number, source in zip(state.get("citations", []), response["sources"]):
+        snippet = _PAGE_RESIDUE.sub("", source["snippet"])
+        snippet = _INFOGRAPHIC_MARKS.sub("", snippet).strip()
+        snippet = re.sub(r"\s+", " ", snippet).strip()
+        if len(snippet) > 240:
+            snippet = snippet[:240].rsplit(" ", 1)[0].rstrip(" .,;:") + "..."
+        sources.append(SourceResponse(
+            number=number,
+            source=source["source"],
+            page=source["page"],
+            snippet=snippet,
+        ))
     return ChatResponse(
         answer=response["answer"],
         citations=state.get("citations", []),
-        sources=[SourceResponse(**source) for source in response["sources"]],
+        sources=sources,
         intent=response["intent"],
         language=response["language"],
         emergency=response["emergency"],

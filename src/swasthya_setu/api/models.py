@@ -12,6 +12,7 @@ class ChatRequest(BaseModel):
 
 
 class SourceResponse(BaseModel):
+    number: int
     source: str
     page: str
     snippet: str
