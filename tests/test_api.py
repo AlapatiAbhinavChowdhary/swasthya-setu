@@ -1,7 +1,16 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from swasthya_setu.api import app as api_module
 from swasthya_setu.config import settings
+
+
+@pytest.fixture(autouse=True)
+def mock_vectorstore_lifespan(monkeypatch):
+    """Keep API tests independent from the local embedding model."""
+    monkeypatch.setattr(api_module, "_store", lambda: object())
+    api_module._requests.clear()
+    api_module._cache.clear()
 
 
 def _state(answer: str, emergency: bool = False) -> dict:

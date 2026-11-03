@@ -10,6 +10,7 @@ from swasthya_setu.generation.agent import (
 )
 from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.verification import (
+    FIXED_MESSAGES,
     PRESCRIPTION_REFUSAL,
     SAFE_REFUSAL,
     is_language_consistent,
@@ -157,6 +158,17 @@ def test_fixed_messages_are_localized():
         {"question": "मुझे दवा बताइए", "language": "hi", "intent": "out_of_scope"}
     )
     assert "निदान" in prescription["answer"]
+
+
+def test_fixed_emergency_and_disclaimer_messages_preserve_spacing():
+    english_emergency = emergency_response("en")
+    hindi_emergency = emergency_response("hi")
+    assert "call 108" in english_emergency
+    assert "call108" not in english_emergency
+    assert "108 पर कॉल करें" in hindi_emergency
+    assert "108पर" not in hindi_emergency
+    assert "Do not self-medicate." in FIXED_MESSAGES["disclaimer"]["en"]
+    assert "खुद से दवा न लें।" in FIXED_MESSAGES["disclaimer"]["hi"]
 
 
 def test_medicine_answer_gets_localized_disclaimer(monkeypatch):
