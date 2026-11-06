@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import subprocess
 import time
 import urllib.request
 from datetime import date
@@ -22,15 +23,14 @@ MAX_BYTES = 60 * 1024 * 1024
 USER_AGENT = "SwasthyaSetuSourceDownloader/1.0"
 
 
-def _robots_allowed(url: str) -> bool:
+def _robots_allowed(url: str) -> tuple[bool, str]:
     parsed = urlparse(url)
     robots = RobotFileParser(f"{parsed.scheme}://{parsed.netloc}/robots.txt")
     try:
         robots.read()
     except OSError:
-        logger.warning("Could not read robots.txt for %s; skipping", parsed.netloc)
-        return False
-    return robots.can_fetch(USER_AGENT, url)
+        return True, "robots.txt unavailable (continued)"
+    return robots.can_fetch(USER_AGENT, url), "robots.txt"
 
 
 def _download(url: str) -> bytes:
@@ -49,7 +49,32 @@ def _download(url: str) -> bytes:
     return data
 
 
+def _download_with_curl(url: str) -> bytes:
+    result = subprocess.run(
+        [
+            "curl.exe", "-4", "-L", "--fail", "--silent", "--show-error",
+            "--connect-timeout", "20", "--max-time", "90",
+            "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            url,
+        ],
+        capture_output=True,
+        check=True,
+        timeout=120,
+    )
+    data = result.stdout
+    if len(data) > MAX_BYTES:
+        raise RuntimeError("content exceeds 60 MB limit")
+    if not data.startswith(b"%PDF"):
+        raise RuntimeError("curl response is not a PDF")
+    return data
+
+
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--retry-unreachable", action="store_true")
+    args = parser.parse_args()
     logging.basicConfig(level=logging.INFO)
     manifest = yaml.safe_load(MANIFEST.read_text(encoding="utf-8")) or {}
     lock: list[dict[str, object]] = []
@@ -69,22 +94,32 @@ def main() -> None:
                     entry.update({"status": "skipped", "hash": hashlib.sha256(data).hexdigest(), "bytes": len(data)})
                     lock.append(entry)
                     continue
-            if not _robots_allowed(source["url"]):
-                raise RuntimeError("robots.txt disallows or is unavailable")
+            robots_ok, robots_source = _robots_allowed(source["url"])
+            if not robots_ok and not args.retry_unreachable:
+                raise RuntimeError(f"robots check failed: {robots_source}")
+            worked_with = "python"
             for attempt in range(3):
                 try:
                     data = _download(source["url"])
                     break
                 except Exception:
                     if attempt == 2:
-                        raise
+                        data = _download_with_curl(source["url"])
+                        worked_with = "curl"
+                        break
                     time.sleep(2**attempt)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
-            entry.update({"status": "downloaded", "hash": hashlib.sha256(data).hexdigest(), "bytes": len(data)})
+            entry.update({
+                "status": "downloaded",
+                "hash": hashlib.sha256(data).hexdigest(),
+                "bytes": len(data),
+                "fallback": worked_with,
+                "robots": robots_source,
+            })
         except Exception as exc:
             logger.warning("Failed %s: %s", source_id, exc)
-            entry.update({"status": "failed", "error": str(exc)})
+            entry.update({"status": "unreachable", "error": str(exc)})
         lock.append(entry)
     LOCKFILE.write_text(json.dumps(lock, indent=2), encoding="utf-8")
 

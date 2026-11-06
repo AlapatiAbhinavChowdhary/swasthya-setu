@@ -17,3 +17,12 @@ sources:
     doc_type: fact_sheet
     year: 2014
     license_note: WHO publication; review attribution and reuse terms before redistribution.
+  - id: national-immunization-schedule
+    title: National Immunization Schedule
+    publisher: National Health Mission, Ministry of Health and Family Welfare, Government of India
+    url: https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf
+    disease_ids: [child-immunization, hepatitis-b, polio, measles, japanese-encephalitis, diphtheria-pertussis-tetanus]
+    language: en
+    doc_type: schedule
+    year: 2026
+    license_note: Official government publication; verify reuse terms before redistribution.

@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     max_input_chars: int = Field(default=2000, ge=100, le=10000)
     rate_limit_per_minute: int = Field(default=30, ge=1, le=1000)
     feedback_database: str = "data/swasthya_setu.db"
+    vectorstore_backend: str = "chroma"
 
 
 settings = Settings()

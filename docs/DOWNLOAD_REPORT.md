@@ -1,11 +1,17 @@
 # Source download report
 
-The manifest currently contains two verified official documents:
+Generated from `data/sources.lock.json` after running:
 
-| Disease coverage | Downloaded | Failed | Skipped | Note |
-|---|---:|---:|---:|---|
-| Dengue | pending local run | 0 | 0 | Existing local PDF is not staged |
-| Malaria, chikungunya, Japanese encephalitis, kala-azar, lymphatic filariasis | pending local run | 0 | 0 | Add more official documents |
-| All other taxonomy entries | 0 | 0 | 0 | Fewer than two documents; manual source review required |
+```powershell
+uv run python scripts/download_data.py --retry-unreachable
+```
 
-Run `uv run python scripts/download_data.py` after reviewing the manifest.
+| Source | Status | Bytes | Fallback | Reason |
+|---|---|---:|---|---|
+| dengue-guidelines-2023 | unreachable | 0 | Python, curl | NCVBDC timed out after retries |
+| who-vector-borne-fact-sheets-2014 | downloaded | 283187 | Python | WHO IRIS returned `%PDF` |
+| national-immunization-schedule | downloaded | 94522 | Python | NHM returned `%PDF` |
+
+Only downloaded or valid pre-existing files in the lockfile are eligible for
+indexing. The existing root-level files in `data/raw/` are intentionally not
+used by the rebuild because they are not tied to this verified manifest.

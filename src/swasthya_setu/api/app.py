@@ -26,6 +26,7 @@ from swasthya_setu.api.models import (
     SourceResponse,
 )
 from swasthya_setu.config import settings
+from swasthya_setu.coverage import get_coverage
 from swasthya_setu.generation.agent import run_agent
 from swasthya_setu.generation.chain import _store
 
@@ -156,6 +157,11 @@ def health() -> dict[str, str]:
 def sources() -> dict[str, str]:
     path = Path("data/SOURCES.md")
     return {"content": path.read_text(encoding="utf-8") if path.exists() else ""}
+
+
+@app.get("/coverage")
+def coverage() -> dict:
+    return get_coverage()
 
 
 @app.post("/chat", response_model=ChatResponse)
