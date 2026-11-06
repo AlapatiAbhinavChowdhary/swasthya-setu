@@ -55,6 +55,13 @@ def test_coverage_reports_indexed_and_coming_soon_diseases():
     assert coverage["diabetes"]["status"] in {"indexed", "coming_soon"}
 
 
+def test_diseases_alias_returns_coverage():
+    with TestClient(api_module.app) as client:
+        response = client.get("/diseases")
+    assert response.status_code == 200
+    assert len(response.json()["diseases"]) >= 20
+
+
 def test_api_emergency_response(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
     monkeypatch.setattr(
