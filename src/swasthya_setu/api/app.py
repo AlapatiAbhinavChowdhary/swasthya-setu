@@ -164,6 +164,11 @@ def coverage() -> dict:
     return get_coverage()
 
 
+@app.get("/diseases")
+def diseases() -> dict:
+    return get_coverage()
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     return _run_chat(request, payload)
