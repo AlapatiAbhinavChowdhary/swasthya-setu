@@ -46,6 +46,15 @@ def test_api_health_and_chat(monkeypatch, tmp_path):
     assert '"number":1' in stream.text
 
 
+def test_coverage_reports_indexed_and_coming_soon_diseases():
+    with TestClient(api_module.app) as client:
+        response = client.get("/coverage")
+    assert response.status_code == 200
+    coverage = {row["id"]: row for row in response.json()["diseases"]}
+    assert coverage["child-immunization"]["documents"] >= 0
+    assert coverage["diabetes"]["status"] in {"indexed", "coming_soon"}
+
+
 def test_api_emergency_response(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
     monkeypatch.setattr(

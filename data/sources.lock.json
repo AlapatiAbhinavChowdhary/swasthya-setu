@@ -1,0 +1,29 @@
+[
+  {
+    "url": "https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf",
+    "file": "data\\raw\\dengue\\dengue-guidelines-2023.pdf",
+    "date": "2026-11-06",
+    "status": "unreachable",
+    "error": "Command '['curl.exe', '-4', '-L', '--fail', '--silent', '--show-error', '--connect-timeout', '20', '--max-time', '90', '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf']' returned non-zero exit status 28."
+  },
+  {
+    "url": "https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content",
+    "file": "data\\raw\\dengue\\who-vector-borne-fact-sheets-2014.pdf",
+    "date": "2026-11-06",
+    "status": "downloaded",
+    "hash": "0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c",
+    "bytes": 283187,
+    "fallback": "python",
+    "robots": "robots.txt"
+  },
+  {
+    "url": "https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf",
+    "file": "data\\raw\\child-immunization\\national-immunization-schedule.pdf",
+    "date": "2026-11-06",
+    "status": "downloaded",
+    "hash": "cf8bd1bb3d8c5a4a9b045f297df574813dda17a9a2ce109fac4700a92ee384b3",
+    "bytes": 94522,
+    "fallback": "python",
+    "robots": "robots.txt unavailable (continued)"
+  }
+]
