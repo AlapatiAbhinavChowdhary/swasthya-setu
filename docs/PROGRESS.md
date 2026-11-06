@@ -3,8 +3,8 @@
 | Phase | Status | Last commit | Notes |
 |---|---|---|---|
 | 0 Safety | complete | `dc1c420` | Deterministic localized safety closings. |
-| 1 Sources and coverage | in progress | working tree | Three official manifest entries; two downloaded and indexed, NCVBDC unreachable. |
-| 2 Chroma and incremental ingestion | pending | - | FAISS remains the active backend. |
+| 1 Sources and coverage | complete | `a752ba8` | Three official manifest entries; two downloaded and indexed, NCVBDC unreachable. |
+| 2 Chroma and incremental ingestion | in progress | working tree | Chroma is active with FAISS fallback; incremental rebuild metadata exists. |
 | 3 Retrieval, agent and tools | pending | - | Existing agent is retained until Phase 2 migration is complete. |
 | 4 API | in progress | working tree | Existing API plus `/coverage`; full API expansion remains. |
 | 5 Website | pending | - | No frontend exists yet. |
@@ -16,6 +16,5 @@
 
 ## Exact next step
 
-Commit the Phase 1 source/download/coverage changes, then create
-`feat/phase-2-chroma` from the merged local `main` and implement a persistent
-Chroma-compatible incremental index while preserving the current FAISS fallback.
+Commit the Chroma changes, merge Phase 1 into local `main`, then create
+`feat/phase-2-chroma` from that merged main and continue retrieval evaluation.
