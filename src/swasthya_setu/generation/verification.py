@@ -17,6 +17,16 @@ FIXED_MESSAGES = {
         "en": "Do not self-medicate. Please check with a doctor or health worker.",
         "hi": "खुद से दवा न लें। कृपया डॉक्टर या स्वास्थ्यकर्मी से सलाह लें।",
     },
+    "awareness_closing": {
+        "en": (
+            "This is health awareness information, not medical advice. "
+            "In an emergency, go to the nearest hospital or call 108."
+        ),
+        "hi": (
+            "यह स्वास्थ्य जागरूकता की जानकारी है, चिकित्सा सलाह नहीं। "
+            "आपातकाल में नजदीकी अस्पताल जाएँ या 108 पर कॉल करें।"
+        ),
+    },
 }
 
 SAFE_REFUSAL = FIXED_MESSAGES["safe_refusal"]["en"]
@@ -69,6 +79,18 @@ def normalize_mixed_script_tokens(text: str) -> str:
     """Replace known model-created mixed-script medical spellings."""
     for mixed, normalized in _MIXED_MEDICAL_TOKENS.items():
         text = re.sub(re.escape(mixed), normalized, text, flags=re.IGNORECASE)
+    return text
+
+
+def strip_generated_closing(text: str) -> str:
+    """Remove model-written safety closings before adding the fixed version."""
+    patterns = (
+        r"(?is)\s*(?:this is health awareness information.*?call\s*108\.?)\s*$",
+        r"(?is)\s*(?:यह स्वास्थ्य जागरूकता की जानकारी.*?108 पर कॉल करें।?)\s*$",
+        r"(?is)\s*(?:do not self-medicate.*?(?:health worker|स्वास्थ्यकर्मी)।?)\s*$",
+    )
+    for pattern in patterns:
+        text = re.sub(pattern, "", text).rstrip()
     return text
 
 
