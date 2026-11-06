@@ -24,6 +24,7 @@ from swasthya_setu.generation.verification import (
     is_language_consistent,
     localized_message,
     normalize_mixed_script_tokens,
+    strip_generated_closing,
     verify_citations,
 )
 
@@ -286,7 +287,12 @@ def _verify_answer(state: AgentState) -> AgentState:
             answer, citations = normalize_mixed_script_tokens(
                 retry_answer
             ), retry_citations
+    answer = strip_generated_closing(answer)
     answer = _append_medicine_disclaimer(answer, language, context)
+    if state.get("intent") in {"disease_info", "prevention_tips"}:
+        closing = localized_message("awareness_closing", language)
+        if closing not in answer:
+            answer = f"{answer.rstrip()} {closing}"
     return {**state, "answer": answer, "citations": citations}
 
 

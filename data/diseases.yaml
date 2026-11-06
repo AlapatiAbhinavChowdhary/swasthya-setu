@@ -1,0 +1,32 @@
+# Hindi names and aliases require human review. Keep reviewed=false until verified.
+diseases:
+  - {id: dengue, name_en: Dengue, name_hi: "डेंगू", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: malaria, name_en: Malaria, name_hi: "मलेरिया", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: chikungunya, name_en: Chikungunya, name_hi: "चिकनगुनिया", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: japanese-encephalitis, name_en: Japanese encephalitis, name_hi: "जापानी इंसेफेलाइटिस", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: kala-azar, name_en: Kala-azar, name_hi: "काला-आजार", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: lymphatic-filariasis, name_en: Lymphatic filariasis, name_hi: "लिम्फेटिक फाइलेरियासिस", aliases_en: [], aliases_hi: [], category: vector-borne, reviewed: false}
+  - {id: tuberculosis, name_en: Tuberculosis, name_hi: "क्षय रोग", aliases_en: [], aliases_hi: [], category: respiratory, reviewed: false}
+  - {id: typhoid, name_en: Typhoid, name_hi: "टाइफाइड", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}
+  - {id: cholera, name_en: Cholera, name_hi: "हैजा", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}
+  - {id: diarrhoeal-disease, name_en: Diarrhoeal disease and ORS, name_hi: "दस्त और ओआरएस", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}
+  - {id: hepatitis-a, name_en: Hepatitis A, name_hi: "हेपेटाइटिस ए", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}
+  - {id: hepatitis-b, name_en: Hepatitis B, name_hi: "हेपेटाइटिस बी", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: hepatitis-e, name_en: Hepatitis E, name_hi: "हेपेटाइटिस ई", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}
+  - {id: seasonal-influenza, name_en: Seasonal influenza and H1N1, name_hi: "मौसमी इन्फ्लुएंजा", aliases_en: [], aliases_hi: [], category: respiratory, reviewed: false}
+  - {id: covid-19, name_en: COVID-19, name_hi: "कोविड-19", aliases_en: [], aliases_hi: [], category: respiratory, reviewed: false}
+  - {id: measles, name_en: Measles, name_hi: "खसरा", aliases_en: [], aliases_hi: [], category: vaccine-preventable, reviewed: false}
+  - {id: polio, name_en: Polio, name_hi: "पोलियो", aliases_en: [], aliases_hi: [], category: vaccine-preventable, reviewed: false}
+  - {id: diphtheria-pertussis-tetanus, name_en: Diphtheria, pertussis and tetanus, name_hi: "डिप्थीरिया, काली खांसी और टिटनेस", aliases_en: [], aliases_hi: [], category: vaccine-preventable, reviewed: false}
+  - {id: rabies-animal-bites, name_en: Rabies and animal bites, name_hi: "रेबीज और पशु के काटने", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: snakebite, name_en: Snakebite, name_hi: "सांप का काटना", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: leprosy, name_en: Leprosy, name_hi: "कुष्ठ रोग", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: hiv-aids, name_en: HIV/AIDS awareness, name_hi: "एचआईवी/एड्स जागरूकता", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: diabetes, name_en: Diabetes, name_hi: "मधुमेह", aliases_en: [], aliases_hi: [], category: non-communicable, reviewed: false}
+  - {id: hypertension, name_en: Hypertension, name_hi: "उच्च रक्तचाप", aliases_en: [], aliases_hi: [], category: non-communicable, reviewed: false}
+  - {id: anaemia-nutrition, name_en: Anaemia and nutrition, name_hi: "एनीमिया और पोषण", aliases_en: [], aliases_hi: [], category: nutrition, reviewed: false}
+  - {id: maternal-newborn-care, name_en: Maternal and newborn care, name_hi: "मातृ और नवजात देखभाल", aliases_en: [], aliases_hi: [], category: maternal-child, reviewed: false}
+  - {id: child-immunization, name_en: Child immunization, name_hi: "बाल टीकाकरण", aliases_en: [], aliases_hi: [], category: vaccine-preventable, reviewed: false}
+  - {id: heat-illness, name_en: Heat-related illness, name_hi: "गर्मी से होने वाली बीमारी", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: mental-health-basics, name_en: Mental health basics, name_hi: "मानसिक स्वास्थ्य की मूल बातें", aliases_en: [], aliases_hi: [], category: other, reviewed: false}
+  - {id: hygiene-sanitation-safe-water, name_en: Hygiene, sanitation and safe water, name_hi: "स्वच्छता, सफाई और सुरक्षित पानी", aliases_en: [], aliases_hi: [], category: water-food-borne, reviewed: false}

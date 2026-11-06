@@ -11,6 +11,6 @@ wheels/
 .env
 data/processed/
 vectorstore/
-data/raw/*.pdf
+data/raw/*
 .pytest_cache/
 data/*.db

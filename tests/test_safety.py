@@ -15,6 +15,7 @@ from swasthya_setu.generation.verification import (
     SAFE_REFUSAL,
     is_language_consistent,
     normalize_mixed_script_tokens,
+    strip_generated_closing,
     verify_citations,
 )
 
@@ -169,6 +170,25 @@ def test_fixed_emergency_and_disclaimer_messages_preserve_spacing():
     assert "108पर" not in hindi_emergency
     assert "Do not self-medicate." in FIXED_MESSAGES["disclaimer"]["en"]
     assert "खुद से दवा न लें।" in FIXED_MESSAGES["disclaimer"]["hi"]
+
+
+def test_full_answer_closing_is_fixed_and_added_once(monkeypatch):
+    state = {
+        "question": "What are dengue symptoms?",
+        "language": "en",
+        "intent": "disease_info",
+        "emergency": False,
+        "answer": (
+            "Fever is a symptom [1]. This is health awareness information, "
+            "not medical advice. In an emergency, go to the nearest hospital or call108."
+        ),
+        "citations": [1],
+        "documents": [Document(page_content="Fever is a symptom.")],
+    }
+    result = _verify_answer(state)
+    closing = FIXED_MESSAGES["awareness_closing"]["en"]
+    assert result["answer"].count(closing) == 1
+    assert "call108" not in result["answer"]
 
 
 def test_medicine_answer_gets_localized_disclaimer(monkeypatch):

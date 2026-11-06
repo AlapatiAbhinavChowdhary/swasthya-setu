@@ -1,8 +1,9 @@
 # Data Sources
 
-All files are downloaded manually from official sources and are not committed to Git (see `.gitignore`).
+The canonical manifest is [`data/sources.yaml`](sources.yaml). Downloaded
+documents are local-only and ignored by Git.
 
-| File | Source | URL | Downloaded |
-|------|--------|-----|------------|
-| dengue_guidelines_2023.pdf | NCVBDC, MoHFW (National Guidelines for Clinical Management of Dengue Fever 2023) | https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf | 2026-11-01 |
-| Fact_Sheet_WHD_2014_EN_1629.pdf | WHO, Dengue and severe dengue fact sheet | https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content | 2026-11-01 |
+| ID | Publisher | Disease coverage | URL |
+|---|---|---|---|
+| dengue-guidelines-2023 | NCVBDC, Government of India | Dengue | https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf |
+| who-vector-borne-fact-sheets-2014 | WHO Country Office for India and Government of India | Dengue, malaria, chikungunya, Japanese encephalitis, kala-azar, lymphatic filariasis | https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content |
