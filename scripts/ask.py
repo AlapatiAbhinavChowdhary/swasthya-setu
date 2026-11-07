@@ -1,11 +1,20 @@
 import sys
 
-from swasthya_setu.generation.agent import run_agent
+from swasthya_setu.config import check_llm_configured
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+is_configured, missing_var = check_llm_configured()
+if not is_configured:
+    sys.exit(f"Error: Required LLM setting '{missing_var}' is missing or set to a placeholder.")
+
+from swasthya_setu.generation.agent import run_agent
+
 question = " ".join(sys.argv[1:])
+if not question.strip():
+    sys.exit("Error: No question provided.")
+
 result = run_agent(question)
 
 print(f"\n=== INTENT ===\n{result.get('intent', 'emergency')}")

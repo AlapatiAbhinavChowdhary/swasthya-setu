@@ -9,6 +9,7 @@ import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request
@@ -25,7 +26,7 @@ from swasthya_setu.api.models import (
     FeedbackResponse,
     SourceResponse,
 )
-from swasthya_setu.config import settings
+from swasthya_setu.config import check_llm_configured, settings
 from swasthya_setu.coverage import get_coverage
 from swasthya_setu.generation.agent import run_agent
 from swasthya_setu.generation.chain import _store
@@ -41,7 +42,19 @@ _INFOGRAPHIC_MARKS = re.compile(r"(?m)^\s*[•▪◦■□]+\s*$")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.database = Database(settings.feedback_database)
-    app.state.vectorstore = _store()
+    is_configured, missing_var = check_llm_configured()
+    app.state.llm_configured = is_configured
+    app.state.llm_missing_var = missing_var
+    if not is_configured:
+        logger.warning(
+            "Required LLM setting '%s' is missing or set to a placeholder.",
+            missing_var,
+        )
+    try:
+        app.state.vectorstore = _store()
+    except Exception as exc:
+        logger.warning("Vectorstore initialization skipped: %s", exc)
+        app.state.vectorstore = None
     yield
 
 
@@ -149,8 +162,11 @@ def _run_chat(request: Request, payload: ChatRequest) -> ChatResponse:
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "llm_configured": getattr(app.state, "llm_configured", False),
+    }
 
 
 @app.get("/sources")
