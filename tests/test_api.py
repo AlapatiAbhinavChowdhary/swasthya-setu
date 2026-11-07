@@ -36,7 +36,9 @@ def test_api_health_and_chat(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
     monkeypatch.setattr(api_module, "run_agent", lambda *_args: _state("Grounded [1]."))
     with TestClient(api_module.app) as client:
-        assert client.get("/health").json() == {"status": "ok"}
+        health_data = client.get("/health").json()
+        assert health_data["status"] == "ok"
+        assert "llm_configured" in health_data
         response = client.post("/chat", json={"message": "What is dengue?"})
         stream = client.post("/chat/stream", json={"message": "What is dengue?"})
     assert response.status_code == 200
@@ -123,3 +125,82 @@ def test_rate_limit_runs_before_cache(monkeypatch, tmp_path):
     assert first.status_code == 200
     assert second.status_code == 429
     assert len(calls) == 1
+
+
+def test_health_reports_llm_configured_when_valid(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    monkeypatch.setenv("GEMINI_API_KEY", "AIzaSyTestValidKey123")
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-2.5-flash")
+    from swasthya_setu.config import get_settings
+
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        health = client.get("/health").json()
+        assert health == {"status": "ok", "llm_configured": True}
+
+
+def test_health_and_endpoints_when_key_missing(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    monkeypatch.setenv("GEMINI_API_KEY", "")
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    from swasthya_setu.config import get_settings
+
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        health = client.get("/health").json()
+        assert health == {"status": "ok", "llm_configured": False}
+        assert client.get("/coverage").status_code == 200
+        assert client.get("/sources").status_code == 200
+
+
+def test_health_and_endpoints_when_dummy_key(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    monkeypatch.setenv("GEMINI_API_KEY", "ci-dummy-key")
+    monkeypatch.setenv("GEMINI_MODEL", "ci-dummy-model")
+    from swasthya_setu.config import get_settings
+
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        health = client.get("/health").json()
+        assert health == {"status": "ok", "llm_configured": False}
+        assert client.get("/coverage").status_code == 200
+        assert client.get("/sources").status_code == 200
+
+
+def test_health_when_dummy_placeholder(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    monkeypatch.setenv("GEMINI_API_KEY", "your_api_key_here")
+    from swasthya_setu.config import get_settings
+
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        health = client.get("/health").json()
+        assert health == {"status": "ok", "llm_configured": False}
+
+
+def test_ask_script_exits_on_missing_or_dummy_key(monkeypatch):
+    import runpy
+    from swasthya_setu.config import get_settings
+
+    # Missing / empty key
+    monkeypatch.setenv("GEMINI_API_KEY", "")
+    get_settings.cache_clear()
+    with pytest.raises(SystemExit) as exc_info:
+        runpy.run_path("scripts/ask.py", run_name="__main__")
+    assert "GEMINI_API_KEY" in str(exc_info.value)
+
+    # Dummy placeholder key
+    monkeypatch.setenv("GEMINI_API_KEY", "ci-dummy-key")
+    monkeypatch.setenv("GEMINI_MODEL", "ci-dummy-model")
+    get_settings.cache_clear()
+    with pytest.raises(SystemExit) as exc_info:
+        runpy.run_path("scripts/ask.py", run_name="__main__")
+    assert "GEMINI_API_KEY" in str(exc_info.value)
+
+    # Valid key with dummy model
+    monkeypatch.setenv("GEMINI_API_KEY", "AIzaSyValidKey")
+    monkeypatch.setenv("GEMINI_MODEL", "ci-dummy-model")
+    get_settings.cache_clear()
+    with pytest.raises(SystemExit) as exc_info:
+        runpy.run_path("scripts/ask.py", run_name="__main__")
+    assert "GEMINI_MODEL" in str(exc_info.value)
