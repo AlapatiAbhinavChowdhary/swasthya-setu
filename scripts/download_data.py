@@ -21,6 +21,7 @@ MANIFEST = ROOT / "data" / "sources.yaml"
 LOCKFILE = ROOT / "data" / "sources.lock.json"
 MAX_BYTES = 60 * 1024 * 1024
 USER_AGENT = "SwasthyaSetuSourceDownloader/1.0"
+ALLOWED_HTML_HOSTS = (".gov.in", ".nic.in", "who.int", ".who.int")
 
 
 def _robots_allowed(url: str) -> tuple[bool, str]:
@@ -69,6 +70,22 @@ def _download_with_curl(url: str) -> bytes:
     return data
 
 
+def _download_html(url: str) -> bytes:
+    host = urlparse(url).hostname or ""
+    if not any(host == suffix.lstrip(".") or host.endswith(suffix) for suffix in ALLOWED_HTML_HOSTS):
+        raise RuntimeError(f"HTML host is not an allowed official domain: {host}")
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        if response.status != 200:
+            raise RuntimeError(f"HTTP {response.status}")
+        data = response.read(MAX_BYTES + 1)
+    if len(data) > MAX_BYTES:
+        raise RuntimeError("content exceeds 60 MB limit")
+    if b"<html" not in data.lower() and b"<!doctype" not in data.lower():
+        raise RuntimeError("response is not HTML")
+    return data
+
+
 def main() -> None:
     import argparse
 
@@ -81,7 +98,10 @@ def main() -> None:
     for source in manifest.get("sources", []):
         source_id = source["id"]
         disease_id = source["disease_ids"][0]
-        target = ROOT / "data" / "raw" / disease_id / f"{source_id}.pdf"
+        extension = "html" if source.get("type") == "html" else "pdf"
+        target = ROOT / source["file"] if source.get("file") else (
+            ROOT / "data" / "raw" / disease_id / f"{source_id}.{extension}"
+        )
         entry: dict[str, object] = {
             "url": source["url"],
             "file": str(target.relative_to(ROOT)),
@@ -90,7 +110,8 @@ def main() -> None:
         try:
             if target.exists():
                 data = target.read_bytes()
-                if data.startswith(b"%PDF"):
+                valid = data.startswith(b"%PDF") if extension == "pdf" else b"<html" in data.lower()
+                if valid:
                     entry.update({"status": "skipped", "hash": hashlib.sha256(data).hexdigest(), "bytes": len(data)})
                     lock.append(entry)
                     continue
@@ -100,11 +121,14 @@ def main() -> None:
             worked_with = "python"
             for attempt in range(3):
                 try:
-                    data = _download(source["url"])
+                    data = _download_html(source["url"]) if extension == "html" else _download(source["url"])
                     break
                 except Exception:
                     if attempt == 2:
-                        data = _download_with_curl(source["url"])
+                        if extension == "html":
+                            data = _download_html(source["url"])
+                        else:
+                            data = _download_with_curl(source["url"])
                         worked_with = "curl"
                         break
                     time.sleep(2**attempt)
@@ -116,6 +140,7 @@ def main() -> None:
                 "bytes": len(data),
                 "fallback": worked_with,
                 "robots": robots_source,
+                "type": extension,
             })
         except Exception as exc:
             logger.warning("Failed %s: %s", source_id, exc)

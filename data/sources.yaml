@@ -1,4 +1,23 @@
 sources:
+  - id: who-india-health-topics
+    title: WHO India health topics
+    publisher: World Health Organization
+    url: https://www.who.int/india/health-topics
+    type: html
+    disease_ids: [dengue, malaria, tuberculosis, maternal-newborn-care]
+    language: en
+    doc_type: health_topics
+    license_note: WHO content; retain attribution and source link.
+  - id: local-dengue-guidelines-2023
+    title: National Guidelines for Clinical Management of Dengue Fever 2023
+    publisher: NCVBDC, Ministry of Health and Family Welfare, Government of India
+    url: https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf
+    file: data/raw/dengue_guidelines_2023.pdf
+    status: local_file
+    disease_ids: [dengue]
+    language: en
+    doc_type: guideline
+    year: 2023
   - id: dengue-guidelines-2023
     title: National Guidelines for Clinical Management of Dengue Fever 2023
     publisher: NCVBDC, Ministry of Health and Family Welfare, Government of India
@@ -12,15 +31,28 @@ sources:
     title: "India BITE: Fact sheets on vector-borne diseases in India"
     publisher: WHO Country Office for India and Government of India
     url: https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content
+    file: data/raw/dengue/who-vector-borne-fact-sheets-2014.pdf
     disease_ids: [dengue, malaria, chikungunya, japanese-encephalitis, kala-azar, lymphatic-filariasis]
     language: en
     doc_type: fact_sheet
     year: 2014
     license_note: WHO publication; review attribution and reuse terms before redistribution.
+  - id: local-who-vector-borne-fact-sheets-2014
+    title: "India BITE: Fact sheets on vector-borne diseases in India"
+    publisher: WHO Country Office for India and Government of India
+    url: https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf
+    file: data/raw/Fact_Sheet_WHD_2014_EN_1629.pdf
+    status: local_file
+    disease_ids: [dengue, malaria, chikungunya, japanese-encephalitis, kala-azar, lymphatic-filariasis]
+    language: en
+    doc_type: fact_sheet
+    year: 2014
+    license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source link.
   - id: national-immunization-schedule
     title: National Immunization Schedule
     publisher: National Health Mission, Ministry of Health and Family Welfare, Government of India
     url: https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf
+    file: data/raw/child-immunization/national-immunization-schedule.pdf
     disease_ids: [child-immunization, hepatitis-b, polio, measles, japanese-encephalitis, diphtheria-pertussis-tetanus]
     language: en
     doc_type: schedule

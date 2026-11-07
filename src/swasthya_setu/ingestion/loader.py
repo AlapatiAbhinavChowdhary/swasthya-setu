@@ -51,10 +51,10 @@ def _repeated_margin_lines(page_lines: list[list[str]]) -> set[str]:
     return {line for line, count in counts.items() if count >= threshold}
 
 
-def load_pdfs(directory: Path) -> list[Document]:
-    """Load PDFs with PyMuPDF and return cleaned one-page Documents."""
+def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
+    """Load explicitly selected PDFs with PyMuPDF and return cleaned pages."""
     documents: list[Document] = []
-    for pdf_path in sorted(directory.glob("*.pdf")):
+    for pdf_path in sorted(pdf_paths):
         with fitz.open(pdf_path) as pdf:
             raw_pages = [normalize_page_text(page.get_text("text")) for page in pdf]
         page_lines = [page.splitlines() for page in raw_pages]
@@ -82,3 +82,8 @@ def load_pdfs(directory: Path) -> list[Document]:
         logger.info("Loaded %s (%d cleaned pages)", pdf_path.name, len(pages))
         documents.extend(pages)
     return documents
+
+
+def load_pdfs(directory: Path) -> list[Document]:
+    """Load PDFs directly inside a directory."""
+    return load_pdf_paths(list(directory.glob("*.pdf")))
