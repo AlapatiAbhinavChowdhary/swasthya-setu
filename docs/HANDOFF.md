@@ -1,0 +1,600 @@
+# Swasthya Setu handoff
+
+This is the continuation document for the next coding agent. It was written
+from the checked-out repository, source files, generated index manifest, Git
+history, and commands run on 2026-11-07. Statements marked **unverified** were
+not proven by the checks run for this handoff.
+
+## 1. PROJECT
+
+Swasthya Setu is a multilingual public-health awareness chatbot and website
+for rural and semi-urban India. The project is associated with SIH25049 and
+is intended to answer awareness questions from verified sources. It must not
+diagnose a person, prescribe medicine, provide a dose, or pretend that
+unindexed knowledge is verified.
+
+The current safety boundary is deliberate:
+
+- Awareness questions go through retrieval and grounded answer generation.
+- Personal diagnosis, medicine selection, dose, dosage schedule, and
+  prescription requests are refused with a localized fixed message.
+- A deterministic emergency check runs before any model call.
+- Emergency messages direct the person to the nearest hospital and emergency
+  help using 108.
+- If indexed documents do not support the question, the assistant uses the
+  no-verified-information response.
+
+The intended users are people seeking plain-language health awareness,
+including people using English or Hindi. The project is a semester project
+for an Agentic AI & LLM course. It is built by a student learning LangChain,
+RAG, and LangGraph. Future explanations and changes should remain
+beginner-friendly and explain the reason for a change without assuming expert
+knowledge.
+
+The repository is not a clinical system. Nothing in this handoff changes that
+scope. Medical review has not been completed; disease records remain
+`reviewed: false`.
+
+## 2. HOW THE OWNER WANTS TO WORK
+
+The owner runs no commands and does no manual editing. The coding agent must
+run discovery, downloads, indexing, builds, tests, and verification itself.
+The agent must report real printed output, not merely say that a command should
+work.
+
+Communication should be casual and concise. Give prompts and decisions in the
+chat rather than instructions that require the owner to operate a terminal.
+When the task is clear, proceed autonomously.
+
+Use one branch per phase or focused work item. Make small conventional
+commits. Merge to `main` only after checks pass. Never mark a feature
+“Complete” without listing the exact commands run and what those commands
+printed. If a target is not met, say partial, blocked, or unverified.
+
+Do not commit `.env`, API keys, PDFs, the SQLite database, Chroma data,
+FAISS data, model caches, or other generated private data. Do not rewrite
+history or discard unrelated work.
+
+## 3. ARCHITECTURE
+
+### Runtime data flow
+
+1. Official PDFs and HTML pages are registered in `data/sources.yaml`.
+2. PDF files are loaded with PyMuPDF. HTML files are cleaned by the HTML
+   loader, which removes common navigation and boilerplate elements.
+3. PDF text is normalized: whitespace is collapsed, page-number lines and
+   repeated margin lines are removed, known table-of-contents pages are
+   dropped, and a small set of known glued words is repaired.
+4. The chunker turns cleaned pages into LangChain `Document` chunks.
+5. `scripts/build_index.py` hashes file bytes with SHA-256. Duplicate file
+   contents are indexed once. Duplicate chunk text is also removed.
+6. The default persistent store is Chroma. FAISS is the compatibility fallback
+   and is used by the comparison script.
+7. The manifest at `vectorstore/index-manifest.json` records schema version,
+   discovered files, total chunks, and chunks per source. The directory is
+   generated and ignored by Git.
+8. The agent performs intent routing and query rewriting, disease-aware
+   retrieval where available, duplicate removal, a relevance gate, generation,
+   citation verification, language checking, and response formatting.
+9. Gemini is accessed through LangChain's Google Generative AI integration.
+   The API key and model are environment settings and are not stored here.
+10. FastAPI exposes health, source, coverage, disease, chat, streaming, and
+    feedback endpoints.
+11. The API applies its in-memory rate limiter before its response cache.
+12. SQLite stores hashed identifiers, message hashes, feedback, and timestamps.
+13. The React/Vite frontend calls the API, displays coverage and source
+    snippets, shows citation numbers, and provides basic language, dark-mode,
+    and read-aloud controls.
+14. A Telegram adapter exists behind environment configuration; live polling is
+    not enabled or verified in this handoff.
+15. Docker and CI files exist, but deployment is not configured or verified.
+
+### Embeddings and retrieval
+
+The embedding model is `intfloat/multilingual-e5-small`. The wrapper in
+`src/swasthya_setu/retrieval/embedder.py` adds `passage: ` to document text
+and `query: ` to query text, and requests normalized embeddings.
+
+The agent asks the store for relevance-scored candidates, removes duplicate
+passage text by SHA-256, applies the minimum relevance threshold, and skips
+the LLM relevance gate only when the top score is at or above the configured
+high-score threshold. Otherwise a Gemini relevance prompt selects useful
+passage numbers.
+
+The offline comparison script includes disease-filtered retrieval and a
+simple BM25-like lexical score combined with dense ranks using reciprocal
+rank fusion. The current benchmark did not show an improvement from the
+hybrid branch; see the verified numbers below.
+
+### Agent graph
+
+The graph is implemented in
+`src/swasthya_setu/generation/agent.py`. The safety node runs first. Emergency
+states go directly to formatting. Other states go through routing, retrieval,
+generation, verification, and formatting.
+
+```mermaid
+flowchart TD
+    A([START]) --> B[safety_check]
+    B -->|emergency| G[format_response]
+    B -->|not emergency| C[intent_router]
+    C --> D[retrieve]
+    D --> E[generate_answer]
+    E --> F[verify_answer]
+    F --> G
+    G --> H([END])
+```
+
+```mermaid
+flowchart LR
+    S[data/sources.yaml] --> L[PyMuPDF and HTML loaders]
+    L --> C[clean pages and chunks]
+    C --> I[SHA-256 dedupe and index]
+    I --> V[(Chroma)]
+    I -. fallback .-> F[(FAISS)]
+    Q[user question] --> A[FastAPI or CLI]
+    A --> G[LangGraph agent]
+    G --> R[disease-aware retrieval]
+    R --> V
+    R --> F
+    R --> M[Gemini generation and checks]
+    M --> O[answer, citations, sources, safety flags]
+    O --> A
+    A --> W[React website or Telegram adapter]
+```
+
+### Safety and response details
+
+`is_emergency` is deterministic and precedes `_llm()`. The fixed emergency
+messages exist in English and Hindi. Prescription refusal, no-verified-info,
+disclaimer, and emergency text are localized through the verification module.
+Medicine names found in retrieved evidence may be repeated with citations, but
+personal dosing, schedules, and prescriptions remain blocked. A deterministic
+medicine disclaimer is appended when a medicine name is present in the answer
+context.
+
+The language check is script-ratio based rather than an all-or-nothing Latin
+character test. This allows Hindi answers to contain terms such as NSAIDs and
+paracetamol. If a grounded, cited answer survives generation but a retry still
+fails language checking, the implementation is intended to keep the grounded
+answer rather than replace it with an unsupported refusal.
+
+## 4. REPO MAP
+
+- `src/swasthya_setu/config.py` — Pydantic settings loaded from `.env`.
+- `src/swasthya_setu/coverage.py` — coverage rows from taxonomy, sources, and index manifest.
+- `src/swasthya_setu/tools.py` — verified disease coverage helpers only.
+- `src/swasthya_setu/ingestion/loader.py` — PyMuPDF cleaning and optional OCR hook.
+- `src/swasthya_setu/ingestion/html_loader.py` — cleaned official HTML extraction.
+- `src/swasthya_setu/ingestion/chunker.py` — page-to-chunk conversion.
+- `src/swasthya_setu/retrieval/embedder.py` — multilingual E5 wrapper.
+- `src/swasthya_setu/retrieval/vectorstore.py` — Chroma persistence and FAISS fallback.
+- `src/swasthya_setu/generation/agent.py` — LangGraph state and agent nodes.
+- `src/swasthya_setu/generation/chain.py` — LLM, store, prompts, and context formatting.
+- `src/swasthya_setu/generation/prompts.py` — answer-generation policy.
+- `src/swasthya_setu/generation/safety.py` — deterministic emergency detection and messages.
+- `src/swasthya_setu/generation/verification.py` — citations, language, fixed messages, and closings.
+- `src/swasthya_setu/api/app.py` — FastAPI app, limiter, cache, endpoints, and snippets.
+- `src/swasthya_setu/api/models.py` — request and response schemas.
+- `src/swasthya_setu/api/db.py` — SQLAlchemy SQLite persistence and hashing.
+- `scripts/build_index.py` — full or incremental source discovery and indexing.
+- `scripts/download_data.py` — source download and report tooling.
+- `scripts/ask.py` — command-line question runner.
+- `scripts/evaluate.py` — Gemini evaluation runner; stops on quota exhaustion.
+- `scripts/evaluate_retrieval.py` — offline Chroma/FAISS retrieval comparison.
+- `scripts/generate_eval.py` — generates the current evaluation JSONL.
+- `scripts/calibrate_threshold.py` — retrieval-score diagnostics.
+- `data/diseases.yaml` — disease taxonomy and unreviewed names.
+- `data/sources.yaml` — verified/local source registry.
+- `data/raw/` — local source files; do not commit new PDFs.
+- `data/sources.lock.json` — source download lock/report state.
+- `docs/` — safety, privacy, progress, evaluation, and this handoff.
+- `tests/` — Python tests, including safety, API, ingestion, and source tests.
+- `eval/questions.jsonl` — 100 generated evaluation questions.
+- `web/src/main.tsx` — current compact React application and page shell.
+- `web/package.json` — Vite, React, TypeScript, and Tailwind dependencies.
+- `web/dist/` — generated frontend build output; do not treat as source.
+- `.github/workflows/` — CI workflow definitions.
+- `Dockerfile` and `docker-compose.yml` — container/development deployment path.
+- `telegram/` — environment-gated Telegram adapter code.
+
+## 5. HOW TO RUN
+
+All commands below are PowerShell commands from the repository root. The
+commands listed as verified were run during this handoff or in the latest
+recorded verification. Commands requiring a real Gemini key are not rerun
+without credentials.
+
+### Setup
+
+```powershell
+uv sync
+Copy-Item .env.example .env
+```
+
+Set these variable names in `.env` when using Gemini or changing defaults:
+`GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_MAX_RETRIES`,
+`RETRIEVAL_MIN_RELEVANCE`, `RETRIEVAL_SKIP_RELEVANCE_GATE_SCORE`,
+`CORS_ORIGINS`, `MAX_INPUT_CHARS`, `RATE_LIMIT_PER_MINUTE`,
+`FEEDBACK_DATABASE`, and `VECTORSTORE_BACKEND`.
+
+`uv sync` and the test/build commands were verified previously. Creating or
+editing `.env` with a real key is **unverified in this handoff** and must never
+be committed.
+
+### Download and index
+
+```powershell
+uv run python scripts/download_data.py
+uv run python scripts/download_data.py --retry-unreachable
+uv run python scripts/build_index.py
+```
+
+The index command was verified and printed `Done. Indexed 191 chunks.` The
+download command exists, but a fresh complete discovery/download run was not
+performed for this handoff. The retry command is therefore **unverified** in
+this handoff.
+
+### Ask from the CLI
+
+```powershell
+uv run python scripts/ask.py "What are the warning signs of severe dengue?"
+```
+
+The command is part of the repository workflow. A fresh output was not
+captured during this handoff, so its current Gemini-dependent answer is
+**unverified**.
+
+### Run the API
+
+```powershell
+uv run uvicorn swasthya_setu.api.app:app --reload
+```
+
+The API module and endpoint tests exist. A live server smoke test was not
+performed during this handoff, so server startup with the current environment
+is **unverified**.
+
+Endpoints implemented in `src/swasthya_setu/api/app.py` are `GET /health`,
+`GET /sources`, `GET /coverage`, `GET /diseases`, `POST /chat`,
+`POST /chat/stream`, and `POST /feedback`.
+
+### Run the website
+
+```powershell
+Set-Location web
+npm install
+npm run build
+npm run lint
+npm run dev
+```
+
+`npm run build` and `npm run lint` were run and passed. `npm run dev` is a
+long-running server command and was not left running. Browser navigation,
+screenshots, and Playwright console checks are **unverified**.
+
+### Tests and evaluation
+
+```powershell
+uv run pytest -q
+uv run python scripts/generate_eval.py
+uv run python scripts/evaluate_retrieval.py
+uv run python scripts/evaluate.py
+```
+
+The pytest and retrieval commands were run for this handoff. The Gemini
+evaluation command was previously run until the free-tier response limit
+returned HTTP 429; see the current-state section.
+
+## 6. CURRENT STATE
+
+Only numbers printed by the repository or recorded from actual commands are
+listed here.
+
+### Tests and index
+
+- `uv run pytest -q` printed `31 passed, 15 warnings in 4.88s`.
+- `uv run python scripts/build_index.py` printed `Done. Indexed 191 chunks.`
+- Chroma verification printed `chunks 191` and `unique_texts 191`.
+- The indexed source IDs were:
+  `doc-dengue-guideline-7c8ffb`,
+  `doc-immunization-cf8bd1`,
+  `doc-who-health-topics-8ddec6`,
+  and `doc-who-vector-0eacf9`.
+- The scanned WHO image-only file is registered, but has no indexed text
+  chunks because OCR was not successfully installed or validated.
+
+### Unique-document coverage
+
+The following table is derived from the current `get_coverage()` result and
+the current manifest. “General only” means the source mentions or covers
+multiple diseases and is not full disease-specific coverage.
+
+| Disease | Unique documents | Chunks | Coverage label |
+|---|---:|---:|---|
+| dengue | 3 | 188 | disease-specific + general only |
+| malaria | 2 | 12 | general only |
+| chikungunya | 1 | 10 | general only |
+| japanese-encephalitis | 2 | 13 | general only |
+| kala-azar | 1 | 10 | general only |
+| lymphatic-filariasis | 1 | 10 | general only |
+| tuberculosis | 1 | 2 | general only |
+| typhoid | 0 | 0 | no indexed document |
+| cholera | 0 | 0 | no indexed document |
+| diarrhoeal-disease | 0 | 0 | no indexed document |
+| hepatitis-a | 0 | 0 | no indexed document |
+| hepatitis-b | 1 | 3 | general only |
+| hepatitis-e | 0 | 0 | no indexed document |
+| seasonal-influenza | 0 | 0 | no indexed document |
+| covid-19 | 0 | 0 | no indexed document |
+| measles | 1 | 3 | general only |
+| polio | 1 | 3 | general only |
+| diphtheria-pertussis-tetanus | 1 | 3 | general only |
+| rabies-animal-bites | 0 | 0 | no indexed document |
+| snakebite | 0 | 0 | no indexed document |
+| leprosy | 0 | 0 | no indexed document |
+| hiv-aids | 0 | 0 | no indexed document |
+| diabetes | 0 | 0 | no indexed document |
+| hypertension | 0 | 0 | no indexed document |
+| anaemia-nutrition | 0 | 0 | no indexed document |
+| maternal-newborn-care | 1 | 2 | general only |
+| child-immunization | 1 | 3 | general only |
+| heat-illness | 0 | 0 | no indexed document |
+| mental-health-basics | 0 | 0 | no indexed document |
+| hygiene-sanitation-safe-water | 0 | 0 | no indexed document |
+
+These are unique source registrations by SHA-256-derived document identity,
+not claims that every general document provides complete clinical coverage.
+
+### Retrieval-only evaluation
+
+The current 100-question set was evaluated offline. The printed results were:
+
+| Backend | Filter | Hybrid BM25+RRF | Hit-rate@4 |
+|---|---:|---:|---:|
+| Chroma | false | false | 18/100 |
+| Chroma | true | false | 58/100 |
+| Chroma | false | true | 16/100 |
+| Chroma | true | true | 58/100 |
+| FAISS | false | false | 18/100 |
+| FAISS | true | false | 58/100 |
+
+The filtered comparison currently has a fallback behavior when no filtered
+documents exist. The benchmark includes questions for diseases without
+indexed documents, so these numbers must not be interpreted as a complete
+quality score for covered diseases. A filtered, covered-only metric is
+**unverified**.
+
+### Gemini evaluation
+
+`docs/EVALUATION.md` records `Questions attempted: 14 / 100`. The run stopped
+when Gemini returned HTTP 429 `RESOURCE_EXHAUSTED` under the free-tier quota.
+The recorded groups were awareness 5, prevention 5, and warning 4. The
+recorded median latencies were 6.064 seconds, 3.296 seconds, and 3.261 seconds
+respectively. This is a partial run, not a full evaluation.
+
+### Frontend
+
+`Set-Location web; npm run build` passed with Vite reporting 15 modules
+transformed. `Set-Location web; npm run lint` passed as a TypeScript
+`tsc --noEmit` check. The package does not currently define a real ESLint
+command; calling the existing lint script is not equivalent to ESLint.
+
+### Tools and data modes
+
+The verified `src/swasthya_setu/tools.py` exposes `list_diseases` and
+`disease_status`, both backed by coverage metadata. There are no verified
+`vaccination_schedule`, `outbreak_alerts`, or `find_hospital` tool functions
+in that module. The website has:
+
+- Vaccination page: text only, says verified schedules are required.
+- Alerts page: explicitly labeled `DEMO` and says live outbreak data is not connected.
+- Facilities page: says facility data is not connected and gives emergency guidance.
+
+Therefore real vaccination, DEMO alert-provider, and SAMPLE hospital lookup
+tools are not implemented in the verified backend. Telegram is an
+environment-gated dry-run adapter only.
+
+## 7. WHAT IS DONE VS PARTIAL VS NOT STARTED
+
+This table matches `docs/PROGRESS.md` exactly as checked for this handoff.
+“Complete” here is the existing progress label, not a claim that the full
+original brief was delivered.
+
+| Phase | Status | Last commit | Notes |
+|---|---|---|---|
+| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings. |
+| 1 Sources and coverage | partial | working tree | Local PDFs restored and duplicate source content collapsed by SHA-256; official HTML support added. Discovery target and OCR coverage remain incomplete. |
+| 2 Chroma and incremental ingestion | partial | working tree | Chroma has 191 unique vectors and no duplicate chunk text; scanned zero-text source still needs optional OCR validation. |
+| 3 Retrieval, agent and tools | partial | working tree | Disease-filtered retrieval and offline Chroma/FAISS comparison are implemented; hybrid RRF is available but does not improve the current benchmark. |
+| 4 API | partial | `1c7b8bb` | Existing endpoints plus `/coverage` and `/diseases`; streaming remains response-at-once. |
+| 5 Website | complete | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend with coverage, chat and safety UI. |
+| 6 Telegram | partial | `ba9baa7` | Env-gated dry-run adapter; live polling intentionally disabled pending token. |
+| 7 Production | partial | `ba9baa7` | Dockerfile and compose path added; deployment account and monitoring remain. |
+| 8 Documentation | complete | `1c7b8bb` | Privacy, safety, data TODO, download, evaluation, and progress docs exist. |
+| 9 Tests and CI | partial | working tree | 31 tests pass in 5.05s; broader ingestion, evaluation, and browser coverage is still pending. |
+| 10 Acceptance | partial | working tree | Retrieval-only evaluation ran for 100 questions; Gemini evaluation stopped at 14/100 due HTTP 429 quota. |
+
+## 8. DECISIONS AND WHY
+
+- **Chroma is the default store; FAISS is fallback/comparison.** Chroma
+  provides persistent collection storage and metadata-aware retrieval. FAISS
+  remains available for compatibility and offline comparison.
+- **Local multilingual E5 embeddings are used.** They avoid a paid embedding
+  service and support English/Hindi text. The wrapper must preserve the E5
+  `passage: ` and `query: ` prefixes.
+- **Query rewrite is English before retrieval.** The router/rewrite call
+  produces a short English search query so the current English-heavy sources
+  can be searched consistently.
+- **The relevance gate exists because E5 scores are compressed.** Calibration
+  showed overlap between relevant and irrelevant scores, so a score threshold
+  alone is not trusted.
+- **Router and rewrite are merged.** One structured Gemini call returns the
+  intent and retrieval query, reducing latency and quota usage.
+- **Emergency detection is deterministic and first.** High-confidence danger
+  phrases must not wait for a model and must not be changed by generation.
+- **Medicine names from context are allowed, but prescriptions are not.**
+  A guideline’s medicine name can be repeated when answering generally and
+  citing it. Doses, schedules, per-person choices, and self-prescribing
+  advice remain blocked.
+- **Only official sources are allowed.** The source policy is restricted to
+  Indian government domains and WHO domains. Do not add a mirror or guessed
+  URL.
+- **Coverage is honest.** A disease with no indexed evidence is shown as
+  coming soon and receives the no-verified-information response. General
+  multi-disease sources are not treated as disease-specific full coverage.
+- **Hashes identify documents and passages.** This prevents duplicate
+  registrations and duplicate citations after the earlier inflation bug.
+
+## 9. LESSONS AND PAST BUGS
+
+- A top-level PDF was excluded by a nested-only glob. The index silently
+  shrank from the dengue guideline’s expected content to 12 chunks. Always
+  scan recursively and include root-level files.
+- The same dengue and WHO files were registered multiple times. Their byte
+  SHA-256 must determine one document identity, and chunk text must also be
+  deduplicated.
+- A general vector-borne fact sheet was credited as full coverage for every
+  disease it mentioned. Keep its label general and report “general information
+  only”.
+- TB, maternal/newborn, and scanned WHO PDFs exposed zero- or tiny-chunk
+  extraction problems. Do not silently call these sources healthy; report the
+  extraction reason and validate optional OCR.
+- An all-or-nothing language check rejected good Hindi answers containing Latin
+  drug names and acronyms. Use script ratio and tolerate context terms.
+- LLM-written disclaimers appeared inconsistently, and extraction/generation
+  produced `call108`. Build emergency and disclaimer text deterministically
+  with correct spacing.
+- Gemini free-tier HTTP 429 limits stopped the 100-question evaluation at
+  14 questions. Evaluation must be quota-aware and resumable.
+- Retrieval hit-rate must be interpreted using actual indexed coverage.
+  Questions for empty diseases are expected refusals, not retrieval failures.
+- Earlier progress reports claimed completion without enough evidence. Match
+  every status to printed command output and label uncertain work unverified.
+
+## 10. SAFETY AND POLICY RULES
+
+These rules must not be weakened:
+
+1. The assistant is awareness-only, not a doctor or diagnostic system.
+2. Never diagnose a person or answer “do I have X?” with a diagnosis.
+3. Never choose a medicine for a person, prescribe, or give a dose or schedule.
+4. General “how is X treated or managed?” questions are awareness questions
+   and must try RAG, not be classified as prescription requests.
+5. Medicine names found in retrieved official context may be repeated only in
+   a general, cited explanation.
+6. Do not extend beyond retrieved evidence or invent medical facts.
+7. Verify citations. The source list must equal the citation numbers in the
+   final answer.
+8. Duplicate chunk text must not appear twice in top-k or citations.
+9. Emergency detection must run before any LLM call.
+10. Emergency output must be deterministic, localized, and include correctly
+    spaced emergency guidance such as `call 108` or `108 पर कॉल करें`.
+11. Fixed no-verified-info, prescription-refusal, emergency, and disclaimer
+    messages must be localized.
+12. A failed language retry must not replace a grounded, cited answer with an
+    unsupported refusal.
+13. Hindi script checks must tolerate Latin medical terms and acronyms.
+14. Use only verified Indian government or WHO sources.
+15. Respect source licenses and retain attribution and official links.
+16. Never treat a general multi-disease source as disease-specific coverage.
+17. Empty coverage must say coming soon/no verified information rather than
+    fill gaps with sample medical content.
+18. Keep disease names and aliases `reviewed: false` until expert review.
+19. Demo alerts and sample facilities must be visibly labeled and never
+    presented as live or verified.
+20. Never commit secrets, API keys, `.env`, PDFs, vectorstores, or databases.
+
+### Privacy design
+
+The API stores SHA-256 session identifiers and SHA-256 message identifiers,
+not raw session IDs or chat message text. SQLite stores session timestamps,
+message roles and hashes, feedback ratings/comments, request IDs, and
+timestamps. The default rate limit is approximately 30 requests per minute per
+client key, combining client IP and optional session ID. The limiter runs
+before the cache lookup. There is no automatic row-retention job in the
+current code; operators must apply and document a retention policy. Users
+should not submit names, addresses, phone numbers, or personal medical
+details. Validation responses must not echo input.
+
+## 11. KNOWN ISSUES AND GAPS
+
+- Optional OCR is only a hook. `rapidocr-onnxruntime` was not successfully
+  installed or validated, so the scanned WHO PDF remains zero-text.
+- The official discovery pass has not reached the requested 40+ documents
+  across 20+ diseases. Current indexed coverage is the small table above.
+- Playwright/browser verification, screenshots, and console-error checks were
+  not run.
+- `/chat/stream` currently returns one complete `message` SSE event followed
+  by `done`; it is not token-level or sentence-level streaming.
+- The hybrid BM25+RRF experiment is implemented, but did not improve the
+  current benchmark and needs a better covered-only evaluation before being
+  treated as a final retrieval choice.
+- Gemini evaluation is partial at 14/100 because of HTTP 429 quota exhaustion.
+- Telegram is dry-run/environment-gated only; live polling and credentials are
+  not configured.
+- Deployment accounts, monitoring, and production hosting are not configured.
+- The web lint script is TypeScript checking, not real ESLint.
+- Disease entries are unreviewed and require expert review.
+- Alerts are DEMO/disconnected, facilities are disconnected rather than a
+  verified SAMPLE provider, and vaccination is a text-only page.
+- There are no verified backend functions for the three requested structured
+  tools.
+- The current evaluation script does not implement a persistent checkpoint or
+  cache for resumed Gemini evaluation.
+- A fresh download run and live API startup were not performed for this
+  handoff and are unverified.
+
+## 12. NEXT STEPS
+
+1. **Finish extraction diagnostics and OCR.**
+   - Files: `src/swasthya_setu/ingestion/loader.py`, `scripts/build_index.py`,
+     `docs/DOWNLOAD_REPORT.md`, tests.
+   - Acceptance: print page counts, characters per page, scan/table/protection
+     status for TB, maternal/newborn, immunization, and scanned WHO files;
+     optional OCR creates marked chunks without slowing default tests; no
+     zero-chunk source is silent.
+2. **Complete official discovery.**
+   - Files: `scripts/download_data.py`, `data/sources.yaml`, source reports.
+   - Acceptance: every candidate is verified from an allowed domain; report
+     downloaded, unreachable, and rejected sources; do not invent URLs.
+3. **Implement and test honest disease-aware retrieval.**
+   - Files: `src/swasthya_setu/generation/agent.py`, retrieval modules, tests.
+   - Acceptance: covered-only hit-rate is printed separately; filtered search
+     falls back transparently; citations remain unique and valid.
+4. **Finish structured tools.**
+   - Files: `src/swasthya_setu/tools.py`, agent/API tests, data providers.
+   - Acceptance: vaccination uses verified schedule only; alerts use an
+     AlertProvider and show DEMO; hospitals use clearly labeled SAMPLE data or
+     a disabled lookup flag; missing data returns an honest message.
+5. **Make streaming real.**
+   - Files: `src/swasthya_setu/api/app.py`, agent response path, `web/src/main.tsx`.
+   - Acceptance: `/chat/stream` emits multiple sentence/token events and one
+     final event containing sources, intent, and flags; frontend renders them.
+6. **Add resumable quota-aware evaluation.**
+   - Files: `scripts/evaluate.py`, `eval/results.jsonl`, `docs/EVALUATION.md`.
+   - Acceptance: token bucket, retry-after handling, checkpoint/cache, and
+     honest expected/unexpected refusal metrics are tested offline.
+7. **Add real frontend quality checks.**
+   - Files: `web/package.json`, ESLint config, Playwright tests, docs.
+   - Acceptance: `npm run build`, real `npm run lint`, API plus web running,
+     every page opened headlessly, screenshots saved, and no console errors.
+8. **Run live/API checks only with configured environment.**
+   - Files: API tests and docs.
+   - Acceptance: health, validation, chat, stream, feedback, and rate-limit
+     checks run against the actual local app without exposing secrets.
+9. **Update progress and commit evidence.**
+   - Files: `docs/PROGRESS.md`, `docs/HANDOFF.md`, reports.
+   - Acceptance: statuses match exact command output; small conventional
+     commit; merge only after the relevant checks pass.
+
+## 13. STARTER MESSAGE FOR THE NEXT AGENT
+
+Continue Swasthya Setu from `docs/HANDOFF.md`; read it before changing code.
+Work autonomously: the owner runs no commands or manual edits. Stay
+awareness-only, use official Indian government/WHO sources, and never invent
+medical facts. Start with OCR/extraction diagnostics for zero-chunk sources,
+then address the listed priorities in order. Run real checks and report exact
+printed output. Use a focused branch and small conventional commits. Do not
+call any feature complete unless the command evidence supports it.
+
