@@ -15,3 +15,6 @@ chroma/
 data/raw/*
 .pytest_cache/
 data/*.db
+web/node_modules/
+web/dist/
+web/tsconfig.tsbuildinfo

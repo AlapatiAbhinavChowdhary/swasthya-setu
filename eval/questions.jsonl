@@ -1,0 +1,100 @@
+{"question": "What are the symptoms of Dengue?", "language": "en", "disease": "dengue", "kind": "awareness"}
+{"question": "How can Dengue be prevented?", "language": "en", "disease": "dengue", "kind": "prevention"}
+{"question": "What are warning signs related to Dengue?", "language": "en", "disease": "dengue", "kind": "warning"}
+{"question": "What are the symptoms of डेंगू?", "language": "hi", "disease": "dengue", "kind": "awareness"}
+{"question": "How can डेंगू be prevented?", "language": "hi", "disease": "dengue", "kind": "prevention"}
+{"question": "What are warning signs related to डेंगू?", "language": "hi", "disease": "dengue", "kind": "warning"}
+{"question": "What are the symptoms of Malaria?", "language": "en", "disease": "malaria", "kind": "awareness"}
+{"question": "How can Malaria be prevented?", "language": "en", "disease": "malaria", "kind": "prevention"}
+{"question": "What are warning signs related to Malaria?", "language": "en", "disease": "malaria", "kind": "warning"}
+{"question": "What are the symptoms of मलेरिया?", "language": "hi", "disease": "malaria", "kind": "awareness"}
+{"question": "How can मलेरिया be prevented?", "language": "hi", "disease": "malaria", "kind": "prevention"}
+{"question": "What are warning signs related to मलेरिया?", "language": "hi", "disease": "malaria", "kind": "warning"}
+{"question": "What are the symptoms of Chikungunya?", "language": "en", "disease": "chikungunya", "kind": "awareness"}
+{"question": "How can Chikungunya be prevented?", "language": "en", "disease": "chikungunya", "kind": "prevention"}
+{"question": "What are warning signs related to Chikungunya?", "language": "en", "disease": "chikungunya", "kind": "warning"}
+{"question": "What are the symptoms of चिकनगुनिया?", "language": "hi", "disease": "chikungunya", "kind": "awareness"}
+{"question": "How can चिकनगुनिया be prevented?", "language": "hi", "disease": "chikungunya", "kind": "prevention"}
+{"question": "What are warning signs related to चिकनगुनिया?", "language": "hi", "disease": "chikungunya", "kind": "warning"}
+{"question": "What are the symptoms of Japanese encephalitis?", "language": "en", "disease": "japanese-encephalitis", "kind": "awareness"}
+{"question": "How can Japanese encephalitis be prevented?", "language": "en", "disease": "japanese-encephalitis", "kind": "prevention"}
+{"question": "What are warning signs related to Japanese encephalitis?", "language": "en", "disease": "japanese-encephalitis", "kind": "warning"}
+{"question": "What are the symptoms of जापानी इंसेफेलाइटिस?", "language": "hi", "disease": "japanese-encephalitis", "kind": "awareness"}
+{"question": "How can जापानी इंसेफेलाइटिस be prevented?", "language": "hi", "disease": "japanese-encephalitis", "kind": "prevention"}
+{"question": "What are warning signs related to जापानी इंसेफेलाइटिस?", "language": "hi", "disease": "japanese-encephalitis", "kind": "warning"}
+{"question": "What are the symptoms of Kala-azar?", "language": "en", "disease": "kala-azar", "kind": "awareness"}
+{"question": "How can Kala-azar be prevented?", "language": "en", "disease": "kala-azar", "kind": "prevention"}
+{"question": "What are warning signs related to Kala-azar?", "language": "en", "disease": "kala-azar", "kind": "warning"}
+{"question": "What are the symptoms of काला-आजार?", "language": "hi", "disease": "kala-azar", "kind": "awareness"}
+{"question": "How can काला-आजार be prevented?", "language": "hi", "disease": "kala-azar", "kind": "prevention"}
+{"question": "What are warning signs related to काला-आजार?", "language": "hi", "disease": "kala-azar", "kind": "warning"}
+{"question": "What are the symptoms of Lymphatic filariasis?", "language": "en", "disease": "lymphatic-filariasis", "kind": "awareness"}
+{"question": "How can Lymphatic filariasis be prevented?", "language": "en", "disease": "lymphatic-filariasis", "kind": "prevention"}
+{"question": "What are warning signs related to Lymphatic filariasis?", "language": "en", "disease": "lymphatic-filariasis", "kind": "warning"}
+{"question": "What are the symptoms of लिम्फेटिक फाइलेरियासिस?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "awareness"}
+{"question": "How can लिम्फेटिक फाइलेरियासिस be prevented?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "prevention"}
+{"question": "What are warning signs related to लिम्फेटिक फाइलेरियासिस?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "warning"}
+{"question": "What are the symptoms of Tuberculosis?", "language": "en", "disease": "tuberculosis", "kind": "awareness"}
+{"question": "How can Tuberculosis be prevented?", "language": "en", "disease": "tuberculosis", "kind": "prevention"}
+{"question": "What are warning signs related to Tuberculosis?", "language": "en", "disease": "tuberculosis", "kind": "warning"}
+{"question": "What are the symptoms of क्षय रोग?", "language": "hi", "disease": "tuberculosis", "kind": "awareness"}
+{"question": "How can क्षय रोग be prevented?", "language": "hi", "disease": "tuberculosis", "kind": "prevention"}
+{"question": "What are warning signs related to क्षय रोग?", "language": "hi", "disease": "tuberculosis", "kind": "warning"}
+{"question": "What are the symptoms of Typhoid?", "language": "en", "disease": "typhoid", "kind": "awareness"}
+{"question": "How can Typhoid be prevented?", "language": "en", "disease": "typhoid", "kind": "prevention"}
+{"question": "What are warning signs related to Typhoid?", "language": "en", "disease": "typhoid", "kind": "warning"}
+{"question": "What are the symptoms of टाइफाइड?", "language": "hi", "disease": "typhoid", "kind": "awareness"}
+{"question": "How can टाइफाइड be prevented?", "language": "hi", "disease": "typhoid", "kind": "prevention"}
+{"question": "What are warning signs related to टाइफाइड?", "language": "hi", "disease": "typhoid", "kind": "warning"}
+{"question": "What are the symptoms of Cholera?", "language": "en", "disease": "cholera", "kind": "awareness"}
+{"question": "How can Cholera be prevented?", "language": "en", "disease": "cholera", "kind": "prevention"}
+{"question": "What are warning signs related to Cholera?", "language": "en", "disease": "cholera", "kind": "warning"}
+{"question": "What are the symptoms of हैजा?", "language": "hi", "disease": "cholera", "kind": "awareness"}
+{"question": "How can हैजा be prevented?", "language": "hi", "disease": "cholera", "kind": "prevention"}
+{"question": "What are warning signs related to हैजा?", "language": "hi", "disease": "cholera", "kind": "warning"}
+{"question": "What are the symptoms of Diarrhoeal disease and ORS?", "language": "en", "disease": "diarrhoeal-disease", "kind": "awareness"}
+{"question": "How can Diarrhoeal disease and ORS be prevented?", "language": "en", "disease": "diarrhoeal-disease", "kind": "prevention"}
+{"question": "What are warning signs related to Diarrhoeal disease and ORS?", "language": "en", "disease": "diarrhoeal-disease", "kind": "warning"}
+{"question": "What are the symptoms of दस्त और ओआरएस?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "awareness"}
+{"question": "How can दस्त और ओआरएस be prevented?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "prevention"}
+{"question": "What are warning signs related to दस्त और ओआरएस?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "warning"}
+{"question": "What are the symptoms of Hepatitis A?", "language": "en", "disease": "hepatitis-a", "kind": "awareness"}
+{"question": "How can Hepatitis A be prevented?", "language": "en", "disease": "hepatitis-a", "kind": "prevention"}
+{"question": "What are warning signs related to Hepatitis A?", "language": "en", "disease": "hepatitis-a", "kind": "warning"}
+{"question": "What are the symptoms of हेपेटाइटिस ए?", "language": "hi", "disease": "hepatitis-a", "kind": "awareness"}
+{"question": "How can हेपेटाइटिस ए be prevented?", "language": "hi", "disease": "hepatitis-a", "kind": "prevention"}
+{"question": "What are warning signs related to हेपेटाइटिस ए?", "language": "hi", "disease": "hepatitis-a", "kind": "warning"}
+{"question": "What are the symptoms of Hepatitis B?", "language": "en", "disease": "hepatitis-b", "kind": "awareness"}
+{"question": "How can Hepatitis B be prevented?", "language": "en", "disease": "hepatitis-b", "kind": "prevention"}
+{"question": "What are warning signs related to Hepatitis B?", "language": "en", "disease": "hepatitis-b", "kind": "warning"}
+{"question": "What are the symptoms of हेपेटाइटिस बी?", "language": "hi", "disease": "hepatitis-b", "kind": "awareness"}
+{"question": "How can हेपेटाइटिस बी be prevented?", "language": "hi", "disease": "hepatitis-b", "kind": "prevention"}
+{"question": "What are warning signs related to हेपेटाइटिस बी?", "language": "hi", "disease": "hepatitis-b", "kind": "warning"}
+{"question": "What are the symptoms of Hepatitis E?", "language": "en", "disease": "hepatitis-e", "kind": "awareness"}
+{"question": "How can Hepatitis E be prevented?", "language": "en", "disease": "hepatitis-e", "kind": "prevention"}
+{"question": "What are warning signs related to Hepatitis E?", "language": "en", "disease": "hepatitis-e", "kind": "warning"}
+{"question": "What are the symptoms of हेपेटाइटिस ई?", "language": "hi", "disease": "hepatitis-e", "kind": "awareness"}
+{"question": "How can हेपेटाइटिस ई be prevented?", "language": "hi", "disease": "hepatitis-e", "kind": "prevention"}
+{"question": "What are warning signs related to हेपेटाइटिस ई?", "language": "hi", "disease": "hepatitis-e", "kind": "warning"}
+{"question": "What are the symptoms of Seasonal influenza and H1N1?", "language": "en", "disease": "seasonal-influenza", "kind": "awareness"}
+{"question": "How can Seasonal influenza and H1N1 be prevented?", "language": "en", "disease": "seasonal-influenza", "kind": "prevention"}
+{"question": "What are warning signs related to Seasonal influenza and H1N1?", "language": "en", "disease": "seasonal-influenza", "kind": "warning"}
+{"question": "What are the symptoms of मौसमी इन्फ्लुएंजा?", "language": "hi", "disease": "seasonal-influenza", "kind": "awareness"}
+{"question": "How can मौसमी इन्फ्लुएंजा be prevented?", "language": "hi", "disease": "seasonal-influenza", "kind": "prevention"}
+{"question": "What are warning signs related to मौसमी इन्फ्लुएंजा?", "language": "hi", "disease": "seasonal-influenza", "kind": "warning"}
+{"question": "What are the symptoms of COVID-19?", "language": "en", "disease": "covid-19", "kind": "awareness"}
+{"question": "How can COVID-19 be prevented?", "language": "en", "disease": "covid-19", "kind": "prevention"}
+{"question": "What are warning signs related to COVID-19?", "language": "en", "disease": "covid-19", "kind": "warning"}
+{"question": "What are the symptoms of कोविड-19?", "language": "hi", "disease": "covid-19", "kind": "awareness"}
+{"question": "How can कोविड-19 be prevented?", "language": "hi", "disease": "covid-19", "kind": "prevention"}
+{"question": "What are warning signs related to कोविड-19?", "language": "hi", "disease": "covid-19", "kind": "warning"}
+{"question": "What are the symptoms of Measles?", "language": "en", "disease": "measles", "kind": "awareness"}
+{"question": "How can Measles be prevented?", "language": "en", "disease": "measles", "kind": "prevention"}
+{"question": "What are warning signs related to Measles?", "language": "en", "disease": "measles", "kind": "warning"}
+{"question": "What are the symptoms of खसरा?", "language": "hi", "disease": "measles", "kind": "awareness"}
+{"question": "How can खसरा be prevented?", "language": "hi", "disease": "measles", "kind": "prevention"}
+{"question": "What are warning signs related to खसरा?", "language": "hi", "disease": "measles", "kind": "warning"}
+{"question": "What are the symptoms of Polio?", "language": "en", "disease": "polio", "kind": "awareness"}
+{"question": "How can Polio be prevented?", "language": "en", "disease": "polio", "kind": "prevention"}
+{"question": "What are warning signs related to Polio?", "language": "en", "disease": "polio", "kind": "warning"}
+{"question": "What are the symptoms of पोलियो?", "language": "hi", "disease": "polio", "kind": "awareness"}

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #f5f7fb; }
+.app { min-height: 100vh; color: #172033; } .dark { background: #111827; color: #f3f4f6; }
+header { align-items: center; background: #0f766e; color: white; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; padding: 1rem; }
+nav { display: flex; flex-wrap: wrap; gap: .25rem; } button, select, textarea { border: 1px solid #cbd5e1; border-radius: .5rem; padding: .6rem .8rem; } button { cursor: pointer; }
+nav button, header > button { background: transparent; color: inherit; border-color: transparent; } main { margin: auto; max-width: 72rem; padding: 2rem 1rem; }
+.hero { padding: 4rem 0; text-align: center; } .primary { background: #0f766e; color: white; border: 0; } textarea { display: block; min-height: 8rem; width: 100%; margin-bottom: 1rem; }
+article, .card { background: white; border-radius: .75rem; margin-top: 1rem; padding: 1rem; } .dark article, .dark .card { background: #1f2937; color: #f3f4f6; }
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); } .card { text-align: left; } .emergency { border: 3px solid #dc2626; }
+.badge { background: #f59e0b; border-radius: .4rem; padding: .3rem .6rem; } table { border-collapse: collapse; width: 100%; } th, td { border-bottom: 1px solid #cbd5e1; padding: .6rem; text-align: left; } footer { border-top: 1px solid #cbd5e1; padding: 1rem; text-align: center; }

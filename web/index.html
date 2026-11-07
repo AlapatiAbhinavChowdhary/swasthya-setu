@@ -1,33 +1,13 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swasthya Setu</title>
-  <style>
-    body { font: 16px system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; padding: 0 1rem; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border-bottom: 1px solid #ddd; padding: .5rem; text-align: left; }
-    .pending { color: #7a4b00; }
-  </style>
-</head>
-<body>
-  <h1>Swasthya Setu</h1>
-  <p>Public-health awareness information from verified sources. Not diagnosis or medical advice.</p>
-  <h2>Diseases</h2>
-  <table>
-    <thead><tr><th>Disease</th><th>Documents</th><th>Last indexed</th><th>Status</th></tr></thead>
-    <tbody id="diseases"><tr><td colspan="4">Loading coverage…</td></tr></tbody>
-  </table>
-  <script>
-    fetch("/coverage").then(response => response.json()).then(data => {
-      document.querySelector("#diseases").innerHTML = data.diseases.map(row => {
-        const status = row.documents
-          ? `${row.documents} verified document(s)`
-          : "Coming soon: no verified sources indexed yet";
-        return `<tr><td>${row.name_en}</td><td>${row.documents}</td><td>${row.last_indexed || "—"}</td><td class="${row.documents ? "" : "pending"}">${status}</td></tr>`;
-      }).join("");
-    });
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Verified public-health awareness from Swasthya Setu." />
+    <title>Swasthya Setu</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
