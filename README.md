@@ -1,5 +1,7 @@
 # Swasthya Setu
 
+[![CI](https://github.com/AlapatiAbhinavChowdhary/swasthya-setu/actions/workflows/ci.yml/badge.svg)](https://github.com/AlapatiAbhinavChowdhary/swasthya-setu/actions/workflows/ci.yml)
+
 Swasthya Setu is a multilingual public-health awareness RAG assistant for
 rural and semi-urban India. It uses local multilingual embeddings, FAISS, and
 Gemini configured through the environment. It is **not a diagnostic or
