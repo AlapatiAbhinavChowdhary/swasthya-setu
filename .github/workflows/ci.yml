@@ -5,12 +5,38 @@ on:
   pull_request:
 
 jobs:
-  test:
+  python:
+    name: python
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ci-dummy-key
+      GEMINI_MODEL: ci-dummy-model
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           version: latest
-      - run: uv sync --frozen
-      - run: uv run pytest -q
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Run pytest
+        run: uv run pytest -q
+
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install frontend dependencies
+        working-directory: web
+        run: npm ci
+      - name: Lint frontend
+        working-directory: web
+        run: npm run lint
+      - name: Build frontend
+        working-directory: web
+        run: npm run build
