@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import re
+import hashlib
 from typing import TypedDict
 
 from langchain_core.documents import Document
@@ -193,10 +194,18 @@ def _retrieve(state: AgentState) -> AgentState:
     if history_text:
         query = f"Conversation:\n{history_text}\n\nCurrent question: {query}"
     search_query = state.get("search_query") or query
-    matches = _store().similarity_search_with_relevance_scores(search_query, k=4)
+    matches = _store().similarity_search_with_relevance_scores(search_query, k=8)
+    seen_chunks: set[str] = set()
+    unique_matches = []
+    for document, relevance in matches:
+        digest = hashlib.sha256(document.page_content.strip().encode("utf-8")).hexdigest()
+        if digest in seen_chunks:
+            continue
+        seen_chunks.add(digest)
+        unique_matches.append((document, relevance))
     candidates = [
         (document, relevance)
-        for document, relevance in matches
+        for document, relevance in unique_matches
         if relevance >= settings.retrieval_min_relevance
     ]
     if (

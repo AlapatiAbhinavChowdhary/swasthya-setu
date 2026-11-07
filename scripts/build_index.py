@@ -21,40 +21,69 @@ source_manifest = yaml.safe_load(
     (ROOT / "data" / "sources.yaml").read_text(encoding="utf-8")
 ).get("sources", [])
 source_metadata = {}
+source_by_hash = {}
 for source in source_manifest:
     file_name = source.get("file")
     if file_name:
-        source_metadata[str((ROOT / file_name).resolve())] = source
+        path = ROOT / file_name
+        source_metadata[str(path.resolve())] = source
+        if path.exists():
+            source_by_hash[hashlib.sha256(path.read_bytes()).hexdigest()] = source
 
 
 def prepare_documents(paths):
-    documents = load_pdf_paths([p for p in paths if p.suffix.lower() == ".pdf"])
-    documents.extend(load_html_paths([p for p in paths if p.suffix.lower() == ".html"]))
+    unique_paths = set()
+    unique_input_paths = []
+    for path in paths:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest not in unique_paths:
+            unique_paths.add(digest)
+            unique_input_paths.append(path)
+    documents = load_pdf_paths([p for p in unique_input_paths if p.suffix.lower() == ".pdf"])
+    documents.extend(load_html_paths([p for p in unique_input_paths if p.suffix.lower() == ".html"]))
+    unique_documents = []
     for document in documents:
-        source = source_metadata.get(str(Path(document.metadata["source"]).resolve()))
+        path = Path(document.metadata["source"])
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        source = source_metadata.get(str(path.resolve())) or source_by_hash.get(digest)
         if source:
             document.metadata["source_id"] = source["id"]
+            document.metadata["doc_id"] = digest
             document.metadata["disease_ids"] = ",".join(source["disease_ids"])
             document.metadata["title"] = source["title"]
             document.metadata["publisher"] = source["publisher"]
             document.metadata["source_url"] = source.get("url", "")
-    return documents
+            document.metadata["coverage"] = source.get("coverage", "general")
+        unique_documents.append(document)
+    return unique_documents
+
+
+def unique_chunks(chunks):
+    seen = set()
+    result = []
+    for chunk in chunks:
+        digest = hashlib.sha256(chunk.page_content.strip().encode("utf-8")).hexdigest()
+        if digest in seen:
+            continue
+        seen.add(digest)
+        result.append(chunk)
+    return result
 
 
 marker_path = ROOT / "vectorstore" / "index-manifest.json"
 previous = json.loads(marker_path.read_text(encoding="utf-8")) if marker_path.exists() else {}
 previous_files = {ROOT / path for path in previous.get("files", [])}
 can_increment = (
-    previous.get("schema_version") == 3
+    previous.get("schema_version") == 4
     and
     settings.vectorstore_backend == "chroma"
     and (ROOT / "vectorstore" / "chroma").exists()
-    and previous_files.issubset(set(current_files))
+    and previous_files.issubset(set(all_files))
 )
 if can_increment:
     new_files = [path for path in all_files if path not in previous_files]
     new_documents = prepare_documents(new_files)
-    new_chunks = chunk_documents(new_documents)
+    new_chunks = unique_chunks(chunk_documents(new_documents))
     if new_chunks:
         store = load_index()
         ids = [
@@ -71,7 +100,7 @@ if can_increment:
         chunks_by_source[source_id] = chunks_by_source.get(source_id, 0) + 1
 else:
     documents = prepare_documents(all_files)
-    chunks = chunk_documents(documents)
+    chunks = unique_chunks(chunk_documents(documents))
     build_index(chunks)
     chunks_count = len(chunks)
     chunks_by_source = {}
@@ -79,7 +108,7 @@ else:
         source_id = doc.metadata.get("source_id", Path(doc.metadata["source"]).name)
         chunks_by_source[source_id] = chunks_by_source.get(source_id, 0) + 1
 manifest = {
-    "schema_version": 3,
+    "schema_version": 4,
     "files": sorted(str(path.relative_to(ROOT)) for path in all_files),
     "chunks": chunks_count,
     "chunks_by_source": chunks_by_source,

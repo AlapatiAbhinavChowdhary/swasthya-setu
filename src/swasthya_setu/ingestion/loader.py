@@ -1,5 +1,6 @@
 import logging
 import re
+import os
 from collections import Counter
 from pathlib import Path
 
@@ -56,7 +57,12 @@ def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
     documents: list[Document] = []
     for pdf_path in sorted(pdf_paths):
         with fitz.open(pdf_path) as pdf:
-            raw_pages = [normalize_page_text(page.get_text("text")) for page in pdf]
+            raw_pages = [
+                normalize_page_text(page.get_text("text", sort=True))
+                for page in pdf
+            ]
+            if os.getenv("SWASTHYA_ENABLE_OCR", "").lower() in {"1", "true", "yes"}:
+                raw_pages = _ocr_empty_pages(pdf, raw_pages)
         page_lines = [page.splitlines() for page in raw_pages]
         repeated = _repeated_margin_lines(page_lines)
         pages = []
@@ -69,19 +75,41 @@ def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
             if _is_table_of_contents(text):
                 logger.info("Dropped table-of-contents page %s page=%d", pdf_path.name, page_number + 1)
                 continue
+            metadata = {
+                "source": str(pdf_path),
+                "page": page_number,
+                "page_label": str(page_number + 1),
+            }
+            if not text:
+                metadata["extraction_error"] = "no text extracted; OCR unavailable or disabled"
             pages.append(
                 Document(
                     page_content=text,
-                    metadata={
-                        "source": str(pdf_path),
-                        "page": page_number,
-                        "page_label": str(page_number + 1),
-                    },
+                    metadata=metadata,
                 )
             )
         logger.info("Loaded %s (%d cleaned pages)", pdf_path.name, len(pages))
         documents.extend(pages)
     return documents
+
+
+def _ocr_empty_pages(pdf, raw_pages: list[str]) -> list[str]:
+    """Best-effort OCR hook; keeps the default ingestion dependency-free."""
+    try:
+        from rapidocr_onnxruntime import RapidOCR
+    except ImportError:
+        logger.warning("OCR requested but rapidocr-onnxruntime is not installed")
+        return raw_pages
+    ocr = RapidOCR()
+    for index, text in enumerate(raw_pages):
+        if text.strip():
+            continue
+        image = pdf[index].get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
+        result, _ = ocr(image.tobytes("png"))
+        raw_pages[index] = "\n".join(
+            item[1] for item in (result or []) if len(item) > 1
+        )
+    return raw_pages
 
 
 def load_pdfs(directory: Path) -> list[Document]:
