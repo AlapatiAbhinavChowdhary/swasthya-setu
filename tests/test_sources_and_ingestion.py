@@ -65,6 +65,46 @@ def test_html_extractor_who_fixture_page():
         assert forbidden.lower() not in text.lower(), f"Forbidden string '{forbidden}' found in extracted text"
 
 
+def test_html_extractor_drops_scripts_styles_and_tracking_code():
+    html_with_scripts = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Cholera - WHO</title>
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime()});})(window,document,'script','dataLayer','GTM-XXXX');</script>
+      <script src="https://www.googletagmanager.com/gtm.js?id=GTM-XXXX"></script>
+      <style>body { font-family: sans-serif; } .header { color: red; }</style>
+    </head>
+    <body>
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html"></iframe></noscript>
+      <script>
+        function deleteCookie(name) { window.document.cookie = name + '=; Max-Age=-99999999;'; }
+        window.TrackingConsentManager = { getConsent: function() { return true; } };
+      </script>
+      <main>
+        <h1>Cholera</h1>
+        <p>Cholera is an acute diarrhoeal infection caused by ingestion of food or water contaminated with the bacterium Vibrio cholerae.</p>
+      </main>
+    </body>
+    </html>
+    """
+    heading, text = extract_html_text(html_with_scripts)
+    assert heading == "Cholera"
+    assert "Vibrio cholerae" in text
+
+    for term in [
+        "googletagmanager",
+        "gtm.js",
+        "dataLayer",
+        "deleteCookie",
+        "TrackingConsentManager",
+        "function(",
+        "window.",
+        "<script",
+    ]:
+        assert term.lower() not in text.lower(), f"Tracking/script term '{term}' leaked into extracted text"
+
+
 def test_local_source_files_are_present():
     dengue_pdf = Path("data/raw/dengue_guidelines_2023.pdf")
     who_pdf = Path("data/raw/Fact_Sheet_WHD_2014_EN_1629.pdf")
