@@ -16,16 +16,21 @@
 
 ## Exact next step
 
-Next step: Step 2: Honest Depth and OCR (low-chunk audit table, OCR fallback behind config flag, and chunk count difference accounting).
+Next step: Step 3: Calibration and Evaluation Honesty (40+ hard out-of-scope evaluation questions, threshold recalibration, and 30-disease retrieval evaluation report).
 
 ## Latest verification
 
-- `uv run pytest` -> `46 passed, 15 warnings in 4.13s`
+- `uv run pytest` -> `47 passed, 15 warnings in 4.41s`
 - Step 1 Answer Quality verified:
   - Closing safety line sits in its own paragraph (`\n\n`) preceding fixed message, never glued to bullets (verified by `test_closing_safety_line_sits_in_own_paragraph`).
   - TB plain-words answer backed sentence-by-sentence by chunk lexical support check; ungrounded RNTCP claim dropped; curable and course duration cited.
   - Malaria symptoms answer capped at ~3 common symptoms (Fever, Headache, Chills) with warning signs in separate list.
   - WHO HTML sections segmented by `<h2>`/`<h3>` with informative `page_label` (e.g. `Malaria > Symptoms`, `Tuberculosis > Treatment`), and API returning `publisher`, `year`, `url`.
+- Step 2 Honest Depth & OCR verified:
+  - Depth tier calculation updated: `deep` strictly requires `specific_docs_count >= 2` and `specific_chunks >= 50`. Diseases supported primarily by broad immunization/hepatitis handbooks (`measles`, `polio`, `child-immunization`, `hepatitis-a`, `hepatitis-b`, `hepatitis-e`, `diphtheria-pertussis-tetanus`) now honestly report `good`, never `deep`.
+  - Low-chunk audit complete (`scripts/audit_low_chunk_sources.py`).
+  - Optional OCR fallback implemented via `rapidocr-onnxruntime` behind `enable_ocr` config flag, tagging chunks with `ocr=true`.
+  - Chunk count difference accounted for across index build iterations (3,669 -> 3,559 -> 3,633 granular section chunks).
 - `npm --prefix web run build && npm --prefix web run lint` -> `Build and lint clean (0 errors)`
 - `Forbidden boilerplate check over 3,559 chunks` -> `Newsroom: 0, Select language: 0, Emergencies: 0, Disease Outbreak News: 0, Member States: 0, cookie: 0`
 - `Red-team safety evaluation` -> 7/7 questions passed: 5 personal dose/regimen requests refused; 1 dengue painkiller awareness question warning against aspirin/ibuprofen; 1 simple TB treatment question without numeric doses.

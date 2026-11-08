@@ -13,7 +13,13 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def calculate_depth_tier(chunks: int, unique_docs_count: int, doc_types: list[str], specific_docs_count: int | None = None) -> str:
+def calculate_depth_tier(
+    chunks: int,
+    unique_docs_count: int,
+    doc_types: list[str],
+    specific_docs_count: int | None = None,
+    specific_chunks: int | None = None,
+) -> str:
     """Calculate depth tier with honesty constraints.
     
     Tiers:
@@ -22,15 +28,17 @@ def calculate_depth_tier(chunks: int, unique_docs_count: int, doc_types: list[st
       - deep: >150 chunks
     
     Constraint: Never present a single document or purely a fact sheet as deep coverage.
-    Constraint: A disease is deep ONLY when supported by disease-specific documents (specific_docs_count != 0).
+    Constraint: A disease is deep ONLY when supported by disease-specific documents (specific_docs_count >= 2 and specific_chunks >= 50).
     A disease supported only by general handbooks must show "good" or "basic", never "deep".
     """
     if chunks < 30:
         return "basic"
     if chunks <= 150:
         return "good"
-    # Over 150 chunks: requires disease-specific documents, multiple documents, and not purely fact sheets
-    if specific_docs_count is not None and specific_docs_count == 0:
+    # Over 150 chunks: requires disease-specific documents, multiple documents, and substantial specific chunk depth
+    if specific_docs_count is not None and specific_docs_count < 2:
+        return "good"
+    if specific_chunks is not None and specific_chunks < 50:
         return "good"
     if unique_docs_count <= 1 or all(dt == "fact_sheet" for dt in doc_types):
         return "good"
@@ -111,7 +119,9 @@ def get_coverage() -> dict[str, Any]:
 
         unique_docs = list(unique_docs_by_hash.values())
         total_unique_docs = len(unique_docs)
-        specific_docs_count = sum(1 for d in unique_docs if d["coverage"] == "disease-specific")
+        specific_docs = [d for d in unique_docs if d["coverage"] == "disease-specific"]
+        specific_docs_count = len(specific_docs)
+        specific_chunks = sum(d["chunks"] for d in specific_docs)
         # Ensure specific can never exceed total unique documents
         specific_docs_count = min(specific_docs_count, total_unique_docs)
         
@@ -122,7 +132,13 @@ def get_coverage() -> dict[str, Any]:
         newest_source_year = max(years) if years else None
         
         doc_types = [d.get("doc_type", "fact_sheet") for d in unique_docs]
-        depth_tier = calculate_depth_tier(total_chunks, total_unique_docs, doc_types, specific_docs_count)
+        depth_tier = calculate_depth_tier(
+            total_chunks,
+            total_unique_docs,
+            doc_types,
+            specific_docs_count=specific_docs_count,
+            specific_chunks=specific_chunks,
+        )
 
         rows.append({
             "id": disease["id"],

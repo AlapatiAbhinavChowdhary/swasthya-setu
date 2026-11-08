@@ -47,13 +47,19 @@ def _repeated_margin_lines(page_lines: list[list[str]]) -> set[str]:
     threshold = max(2, len(page_lines) // 5)
     margins = []
     for lines in page_lines:
-        margins.extend(lines[:2] + lines[-2:])
+        top = lines[:2]
+        bottom = lines[-2:] if len(lines) > 2 else []
+        margins.extend(top + bottom)
     counts = Counter(line for line in margins if line)
     return {line for line, count in counts.items() if count >= threshold}
 
 
 def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
     """Load explicitly selected PDFs with PyMuPDF and return cleaned pages."""
+    from swasthya_setu.config import settings
+
+    enable_ocr = settings.enable_ocr or os.getenv("SWASTHYA_ENABLE_OCR", "").lower() in {"1", "true", "yes"}
+
     documents: list[Document] = []
     for pdf_path in sorted(pdf_paths):
         with fitz.open(pdf_path) as pdf:
@@ -61,8 +67,9 @@ def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
                 normalize_page_text(page.get_text("text", sort=True))
                 for page in pdf
             ]
-            if os.getenv("SWASTHYA_ENABLE_OCR", "").lower() in {"1", "true", "yes"}:
-                raw_pages = _ocr_empty_pages(pdf, raw_pages)
+            ocr_pages: set[int] = set()
+            if enable_ocr:
+                raw_pages, ocr_pages = _ocr_empty_pages(pdf, raw_pages)
         page_lines = [page.splitlines() for page in raw_pages]
         repeated = _repeated_margin_lines(page_lines)
         pages = []
@@ -75,10 +82,12 @@ def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
             if _is_table_of_contents(text):
                 logger.info("Dropped table-of-contents page %s page=%d", pdf_path.name, page_number + 1)
                 continue
+            is_ocr = page_number in ocr_pages
             metadata = {
                 "source": str(pdf_path),
                 "page": page_number,
                 "page_label": str(page_number + 1),
+                "ocr": is_ocr,
             }
             if not text:
                 metadata["extraction_error"] = "no text extracted; OCR unavailable or disabled"
@@ -93,23 +102,27 @@ def load_pdf_paths(pdf_paths: list[Path]) -> list[Document]:
     return documents
 
 
-def _ocr_empty_pages(pdf, raw_pages: list[str]) -> list[str]:
+def _ocr_empty_pages(pdf, raw_pages: list[str]) -> tuple[list[str], set[int]]:
     """Best-effort OCR hook; keeps the default ingestion dependency-free."""
+    ocr_pages: set[int] = set()
     try:
         from rapidocr_onnxruntime import RapidOCR
     except ImportError:
         logger.warning("OCR requested but rapidocr-onnxruntime is not installed")
-        return raw_pages
+        return raw_pages, ocr_pages
     ocr = RapidOCR()
     for index, text in enumerate(raw_pages):
         if text.strip():
             continue
         image = pdf[index].get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
         result, _ = ocr(image.tobytes("png"))
-        raw_pages[index] = "\n".join(
+        extracted = "\n".join(
             item[1] for item in (result or []) if len(item) > 1
-        )
-    return raw_pages
+        ).strip()
+        if extracted:
+            raw_pages[index] = extracted
+            ocr_pages.add(index)
+    return raw_pages, ocr_pages
 
 
 def load_pdfs(directory: Path) -> list[Document]:

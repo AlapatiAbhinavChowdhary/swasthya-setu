@@ -143,7 +143,7 @@ sources:
   - hepatitis-a
   - hepatitis-b
   - hepatitis-e
-  coverage: disease-specific
+  coverage: general
   language: en
   doc_type: guideline
   year: 2018

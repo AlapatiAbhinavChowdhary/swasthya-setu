@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = Field(default=30, ge=1, le=1000)
     feedback_database: str = "data/swasthya_setu.db"
     vectorstore_backend: str = "chroma"
+    enable_ocr: bool = Field(default=False)
 
 
 @cache
@@ -77,6 +78,7 @@ class _SettingsProxy:
         self.__dict__["retrieval_min_relevance"] = 0.25
         self.__dict__["retrieval_skip_relevance_gate_score"] = 0.84
         self.__dict__["vectorstore_backend"] = "chroma"
+        self.__dict__["enable_ocr"] = False
         self.__dict__["_overrides"] = set()
 
     def __getattribute__(self, name: str) -> Any:

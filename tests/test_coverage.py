@@ -38,10 +38,13 @@ def test_depth_tier_honesty_rules():
     assert calculate_depth_tier(chunks=300, unique_docs_count=2, doc_types=["fact_sheet", "fact_sheet"]) == "good"
 
     # Over 150 chunks with multiple documents and at least one non-fact_sheet -> deep
-    assert calculate_depth_tier(chunks=200, unique_docs_count=3, doc_types=["fact_sheet", "guideline", "handbook"], specific_docs_count=1) == "deep"
+    assert calculate_depth_tier(chunks=200, unique_docs_count=3, doc_types=["fact_sheet", "guideline", "handbook"], specific_docs_count=2, specific_chunks=80) == "deep"
 
     # Supported ONLY by general handbooks (specific_docs_count == 0) -> must show good, never deep!
     assert calculate_depth_tier(chunks=500, unique_docs_count=5, doc_types=["handbook", "guideline"], specific_docs_count=0) == "good"
+
+    # Supported mainly by general handbooks with only 1 specific fact sheet (<50 specific chunks) -> good, never deep!
+    assert calculate_depth_tier(chunks=600, unique_docs_count=6, doc_types=["fact_sheet", "handbook"], specific_docs_count=1, specific_chunks=10) == "good"
 
 
 def test_tuberculosis_coverage_honest_count():
