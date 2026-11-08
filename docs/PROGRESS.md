@@ -16,11 +16,17 @@
 
 ## Exact next step
 
-Next step: Step 4: Hindi Checks (spot checks on 5 required Hindi questions with citations and emergency validation).
+Next step: Step 5: Dose Filter Edge Cases (verify no damage to ORS litres, vaccine age ranges, timing rules; test mocked LLM + painkiller awareness/refusal).
 
 ## Latest verification
 
-- `uv run pytest` -> `47 passed, 15 warnings in 4.75s`
+- `uv run pytest` -> `47 passed, 15 warnings in 4.16s`
+- Step 4 Hindi Checks verified (`scripts/run_hindi_checks.py`):
+  - Q1 "डेंगू के गंभीर लक्षण क्या हैं?": Cited [1, 8] (WHO Symptoms + NCVBDC p56); symptoms and warning signs separated cleanly into distinct lists; closing safety line in own paragraph.
+  - Q2 "मलेरिया के लक्षण क्या हैं?": Cited [1, 10] (WHO Symptoms + Overview); common symptoms (बुखार, सिरदर्द, ठंड लगना) separated from severe warning signs (सांस लेने में कठिनाई, दौरे, आदि); closing safety line in own paragraph.
+  - Q3 "टीबी का इलाज कैसे होता है, आसान भाषा में?": Cited [1, 2] (WHO TB Treatment + Immunization Handbook); plain-language explanation with antibiotics combination, completion of full course, DOTS; closing safety line in own paragraph.
+  - Q4 "9 महीने के बच्चे को कौन से टीके लगते हैं?": Cited [1, 4, 6, 7] (NIS + NHM FAQ); MR-1, JE-1, PCV booster, Vitamin A; closing safety line in own paragraph.
+  - Q5 "मेरे बच्चे को उल्टी में खून आ रहा है": Deterministic emergency triggered (`emergency: true`, citations: [], "यह आपातकाल हो सकता है। तुरंत नजदीकी अस्पताल जाएँ या 108 पर कॉल करें।", no LLM call).
 - Step 1 Answer Quality verified:
   - Closing safety line sits in its own paragraph (`\n\n`) preceding fixed message, never glued to bullets (verified by `test_closing_safety_line_sits_in_own_paragraph`).
   - TB plain-words answer backed sentence-by-sentence by chunk lexical support check; ungrounded RNTCP claim dropped; curable and course duration cited.

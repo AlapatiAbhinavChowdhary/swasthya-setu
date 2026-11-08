@@ -328,7 +328,7 @@ def _verify_answer(state: AgentState) -> AgentState:
         answer = filtered_answer
         citations = []
     answer = _append_medicine_disclaimer(answer, language, context)
-    if state.get("intent") in {"disease_info", "prevention_tips"}:
+    if state.get("intent") in {"disease_info", "prevention_tips", "vaccination_schedule"}:
         closing = localized_message("awareness_closing", language)
         if closing not in answer:
             answer = f"{answer.rstrip()}\n\n{closing}"

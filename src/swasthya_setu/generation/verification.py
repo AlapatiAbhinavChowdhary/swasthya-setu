@@ -141,7 +141,7 @@ def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
     # Acronyms (e.g. RNTCP, NTEP, DOTS) in the sentence must exist in the cited doc
     acronyms = re.findall(r"\b[A-Z]{2,}\b", sentence)
     for ac in acronyms:
-        if ac in {"WHO", "TB", "HIV", "ORS", "IV"}:
+        if ac in {"WHO", "TB", "HIV", "ORS", "IV", "MR", "JE", "OPV", "IPV", "DPT"}:
             continue
         if ac.lower() not in doc_text:
             return False
@@ -152,12 +152,23 @@ def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
         if phrase.lower() not in doc_text:
             return False
 
-    words = re.findall(r"\b[A-Za-z0-9\-\u0900-\u097f]{3,}\b", sentence.lower())
-    content_words = [w for w in words if w not in _STOPWORDS]
-    if len(content_words) >= 4:
-        matches = sum(1 for w in content_words if w in doc_text)
-        if matches / len(content_words) < 0.20:
+    # Check Latin words if present
+    latin_words = [w for w in re.findall(r"\b[a-z]{3,}\b", sentence.lower()) if w not in _STOPWORDS]
+    if latin_words and len(latin_words) >= 4:
+        matches = sum(1 for w in latin_words if w in doc_text)
+        if matches == 0:
             return False
+
+    # For English sentences without non-Latin scripts, check English content word overlap
+    is_non_latin = any(ord(c) >= 0x0900 for c in sentence)
+    if not is_non_latin:
+        words = re.findall(r"\b[a-z0-9\-]{3,}\b", sentence.lower())
+        content_words = [w for w in words if w not in _STOPWORDS]
+        if len(content_words) >= 4:
+            matches = sum(1 for w in content_words if w in doc_text)
+            if matches / len(content_words) < 0.20:
+                return False
+
     return True
 
 
