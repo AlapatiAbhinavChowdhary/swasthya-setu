@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     feedback_database: str = "data/swasthya_setu.db"
     vectorstore_backend: str = "chroma"
     enable_ocr: bool = Field(default=False)
+    enable_overpass: bool = Field(default=False)
 
 
 @cache

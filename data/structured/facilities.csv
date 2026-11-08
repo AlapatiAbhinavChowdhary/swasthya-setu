@@ -1,0 +1,8 @@
+id,name,type,district,state,address,phone,label
+FAC-SAMPLE-001,Dr. Ram Manohar Lohia Hospital,Central Government Hospital,New Delhi,Delhi,"Baba Kharak Singh Marg, Connaught Place, New Delhi 110001",108 (Helpline),SAMPLE
+FAC-SAMPLE-002,Safdarjung Hospital,Central Government Hospital,South West Delhi,Delhi,"Ring Road, opposite AIIMS, New Delhi 110029",108 (Helpline),SAMPLE
+FAC-SAMPLE-003,All India Institute of Medical Sciences (AIIMS),Autonomous Apex Institute,South Delhi,Delhi,"Sri Aurobindo Marg, Ansari Nagar, New Delhi 110029",108 (Helpline),SAMPLE
+FAC-SAMPLE-004,Sassoon General Hospital & BJ Medical College,Government District Hospital,Pune,Maharashtra,"Near Pune Railway Station, Pune 411001",108 (Helpline),SAMPLE
+FAC-SAMPLE-005,Aundh District Hospital,District Hospital,Pune,Maharashtra,"Aundh Camp, Pune 411027",108 (Helpline),SAMPLE
+FAC-SAMPLE-006,Capital Hospital,State Government Hospital,Khurda,Odisha,"Unit 6, Bhubaneswar, Odisha 751001",108 (Helpline),SAMPLE
+FAC-SAMPLE-007,AIIMS Bhubaneswar,Autonomous Apex Institute,Khurda,Odisha,"Sijua, Patrapada, Bhubaneswar, Odisha 751019",108 (Helpline),SAMPLE

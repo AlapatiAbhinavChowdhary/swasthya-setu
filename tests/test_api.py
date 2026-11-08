@@ -186,6 +186,53 @@ def test_health_and_endpoints_when_dummy_key(monkeypatch, tmp_path):
         assert client.get("/sources").status_code == 200
 
 
+def test_alerts_endpoint_returns_demo_data():
+    with TestClient(api_module.app) as client:
+        resp = client.get("/alerts")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["is_demo"] is True
+        assert "not a live alert" in data["disclaimer"]
+        assert len(data["alerts"]) > 0
+        for alert in data["alerts"]:
+            assert alert["label"] == "DEMO"
+
+        # Filter by disease
+        resp_dengue = client.get("/alerts?disease=dengue")
+        assert resp_dengue.status_code == 200
+        dengue_data = resp_dengue.json()
+        assert all(a["disease"].lower() == "dengue" for a in dengue_data["alerts"])
+
+        # Hindi disclaimer
+        resp_hi = client.get("/alerts?language=hi")
+        assert resp_hi.status_code == 200
+        assert "डेमो डेटा" in resp_hi.json()["disclaimer"]
+
+
+def test_facilities_endpoint_returns_sample_data():
+    with TestClient(api_module.app) as client:
+        resp = client.get("/facilities")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["is_sample"] is True
+        assert "108" in data["disclaimer"]
+        assert len(data["facilities"]) > 0
+        for fac in data["facilities"]:
+            assert fac["label"] == "SAMPLE"
+
+        # Filter by district
+        resp_pune = client.get("/facilities?district=pune")
+        assert resp_pune.status_code == 200
+        pune_data = resp_pune.json()
+        assert all("pune" in f["district"].lower() for f in pune_data["facilities"])
+
+        # Hindi emergency disclaimer
+        resp_hi = client.get("/facilities?language=hi")
+        assert resp_hi.status_code == 200
+        assert "108" in resp_hi.json()["disclaimer"]
+        assert "नमूना" in resp_hi.json()["disclaimer"]
+
+
 def test_health_when_dummy_placeholder(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
     monkeypatch.setenv("GEMINI_API_KEY", "your_api_key_here")

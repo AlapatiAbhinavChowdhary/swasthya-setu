@@ -16,11 +16,15 @@
 
 ## Exact next step
 
-Next step: Step 6: Outbreak Alerts and Facilities Tools (mocked provider + endpoints + emergency cards).
+Next step: Step 7: Safe Streaming (full pipeline verification before SSE sentence streaming + metadata/done events).
 
 ## Latest verification
 
-- `uv run pytest` -> `49 passed, 15 warnings in 6.14s`
+- `uv run pytest` -> `57 passed, 15 warnings in 4.29s`
+- Step 6 Outbreak Alerts and Facilities Tools verified:
+  - `outbreak_alerts`: Structured `AlertProvider` protocol and `JsonAlertProvider` reading `data/structured/outbreak_alerts.json`. Every entry labelled `DEMO` and all responses carry `"demo data, not a live alert"` disclaimer with official IDSP reference (`idsp.nic.in`) in both EN and HI. Endpoint `GET /alerts` with district/disease/state query filtering.
+  - `find_hospital`: Backed by `data/structured/facilities.csv` with official helpline (108) and all rows labelled `SAMPLE`. Searchable by district and state. Optional Overpass OSM behind config flag (`enable_overpass`, default `False`). Endpoint `GET /facilities`. Fixed emergency message that data is sample and in a medical emergency the user should go to the nearest hospital or call 108.
+  - Agent intent routing for both `outbreak_alerts` and `find_hospital` in EN and HI, tested and verified via `scripts/verify_tools.py` and `tests/test_tools.py`.
 - Step 5 Dose Filter Edge Cases verified:
   - Legitimate non-dose quantities preserved without false positives: ORS "one litre of clean water" / "1 litre", vaccine age ranges "at 9 months" / "between 9 and 12 months", timing rules "within 24 hours of birth" / "within 48 hours".
   - Mocked LLM non-dose answers pass through `_verify_answer` without triggering dose refusal or dropping citations.

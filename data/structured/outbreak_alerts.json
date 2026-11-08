@@ -1,0 +1,39 @@
+{
+  "disclaimer": "Demo data, not a live alert. For active official disease surveillance in India, consult the Integrated Disease Surveillance Programme (IDSP) at idsp.nic.in.",
+  "disclaimer_hi": "केवल डेमो डेटा - यह लाइव अलर्ट नहीं है। भारत में सक्रिय आधिकारिक रोग निगरानी के लिए आईडीएसपी (idsp.nic.in) से परामर्श लें।",
+  "alerts": [
+    {
+      "id": "ALERT-DEMO-001",
+      "label": "DEMO",
+      "disease": "Dengue",
+      "district": "South Delhi",
+      "state": "Delhi",
+      "date": "2026-10-15",
+      "advisory": "Seasonal increase in dengue vector activity reported. Residents are advised to eliminate stagnant water and use mosquito nets.",
+      "advisory_hi": "डेंगू मच्छर गतिविधियों में मौसमी वृद्धि देखी गई है। निवासियों को सलाह दी जाती है कि वे जमा पानी हटाएं और मच्छरदानी का उपयोग करें।",
+      "source": "State Health Surveillance (Demo / Mock Entry)"
+    },
+    {
+      "id": "ALERT-DEMO-002",
+      "label": "DEMO",
+      "disease": "Malaria",
+      "district": "Sundargarh",
+      "state": "Odisha",
+      "date": "2026-09-20",
+      "advisory": "Post-monsoon vector surveillance advisory. Seek prompt diagnosis at nearest PHC/CHC for any fever with chills.",
+      "advisory_hi": "मानसून बाद वेक्टर निगरानी परामर्श। ठंड के साथ बुखार होने पर तुरंत नजदीकी पीएचसी/सीएचसी में जांच कराएं।",
+      "source": "NVBDCP District Advisory (Demo / Mock Entry)"
+    },
+    {
+      "id": "ALERT-DEMO-003",
+      "label": "DEMO",
+      "disease": "Cholera",
+      "district": "Pune",
+      "state": "Maharashtra",
+      "date": "2026-08-10",
+      "advisory": "Localized waterborne disease advisory following heavy rainfall. Boil drinking water and maintain food hygiene.",
+      "advisory_hi": "भारी बारिश के बाद जलजनित बीमारी की स्थानीय सलाह। पीने का पानी उबालें और खाद्य स्वच्छता बनाए रखें।",
+      "source": "Municipal Health Department (Demo / Mock Entry)"
+    }
+  ]
+}

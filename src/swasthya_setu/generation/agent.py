@@ -282,6 +282,98 @@ def _generate_answer(state: AgentState) -> AgentState:
             "Namaste. I can help with verified information about disease symptoms, "
             "prevention, and vaccination."
         ), "citations": []}
+    if state["intent"] == "outbreak_alerts":
+        from swasthya_setu.tools import outbreak_alerts
+        q = state["question"].lower()
+        district = None
+        disease = None
+        for d in ["south delhi", "new delhi", "delhi", "pune", "sundargarh", "khurda", "bhubaneswar", "mumbai"]:
+            if d in q:
+                district = d
+                break
+        for dis in ["dengue", "malaria", "cholera", "tb", "tuberculosis", "typhoid"]:
+            if dis in q:
+                disease = dis
+                break
+        lang = state.get("language", "en")
+        data = outbreak_alerts(district=district, disease=disease, language=lang)
+        alerts = data.get("alerts", [])
+        closing = localized_message("awareness_closing", lang)
+        if lang == "hi":
+            lines = [f"**सूचना:** {data['disclaimer']}\n"]
+            if alerts:
+                lines.append("सक्रिय नमूना अलर्ट:")
+                for a in alerts:
+                    lines.append(
+                        f"* **[{a.get('label', 'DEMO')}] {a.get('disease')} - {a.get('district')}, {a.get('state')}** "
+                        f"({a.get('date')}): {a.get('advisory_hi', a.get('advisory'))} [स्रोत: {a.get('source')}]"
+                    )
+            else:
+                lines.append("वर्तमान में इस क्षेत्र या बीमारी के लिए कोई सक्रिय अलर्ट दर्ज नहीं है।")
+            lines.append(f"\n{closing}")
+            return {**state, "answer": "\n".join(lines), "citations": []}
+        else:
+            lines = [f"**Notice:** {data['disclaimer']}\n"]
+            if alerts:
+                lines.append("Sample Outbreak Alerts:")
+                for a in alerts:
+                    lines.append(
+                        f"* **[{a.get('label', 'DEMO')}] {a.get('disease')} - {a.get('district')}, {a.get('state')}** "
+                        f"({a.get('date')}): {a.get('advisory')} [Source: {a.get('source')}]"
+                    )
+            else:
+                lines.append("No active alerts currently recorded for this query.")
+            lines.append(f"\n{closing}")
+            return {**state, "answer": "\n".join(lines), "citations": []}
+
+    if state["intent"] == "find_hospital":
+        from swasthya_setu.tools import find_hospital
+        q = state["question"].lower()
+        district = None
+        state_filter = None
+        for d in ["south west delhi", "south delhi", "new delhi", "delhi", "pune", "khurda", "bhubaneswar"]:
+            if d in q:
+                district = d
+                break
+        for s in ["delhi", "maharashtra", "odisha"]:
+            if s in q and not district:
+                state_filter = s
+                break
+        lang = state.get("language", "en")
+        data = find_hospital(district=district, state=state_filter, language=lang)
+        facs = data.get("facilities", [])
+        closing = localized_message("awareness_closing", lang)
+        if lang == "hi":
+            lines = [f"**आपातकालीन सूचना:** {data['disclaimer']}\n"]
+            if facs:
+                lines.append("नमूना स्वास्थ्य केंद्र / अस्पताल:")
+                for f in facs[:5]:
+                    lines.append(
+                        f"* **{f.get('name')}** [{f.get('label', 'SAMPLE')}]\n"
+                        f"  प्रकार: {f.get('type')} | ज़िला: {f.get('district')}, {f.get('state')}\n"
+                        f"  पता: {f.get('address')}\n"
+                        f"  हेल्पलाइन: {f.get('phone')}"
+                    )
+            else:
+                lines.append("इस क्षेत्र के लिए कोई नमूना अस्पताल रिकॉर्ड नहीं मिला।")
+            lines.append(f"\n{closing}")
+            return {**state, "answer": "\n".join(lines), "citations": []}
+        else:
+            lines = [f"**Emergency Notice:** {data['disclaimer']}\n"]
+            if facs:
+                lines.append("Sample Healthcare Facilities:")
+                for f in facs[:5]:
+                    lines.append(
+                        f"* **{f.get('name')}** [{f.get('label', 'SAMPLE')}]\n"
+                        f"  Type: {f.get('type')} | District: {f.get('district')}, {f.get('state')}\n"
+                        f"  Address: {f.get('address')}\n"
+                        f"  Helpline: {f.get('phone')}"
+                    )
+            else:
+                lines.append("No sample facilities found for this query.")
+            lines.append(f"\n{closing}")
+            return {**state, "answer": "\n".join(lines), "citations": []}
+
     text = (answer_prompt | _llm() | StrOutputParser()).invoke(
         {
             "context": format_context(state.get("documents", [])),
@@ -299,6 +391,8 @@ def _verify_answer(state: AgentState) -> AgentState:
     if state.get("emergency") or state.get("intent") in {
         "out_of_scope",
         "greeting_smalltalk",
+        "outbreak_alerts",
+        "find_hospital",
     }:
         return state
     documents = state.get("documents", [])
@@ -412,7 +506,12 @@ def _build_graph():
         "intent_router",
         lambda state: (
             "generate_answer"
-            if state["intent"] in {"out_of_scope", "greeting_smalltalk"}
+            if state["intent"] in {
+                "out_of_scope",
+                "greeting_smalltalk",
+                "outbreak_alerts",
+                "find_hospital",
+            }
             else "retrieve"
         ),
     )

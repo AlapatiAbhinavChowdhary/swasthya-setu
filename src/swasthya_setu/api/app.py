@@ -194,6 +194,27 @@ def get_vaccination(age_months: int | None = None) -> dict[str, Any]:
     return vaccination_schedule(age_months=age_months)
 
 
+@app.get("/alerts")
+def get_alerts(
+    district: str | None = None,
+    state: str | None = None,
+    disease: str | None = None,
+    language: str = "en",
+) -> dict[str, Any]:
+    from swasthya_setu.tools import outbreak_alerts
+    return outbreak_alerts(district=district, state=state, disease=disease, language=language)
+
+
+@app.get("/facilities")
+def get_facilities(
+    district: str | None = None,
+    state: str | None = None,
+    language: str = "en",
+) -> dict[str, Any]:
+    from swasthya_setu.tools import find_hospital
+    return find_hospital(district=district, state=state, language=language)
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     return _run_chat(request, payload)
