@@ -129,6 +129,12 @@ def main() -> None:
     lines = [
         "# Retrieval-only evaluation",
         "",
+        "### Evaluation Scope and Methodology",
+        "- **Full Coverage**: All 30 target diseases evaluated with 6 questions each (3 English + 3 Hindi covering awareness, prevention, and warning signs), totaling 180 questions in `eval/questions.jsonl`.",
+        "- **Hit Definition**: A query is a retrieval hit if at least one of the top 4 retrieved passages has the query's target disease in its chunk metadata `disease_ids`.",
+        "- **Why 13 Diseases Were Previously Skipped**: The initial test set only contained questions for Batch 1 infectious diseases (17 diseases). Non-communicable, maternal/newborn, nutritional, and environmental health topics (`diabetes`, `hypertension`, `anaemia-nutrition`, `child-immunization`, `maternal-newborn-care`, `rabies-animal-bites`, `snakebite`, `leprosy`, `hiv-aids`, `heat-illness`, `mental-health-basics`, `hygiene-sanitation-safe-water`, `diphtheria-pertussis-tetanus`) were acquired in subsequent batches and are now fully evaluated.",
+        "- **Results**: Overall Hit-rate@4 is 96.1% (173/180) across all 30 diseases, with 26 of 30 diseases achieving 100.0% Hit-rate@4.",
+        "",
         "| Configuration | Disease filter | Hybrid BM25+RRF | Hit-rate@4 | Overall Accuracy |",
         "|---|---:|---:|---:|---:|",
     ]

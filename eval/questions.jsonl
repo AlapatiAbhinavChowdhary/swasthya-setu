@@ -1,100 +1,180 @@
-{"question": "What are the symptoms of Dengue?", "language": "en", "disease": "dengue", "kind": "awareness"}
-{"question": "How can Dengue be prevented?", "language": "en", "disease": "dengue", "kind": "prevention"}
-{"question": "What are warning signs related to Dengue?", "language": "en", "disease": "dengue", "kind": "warning"}
-{"question": "What are the symptoms of डेंगू?", "language": "hi", "disease": "dengue", "kind": "awareness"}
-{"question": "How can डेंगू be prevented?", "language": "hi", "disease": "dengue", "kind": "prevention"}
-{"question": "What are warning signs related to डेंगू?", "language": "hi", "disease": "dengue", "kind": "warning"}
-{"question": "What are the symptoms of Malaria?", "language": "en", "disease": "malaria", "kind": "awareness"}
-{"question": "How can Malaria be prevented?", "language": "en", "disease": "malaria", "kind": "prevention"}
-{"question": "What are warning signs related to Malaria?", "language": "en", "disease": "malaria", "kind": "warning"}
-{"question": "What are the symptoms of मलेरिया?", "language": "hi", "disease": "malaria", "kind": "awareness"}
-{"question": "How can मलेरिया be prevented?", "language": "hi", "disease": "malaria", "kind": "prevention"}
-{"question": "What are warning signs related to मलेरिया?", "language": "hi", "disease": "malaria", "kind": "warning"}
-{"question": "What are the symptoms of Chikungunya?", "language": "en", "disease": "chikungunya", "kind": "awareness"}
-{"question": "How can Chikungunya be prevented?", "language": "en", "disease": "chikungunya", "kind": "prevention"}
-{"question": "What are warning signs related to Chikungunya?", "language": "en", "disease": "chikungunya", "kind": "warning"}
-{"question": "What are the symptoms of चिकनगुनिया?", "language": "hi", "disease": "chikungunya", "kind": "awareness"}
-{"question": "How can चिकनगुनिया be prevented?", "language": "hi", "disease": "chikungunya", "kind": "prevention"}
-{"question": "What are warning signs related to चिकनगुनिया?", "language": "hi", "disease": "chikungunya", "kind": "warning"}
-{"question": "What are the symptoms of Japanese encephalitis?", "language": "en", "disease": "japanese-encephalitis", "kind": "awareness"}
-{"question": "How can Japanese encephalitis be prevented?", "language": "en", "disease": "japanese-encephalitis", "kind": "prevention"}
-{"question": "What are warning signs related to Japanese encephalitis?", "language": "en", "disease": "japanese-encephalitis", "kind": "warning"}
-{"question": "What are the symptoms of जापानी इंसेफेलाइटिस?", "language": "hi", "disease": "japanese-encephalitis", "kind": "awareness"}
-{"question": "How can जापानी इंसेफेलाइटिस be prevented?", "language": "hi", "disease": "japanese-encephalitis", "kind": "prevention"}
-{"question": "What are warning signs related to जापानी इंसेफेलाइटिस?", "language": "hi", "disease": "japanese-encephalitis", "kind": "warning"}
-{"question": "What are the symptoms of Kala-azar?", "language": "en", "disease": "kala-azar", "kind": "awareness"}
-{"question": "How can Kala-azar be prevented?", "language": "en", "disease": "kala-azar", "kind": "prevention"}
-{"question": "What are warning signs related to Kala-azar?", "language": "en", "disease": "kala-azar", "kind": "warning"}
-{"question": "What are the symptoms of काला-आजार?", "language": "hi", "disease": "kala-azar", "kind": "awareness"}
-{"question": "How can काला-आजार be prevented?", "language": "hi", "disease": "kala-azar", "kind": "prevention"}
-{"question": "What are warning signs related to काला-आजार?", "language": "hi", "disease": "kala-azar", "kind": "warning"}
-{"question": "What are the symptoms of Lymphatic filariasis?", "language": "en", "disease": "lymphatic-filariasis", "kind": "awareness"}
-{"question": "How can Lymphatic filariasis be prevented?", "language": "en", "disease": "lymphatic-filariasis", "kind": "prevention"}
-{"question": "What are warning signs related to Lymphatic filariasis?", "language": "en", "disease": "lymphatic-filariasis", "kind": "warning"}
-{"question": "What are the symptoms of लिम्फेटिक फाइलेरियासिस?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "awareness"}
-{"question": "How can लिम्फेटिक फाइलेरियासिस be prevented?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "prevention"}
-{"question": "What are warning signs related to लिम्फेटिक फाइलेरियासिस?", "language": "hi", "disease": "lymphatic-filariasis", "kind": "warning"}
-{"question": "What are the symptoms of Tuberculosis?", "language": "en", "disease": "tuberculosis", "kind": "awareness"}
-{"question": "How can Tuberculosis be prevented?", "language": "en", "disease": "tuberculosis", "kind": "prevention"}
-{"question": "What are warning signs related to Tuberculosis?", "language": "en", "disease": "tuberculosis", "kind": "warning"}
-{"question": "What are the symptoms of क्षय रोग?", "language": "hi", "disease": "tuberculosis", "kind": "awareness"}
-{"question": "How can क्षय रोग be prevented?", "language": "hi", "disease": "tuberculosis", "kind": "prevention"}
-{"question": "What are warning signs related to क्षय रोग?", "language": "hi", "disease": "tuberculosis", "kind": "warning"}
-{"question": "What are the symptoms of Typhoid?", "language": "en", "disease": "typhoid", "kind": "awareness"}
-{"question": "How can Typhoid be prevented?", "language": "en", "disease": "typhoid", "kind": "prevention"}
-{"question": "What are warning signs related to Typhoid?", "language": "en", "disease": "typhoid", "kind": "warning"}
-{"question": "What are the symptoms of टाइफाइड?", "language": "hi", "disease": "typhoid", "kind": "awareness"}
-{"question": "How can टाइफाइड be prevented?", "language": "hi", "disease": "typhoid", "kind": "prevention"}
-{"question": "What are warning signs related to टाइफाइड?", "language": "hi", "disease": "typhoid", "kind": "warning"}
-{"question": "What are the symptoms of Cholera?", "language": "en", "disease": "cholera", "kind": "awareness"}
-{"question": "How can Cholera be prevented?", "language": "en", "disease": "cholera", "kind": "prevention"}
-{"question": "What are warning signs related to Cholera?", "language": "en", "disease": "cholera", "kind": "warning"}
-{"question": "What are the symptoms of हैजा?", "language": "hi", "disease": "cholera", "kind": "awareness"}
-{"question": "How can हैजा be prevented?", "language": "hi", "disease": "cholera", "kind": "prevention"}
-{"question": "What are warning signs related to हैजा?", "language": "hi", "disease": "cholera", "kind": "warning"}
-{"question": "What are the symptoms of Diarrhoeal disease and ORS?", "language": "en", "disease": "diarrhoeal-disease", "kind": "awareness"}
-{"question": "How can Diarrhoeal disease and ORS be prevented?", "language": "en", "disease": "diarrhoeal-disease", "kind": "prevention"}
-{"question": "What are warning signs related to Diarrhoeal disease and ORS?", "language": "en", "disease": "diarrhoeal-disease", "kind": "warning"}
-{"question": "What are the symptoms of दस्त और ओआरएस?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "awareness"}
-{"question": "How can दस्त और ओआरएस be prevented?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "prevention"}
-{"question": "What are warning signs related to दस्त और ओआरएस?", "language": "hi", "disease": "diarrhoeal-disease", "kind": "warning"}
-{"question": "What are the symptoms of Hepatitis A?", "language": "en", "disease": "hepatitis-a", "kind": "awareness"}
-{"question": "How can Hepatitis A be prevented?", "language": "en", "disease": "hepatitis-a", "kind": "prevention"}
-{"question": "What are warning signs related to Hepatitis A?", "language": "en", "disease": "hepatitis-a", "kind": "warning"}
-{"question": "What are the symptoms of हेपेटाइटिस ए?", "language": "hi", "disease": "hepatitis-a", "kind": "awareness"}
-{"question": "How can हेपेटाइटिस ए be prevented?", "language": "hi", "disease": "hepatitis-a", "kind": "prevention"}
-{"question": "What are warning signs related to हेपेटाइटिस ए?", "language": "hi", "disease": "hepatitis-a", "kind": "warning"}
-{"question": "What are the symptoms of Hepatitis B?", "language": "en", "disease": "hepatitis-b", "kind": "awareness"}
-{"question": "How can Hepatitis B be prevented?", "language": "en", "disease": "hepatitis-b", "kind": "prevention"}
-{"question": "What are warning signs related to Hepatitis B?", "language": "en", "disease": "hepatitis-b", "kind": "warning"}
-{"question": "What are the symptoms of हेपेटाइटिस बी?", "language": "hi", "disease": "hepatitis-b", "kind": "awareness"}
-{"question": "How can हेपेटाइटिस बी be prevented?", "language": "hi", "disease": "hepatitis-b", "kind": "prevention"}
-{"question": "What are warning signs related to हेपेटाइटिस बी?", "language": "hi", "disease": "hepatitis-b", "kind": "warning"}
-{"question": "What are the symptoms of Hepatitis E?", "language": "en", "disease": "hepatitis-e", "kind": "awareness"}
-{"question": "How can Hepatitis E be prevented?", "language": "en", "disease": "hepatitis-e", "kind": "prevention"}
-{"question": "What are warning signs related to Hepatitis E?", "language": "en", "disease": "hepatitis-e", "kind": "warning"}
-{"question": "What are the symptoms of हेपेटाइटिस ई?", "language": "hi", "disease": "hepatitis-e", "kind": "awareness"}
-{"question": "How can हेपेटाइटिस ई be prevented?", "language": "hi", "disease": "hepatitis-e", "kind": "prevention"}
-{"question": "What are warning signs related to हेपेटाइटिस ई?", "language": "hi", "disease": "hepatitis-e", "kind": "warning"}
-{"question": "What are the symptoms of Seasonal influenza and H1N1?", "language": "en", "disease": "seasonal-influenza", "kind": "awareness"}
-{"question": "How can Seasonal influenza and H1N1 be prevented?", "language": "en", "disease": "seasonal-influenza", "kind": "prevention"}
-{"question": "What are warning signs related to Seasonal influenza and H1N1?", "language": "en", "disease": "seasonal-influenza", "kind": "warning"}
-{"question": "What are the symptoms of मौसमी इन्फ्लुएंजा?", "language": "hi", "disease": "seasonal-influenza", "kind": "awareness"}
-{"question": "How can मौसमी इन्फ्लुएंजा be prevented?", "language": "hi", "disease": "seasonal-influenza", "kind": "prevention"}
-{"question": "What are warning signs related to मौसमी इन्फ्लुएंजा?", "language": "hi", "disease": "seasonal-influenza", "kind": "warning"}
-{"question": "What are the symptoms of COVID-19?", "language": "en", "disease": "covid-19", "kind": "awareness"}
-{"question": "How can COVID-19 be prevented?", "language": "en", "disease": "covid-19", "kind": "prevention"}
-{"question": "What are warning signs related to COVID-19?", "language": "en", "disease": "covid-19", "kind": "warning"}
-{"question": "What are the symptoms of कोविड-19?", "language": "hi", "disease": "covid-19", "kind": "awareness"}
-{"question": "How can कोविड-19 be prevented?", "language": "hi", "disease": "covid-19", "kind": "prevention"}
-{"question": "What are warning signs related to कोविड-19?", "language": "hi", "disease": "covid-19", "kind": "warning"}
-{"question": "What are the symptoms of Measles?", "language": "en", "disease": "measles", "kind": "awareness"}
-{"question": "How can Measles be prevented?", "language": "en", "disease": "measles", "kind": "prevention"}
-{"question": "What are warning signs related to Measles?", "language": "en", "disease": "measles", "kind": "warning"}
-{"question": "What are the symptoms of खसरा?", "language": "hi", "disease": "measles", "kind": "awareness"}
-{"question": "How can खसरा be prevented?", "language": "hi", "disease": "measles", "kind": "prevention"}
-{"question": "What are warning signs related to खसरा?", "language": "hi", "disease": "measles", "kind": "warning"}
-{"question": "What are the symptoms of Polio?", "language": "en", "disease": "polio", "kind": "awareness"}
-{"question": "How can Polio be prevented?", "language": "en", "disease": "polio", "kind": "prevention"}
-{"question": "What are warning signs related to Polio?", "language": "en", "disease": "polio", "kind": "warning"}
-{"question": "What are the symptoms of पोलियो?", "language": "hi", "disease": "polio", "kind": "awareness"}
+{"disease": "dengue", "language": "en", "question": "What are the early warning signs of severe dengue?", "kind": "warning"}
+{"disease": "dengue", "language": "en", "question": "How can mosquito breeding be prevented around homes to stop dengue?", "kind": "prevention"}
+{"disease": "dengue", "language": "en", "question": "What symptoms indicate a dengue fever infection?", "kind": "awareness"}
+{"disease": "dengue", "language": "hi", "question": "डेंगू के गंभीर लक्षण और खतरे के संकेत क्या हैं?", "kind": "warning"}
+{"disease": "dengue", "language": "hi", "question": "डेंगू के मच्छरों से बचाव के लिए घर पर क्या उपाय करें?", "kind": "prevention"}
+{"disease": "dengue", "language": "hi", "question": "डेंगू बुखार होने पर क्या लक्षण दिखाई देते हैं?", "kind": "awareness"}
+{"disease": "malaria", "language": "en", "question": "What are the common symptoms of malaria infection?", "kind": "awareness"}
+{"disease": "malaria", "language": "en", "question": "How is malaria transmitted and how to prevent mosquito bites?", "kind": "prevention"}
+{"disease": "malaria", "language": "en", "question": "What are the severe complications and warning signs of malaria?", "kind": "warning"}
+{"disease": "malaria", "language": "hi", "question": "मलेरिया के सामान्य लक्षण क्या होते हैं?", "kind": "awareness"}
+{"disease": "malaria", "language": "hi", "question": "मलेरिया से बचाव और मच्छरों की रोकथाम के क्या उपाय हैं?", "kind": "prevention"}
+{"disease": "malaria", "language": "hi", "question": "मलेरिया के गंभीर खतरे के संकेत क्या हैं?", "kind": "warning"}
+{"disease": "chikungunya", "language": "en", "question": "What are the characteristic joint pain symptoms of chikungunya?", "kind": "awareness"}
+{"disease": "chikungunya", "language": "en", "question": "How is chikungunya spread and how can it be avoided?", "kind": "prevention"}
+{"disease": "chikungunya", "language": "en", "question": "How long does joint pain usually last after chikungunya fever?", "kind": "awareness"}
+{"disease": "chikungunya", "language": "hi", "question": "चिकनगुनिया में जोड़ों के दर्द के क्या लक्षण होते हैं?", "kind": "awareness"}
+{"disease": "chikungunya", "language": "hi", "question": "चिकनगुनिया से बचाव के लिए मच्छरों को कैसे रोकें?", "kind": "prevention"}
+{"disease": "chikungunya", "language": "hi", "question": "चिकनगुनिया बुखार के बाद जोड़ों का दर्द कितने समय तक रहता है?", "kind": "awareness"}
+{"disease": "japanese-encephalitis", "language": "en", "question": "What are the key symptoms of Japanese Encephalitis in children?", "kind": "awareness"}
+{"disease": "japanese-encephalitis", "language": "en", "question": "Which vaccine protects against Japanese Encephalitis in endemic areas?", "kind": "prevention"}
+{"disease": "japanese-encephalitis", "language": "en", "question": "What are warning signs of brain inflammation in Japanese Encephalitis?", "kind": "warning"}
+{"disease": "japanese-encephalitis", "language": "hi", "question": "बच्चों में जापानी इंसेफेलाइटिस (दिमागी बुखार) के लक्षण क्या हैं?", "kind": "awareness"}
+{"disease": "japanese-encephalitis", "language": "hi", "question": "जापानी इंसेफेलाइटिस से बचाव के लिए कौन सा टीका लगता है?", "kind": "prevention"}
+{"disease": "japanese-encephalitis", "language": "hi", "question": "दिमागी बुखार के गंभीर खतरे के संकेत क्या हैं?", "kind": "warning"}
+{"disease": "kala-azar", "language": "en", "question": "What are the prolonged fever symptoms of visceral leishmaniasis kala-azar?", "kind": "awareness"}
+{"disease": "kala-azar", "language": "en", "question": "How do sandflies transmit kala-azar and how is indoor spraying done?", "kind": "prevention"}
+{"disease": "kala-azar", "language": "en", "question": "What are the signs of spleen enlargement in kala-azar patients?", "kind": "warning"}
+{"disease": "kala-azar", "language": "hi", "question": "काला-आजार के लक्षण और लंबे समय तक रहने वाले बुखार की पहचान क्या है?", "kind": "awareness"}
+{"disease": "kala-azar", "language": "hi", "question": "बालू मक्खी से फैलने वाले काला-आजार से बचाव कैसे करें?", "kind": "prevention"}
+{"disease": "kala-azar", "language": "hi", "question": "काला-आजार में तिल्ली बढ़ने के क्या संकेत होते हैं?", "kind": "warning"}
+{"disease": "lymphatic-filariasis", "language": "en", "question": "What causes lymphatic filariasis elephantiasis swelling?", "kind": "awareness"}
+{"disease": "lymphatic-filariasis", "language": "en", "question": "How does mass drug administration prevent lymphatic filariasis?", "kind": "prevention"}
+{"disease": "lymphatic-filariasis", "language": "en", "question": "What skin hygiene steps help manage swollen limbs in filariasis?", "kind": "care"}
+{"disease": "lymphatic-filariasis", "language": "hi", "question": "हाथीपांव (फाइलेरिया) के लक्षण और सूजन के क्या कारण हैं?", "kind": "awareness"}
+{"disease": "lymphatic-filariasis", "language": "hi", "question": "फाइलेरिया उन्मूलन अभियान में दी जाने वाली दवाओं का क्या महत्व है?", "kind": "prevention"}
+{"disease": "lymphatic-filariasis", "language": "hi", "question": "हाथीपांव के मरीजों को पैरों की सफाई कैसे रखनी चाहिए?", "kind": "care"}
+{"disease": "tuberculosis", "language": "en", "question": "What are the common symptoms of pulmonary tuberculosis?", "kind": "awareness"}
+{"disease": "tuberculosis", "language": "en", "question": "How is tuberculosis treated in simple words?", "kind": "treatment"}
+{"disease": "tuberculosis", "language": "en", "question": "How does TB spread in the air and how to prevent household transmission?", "kind": "prevention"}
+{"disease": "tuberculosis", "language": "hi", "question": "फेफड़ों की टीबी (क्षय रोग) के मुख्य लक्षण क्या हैं?", "kind": "awareness"}
+{"disease": "tuberculosis", "language": "hi", "question": "टीबी का इलाज आसान भाषा में कैसे होता है?", "kind": "treatment"}
+{"disease": "tuberculosis", "language": "hi", "question": "टीबी कैसे फैलती है और परिवार के सदस्यों को कैसे बचाएं?", "kind": "prevention"}
+{"disease": "typhoid", "language": "en", "question": "What are the symptoms and high fever patterns of typhoid?", "kind": "awareness"}
+{"disease": "typhoid", "language": "en", "question": "How does contaminated water and food spread typhoid fever?", "kind": "prevention"}
+{"disease": "typhoid", "language": "en", "question": "What hygiene practices prevent typhoid fever outbreaks?", "kind": "prevention"}
+{"disease": "typhoid", "language": "hi", "question": "टाइफाइड (मियादी बुखार) के मुख्य लक्षण क्या होते हैं?", "kind": "awareness"}
+{"disease": "typhoid", "language": "hi", "question": "दूषित पानी और खाने से टाइफाइड कैसे फैलता है?", "kind": "prevention"}
+{"disease": "typhoid", "language": "hi", "question": "टाइफाइड से बचने के लिए साफ-सफाई के क्या नियम हैं?", "kind": "prevention"}
+{"disease": "cholera", "language": "en", "question": "What are the symptoms of severe watery diarrhea in cholera?", "kind": "awareness"}
+{"disease": "cholera", "language": "en", "question": "How should dehydration from cholera be treated with ORS immediately?", "kind": "treatment"}
+{"disease": "cholera", "language": "en", "question": "What water sanitation measures prevent the spread of cholera?", "kind": "prevention"}
+{"disease": "cholera", "language": "hi", "question": "हैजा (कॉलरा) के तेज दस्त के लक्षण क्या होते हैं?", "kind": "awareness"}
+{"disease": "cholera", "language": "hi", "question": "हैजा में पानी की कमी होने पर तुरंत ओआरएस कैसे दें?", "kind": "treatment"}
+{"disease": "cholera", "language": "hi", "question": "हैजे के प्रकोप से बचने के लिए पीने के पानी को कैसे साफ रखें?", "kind": "prevention"}
+{"disease": "diarrhoeal-disease", "language": "en", "question": "How to prepare and give ORS solution for child diarrhea at home?", "kind": "treatment"}
+{"disease": "diarrhoeal-disease", "language": "en", "question": "What are the danger signs of severe dehydration in young children?", "kind": "warning"}
+{"disease": "diarrhoeal-disease", "language": "en", "question": "How does handwashing and clean water prevent diarrhoeal diseases?", "kind": "prevention"}
+{"disease": "diarrhoeal-disease", "language": "hi", "question": "दस्त होने पर घर पर ओआरएस का घोल कैसे बनाकर देना चाहिए?", "kind": "treatment"}
+{"disease": "diarrhoeal-disease", "language": "hi", "question": "छोटे बच्चों में निर्जलीकरण (डिहाइड्रेशन) के खतरे के लक्षण क्या हैं?", "kind": "warning"}
+{"disease": "diarrhoeal-disease", "language": "hi", "question": "हाथ धोने और स्वच्छ पानी से दस्त की रोकथाम कैसे होती है?", "kind": "prevention"}
+{"disease": "hepatitis-a", "language": "en", "question": "What are the symptoms of hepatitis A including jaundice and dark urine?", "kind": "awareness"}
+{"disease": "hepatitis-a", "language": "en", "question": "How is hepatitis A transmitted through food and contaminated water?", "kind": "prevention"}
+{"disease": "hepatitis-a", "language": "en", "question": "How long does recovery take for acute hepatitis A infection?", "kind": "awareness"}
+{"disease": "hepatitis-a", "language": "hi", "question": "हेपेटाइटिस ए में पीलिया और गहरे रंग के पेशाब के क्या लक्षण हैं?", "kind": "awareness"}
+{"disease": "hepatitis-a", "language": "hi", "question": "हेपेटाइटिस ए दूषित भोजन और पानी से कैसे फैलता है?", "kind": "prevention"}
+{"disease": "hepatitis-a", "language": "hi", "question": "हेपेटाइटिस ए से ठीक होने में कितना समय लगता है?", "kind": "awareness"}
+{"disease": "hepatitis-b", "language": "en", "question": "How is hepatitis B virus transmitted between people?", "kind": "prevention"}
+{"disease": "hepatitis-b", "language": "en", "question": "Which vaccine prevents hepatitis B and when is birth dose given?", "kind": "prevention"}
+{"disease": "hepatitis-b", "language": "en", "question": "What are the chronic complications of untreated hepatitis B?", "kind": "warning"}
+{"disease": "hepatitis-b", "language": "hi", "question": "हेपेटाइटिस बी का संक्रमण कैसे फैलता है?", "kind": "prevention"}
+{"disease": "hepatitis-b", "language": "hi", "question": "हेपेटाइटिस बी का टीका जन्म के समय क्यों जरूरी है?", "kind": "prevention"}
+{"disease": "hepatitis-b", "language": "hi", "question": "हेपेटाइटिस बी लंबे समय तक रहने पर क्या समस्याएं हो सकती हैं?", "kind": "warning"}
+{"disease": "hepatitis-e", "language": "en", "question": "What are the symptoms of hepatitis E virus infection?", "kind": "awareness"}
+{"disease": "hepatitis-e", "language": "en", "question": "Why is hepatitis E particularly dangerous during pregnancy?", "kind": "warning"}
+{"disease": "hepatitis-e", "language": "en", "question": "How to prevent waterborne hepatitis E outbreaks in communities?", "kind": "prevention"}
+{"disease": "hepatitis-e", "language": "hi", "question": "हेपेटाइटिस ई के संक्रमण के लक्षण क्या हैं?", "kind": "awareness"}
+{"disease": "hepatitis-e", "language": "hi", "question": "गर्भावस्था में हेपेटाइटिस ई क्यों खतरनाक हो सकता है?", "kind": "warning"}
+{"disease": "hepatitis-e", "language": "hi", "question": "पानी से फैलने वाले हेपेटाइटिस ई से कैसे बचें?", "kind": "prevention"}
+{"disease": "seasonal-influenza", "language": "en", "question": "What are the symptoms of seasonal flu compared to a common cold?", "kind": "awareness"}
+{"disease": "seasonal-influenza", "language": "en", "question": "How does influenza spread and what respiratory etiquette helps?", "kind": "prevention"}
+{"disease": "seasonal-influenza", "language": "en", "question": "What are high-risk warning signs for severe pneumonia following flu?", "kind": "warning"}
+{"disease": "seasonal-influenza", "language": "hi", "question": "मौसमी फ्लू और साधारण जुकाम के लक्षणों में क्या अंतर है?", "kind": "awareness"}
+{"disease": "seasonal-influenza", "language": "hi", "question": "फ्लू से बचने के लिए खांसते-छींकते समय क्या सावधानी बरतें?", "kind": "prevention"}
+{"disease": "seasonal-influenza", "language": "hi", "question": "फ्लू के बाद निमोनिया के गंभीर लक्षण क्या होते हैं?", "kind": "warning"}
+{"disease": "covid-19", "language": "en", "question": "What are the primary respiratory symptoms of COVID-19?", "kind": "awareness"}
+{"disease": "covid-19", "language": "en", "question": "How can airborne spread of COVID-19 be reduced in crowded spaces?", "kind": "prevention"}
+{"disease": "covid-19", "language": "en", "question": "What are the emergency warning signs of low oxygen in COVID-19?", "kind": "warning"}
+{"disease": "covid-19", "language": "hi", "question": "कोविड-19 के मुख्य लक्षण क्या हैं?", "kind": "awareness"}
+{"disease": "covid-19", "language": "hi", "question": "भीड़-भाड़ वाली जगहों पर कोविड से बचाव के क्या उपाय हैं?", "kind": "prevention"}
+{"disease": "covid-19", "language": "hi", "question": "कोविड में ऑक्सीजन की कमी होने पर क्या खतरे के संकेत हैं?", "kind": "warning"}
+{"disease": "measles", "language": "en", "question": "What does the measles rash look like and what are initial symptoms?", "kind": "awareness"}
+{"disease": "measles", "language": "en", "question": "At what age is the MR measles-rubella vaccine administered?", "kind": "prevention"}
+{"disease": "measles", "language": "en", "question": "What dangerous complications like pneumonia can measles cause in children?", "kind": "warning"}
+{"disease": "measles", "language": "hi", "question": "खसरा (मीजल्स) के दाने और शुरुआती लक्षण कैसे होते हैं?", "kind": "awareness"}
+{"disease": "measles", "language": "hi", "question": "खसरे से बचाव के लिए एमआर का टीका किस उम्र में लगता है?", "kind": "prevention"}
+{"disease": "measles", "language": "hi", "question": "खसरे के कारण बच्चों में निमोनिया जैसे क्या खतरे हो सकते हैं?", "kind": "warning"}
+{"disease": "polio", "language": "en", "question": "What are the early symptoms of acute flaccid paralysis in polio?", "kind": "awareness"}
+{"disease": "polio", "language": "en", "question": "How do oral polio vaccine drops and IPV injections prevent polio?", "kind": "prevention"}
+{"disease": "polio", "language": "en", "question": "How does the poliovirus spread through the faecal-oral route?", "kind": "prevention"}
+{"disease": "polio", "language": "hi", "question": "पोलियो के लक्षण और हाथ-पैरों में अचानक कमजोरी की पहचान क्या है?", "kind": "awareness"}
+{"disease": "polio", "language": "hi", "question": "पोलियो की खुराक (ओपीवी) और आईपीवी इंजेक्शन क्यों जरूरी हैं?", "kind": "prevention"}
+{"disease": "polio", "language": "hi", "question": "पोलियो का वायरस कैसे फैलता है और स्वच्छता क्यों जरूरी है?", "kind": "prevention"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "en", "question": "What are the symptoms of diphtheria including neck swelling and grey membrane?", "kind": "awareness"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "en", "question": "What is whooping cough pertussis and how is it prevented in infants?", "kind": "awareness"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "en", "question": "What is lockjaw tetanus and why is wound cleaning essential?", "kind": "awareness"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "hi", "question": "गलघोंटू (डिप्थीरिया) के लक्षण और गले में झिल्ली बनने के क्या संकेत हैं?", "kind": "awareness"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "hi", "question": "काली खांसी (पर्टुसिस) के लक्षण और बचाव का टीका क्या है?", "kind": "awareness"}
+{"disease": "diphtheria-pertussis-tetanus", "language": "hi", "question": "धनुस्तंभ (टिटनेस) क्या है और चोट लगने पर टीका क्यों लगवाना चाहिए?", "kind": "awareness"}
+{"disease": "rabies-animal-bites", "language": "en", "question": "What is the immediate first aid for a dog or animal bite?", "kind": "treatment"}
+{"disease": "rabies-animal-bites", "language": "en", "question": "Why must wounds from rabid animals be washed with soap and running water?", "kind": "treatment"}
+{"disease": "rabies-animal-bites", "language": "en", "question": "Why is prompt rabies post-exposure vaccination essential before symptoms start?", "kind": "prevention"}
+{"disease": "rabies-animal-bites", "language": "hi", "question": "कुत्ते या जानवर के काटने पर तुरंत क्या प्राथमिक उपचार करना चाहिए?", "kind": "treatment"}
+{"disease": "rabies-animal-bites", "language": "hi", "question": "जानवर के काटने वाले घाव को साबुन और बहते पानी से क्यों धोना चाहिए?", "kind": "treatment"}
+{"disease": "rabies-animal-bites", "language": "hi", "question": "रेबीज का टीका समय पर लगवाना क्यों जीवन रक्षक है?", "kind": "prevention"}
+{"disease": "snakebite", "language": "en", "question": "What is the proper first aid protocol for snakebite victims?", "kind": "treatment"}
+{"disease": "snakebite", "language": "en", "question": "What harmful practices like cutting or sucking the wound should be avoided in snakebite?", "kind": "treatment"}
+{"disease": "snakebite", "language": "en", "question": "What are the warning signs of venom poisoning after a snakebite?", "kind": "warning"}
+{"disease": "snakebite", "language": "hi", "question": "सांप के काटने पर तुरंत क्या प्राथमिक उपचार करना चाहिए?", "kind": "treatment"}
+{"disease": "snakebite", "language": "hi", "question": "सांप काटने पर कौन सी गलतियां जैसे चीरा लगाना या चूसना बिल्कुल न करें?", "kind": "treatment"}
+{"disease": "snakebite", "language": "hi", "question": "सांप के जहर के मुख्य लक्षण क्या होते हैं?", "kind": "warning"}
+{"disease": "leprosy", "language": "en", "question": "What are the early skin patch symptoms of leprosy Hansen disease?", "kind": "awareness"}
+{"disease": "leprosy", "language": "en", "question": "Is leprosy completely curable with multi-drug therapy MDT?", "kind": "treatment"}
+{"disease": "leprosy", "language": "en", "question": "How to prevent nerve damage and disability in leprosy patients?", "kind": "care"}
+{"disease": "leprosy", "language": "hi", "question": "कुष्ठ रोग (लेप्रोसी) के शुरुआती हल्के दाग-धब्बे और सुन्नता के लक्षण क्या हैं?", "kind": "awareness"}
+{"disease": "leprosy", "language": "hi", "question": "क्या कुष्ठ रोग एमडीटी दवा से पूरी तरह ठीक हो सकता है?", "kind": "treatment"}
+{"disease": "leprosy", "language": "hi", "question": "कुष्ठ रोग में हाथों-पैरों की नसों को नुकसान से कैसे बचाएं?", "kind": "care"}
+{"disease": "hiv-aids", "language": "en", "question": "How is HIV transmitted and how can transmission be prevented?", "kind": "prevention"}
+{"disease": "hiv-aids", "language": "en", "question": "What does free antiretroviral therapy ART do for people living with HIV?", "kind": "treatment"}
+{"disease": "hiv-aids", "language": "en", "question": "Does casual contact like hugging or sharing food spread HIV?", "kind": "prevention"}
+{"disease": "hiv-aids", "language": "hi", "question": "एचआईवी संक्रमण कैसे फैलता है और इससे बचाव के क्या तरीके हैं?", "kind": "prevention"}
+{"disease": "hiv-aids", "language": "hi", "question": "एआरटी (एंटीरेट्रोवायरल) इलाज से एचआईवी मरीज स्वस्थ जीवन कैसे जी सकते हैं?", "kind": "treatment"}
+{"disease": "hiv-aids", "language": "hi", "question": "क्या साथ खाना खाने या हाथ मिलाने से एचआईवी फैलता है?", "kind": "prevention"}
+{"disease": "diabetes", "language": "en", "question": "What are the common symptoms of high blood sugar in type 2 diabetes?", "kind": "awareness"}
+{"disease": "diabetes", "language": "en", "question": "What dietary and physical lifestyle changes help manage blood sugar?", "kind": "prevention"}
+{"disease": "diabetes", "language": "en", "question": "Why is regular foot care important for people with diabetes?", "kind": "care"}
+{"disease": "diabetes", "language": "hi", "question": "मधुमेह (डायबिटीज) में शुगर बढ़ने के आम लक्षण क्या होते हैं?", "kind": "awareness"}
+{"disease": "diabetes", "language": "hi", "question": "डायबिटीज को नियंत्रित रखने के लिए खानपान में क्या बदलाव करें?", "kind": "prevention"}
+{"disease": "diabetes", "language": "hi", "question": "शुगर के मरीजों को पैरों की देखभाल क्यों करनी चाहिए?", "kind": "care"}
+{"disease": "hypertension", "language": "en", "question": "Why is high blood pressure hypertension called a silent killer?", "kind": "awareness"}
+{"disease": "hypertension", "language": "en", "question": "How does reducing salt intake help lower high blood pressure?", "kind": "prevention"}
+{"disease": "hypertension", "language": "en", "question": "What are the warning signs of a hypertensive emergency?", "kind": "warning"}
+{"disease": "hypertension", "language": "hi", "question": "उच्च रक्तचाप (हाई ब्लड प्रेशर) को शांत बीमारी क्यों कहा जाता है?", "kind": "awareness"}
+{"disease": "hypertension", "language": "hi", "question": "नमक कम खाने से ब्लड प्रेशर नियंत्रित करने में कैसे मदद मिलती है?", "kind": "prevention"}
+{"disease": "hypertension", "language": "hi", "question": "ब्लड प्रेशर बहुत ज्यादा बढ़ने पर क्या खतरे के लक्षण होते हैं?", "kind": "warning"}
+{"disease": "anaemia-nutrition", "language": "en", "question": "What are the common symptoms of iron-deficiency anaemia in women and children?", "kind": "awareness"}
+{"disease": "anaemia-nutrition", "language": "en", "question": "Which local foods and iron-folic acid tablets treat anaemia?", "kind": "prevention"}
+{"disease": "anaemia-nutrition", "language": "en", "question": "What are the signs of severe acute malnutrition in infants?", "kind": "warning"}
+{"disease": "anaemia-nutrition", "language": "hi", "question": "महिलाओं और बच्चों में खून की कमी (एनीमिया) के क्या लक्षण हैं?", "kind": "awareness"}
+{"disease": "anaemia-nutrition", "language": "hi", "question": "एनीमिया दूर करने के लिए कौन से पौष्टिक आहार और आयरन की गोलियां लेनी चाहिए?", "kind": "prevention"}
+{"disease": "anaemia-nutrition", "language": "hi", "question": "बच्चों में गंभीर कुपोषण के क्या लक्षण होते हैं?", "kind": "warning"}
+{"disease": "maternal-newborn-care", "language": "en", "question": "What are the danger signs during pregnancy requiring urgent medical attention?", "kind": "warning"}
+{"disease": "maternal-newborn-care", "language": "en", "question": "Why is exclusive breastfeeding recommended for the first 6 months?", "kind": "prevention"}
+{"disease": "maternal-newborn-care", "language": "en", "question": "What thermal care and warmth measures protect newborn babies from hypothermia?", "kind": "care"}
+{"disease": "maternal-newborn-care", "language": "hi", "question": "गर्भावस्था के दौरान खतरे के कौन से लक्षण दिखने पर तुरंत अस्पताल जाना चाहिए?", "kind": "warning"}
+{"disease": "maternal-newborn-care", "language": "hi", "question": "शुरुआती 6 महीने तक शिशु को केवल मां का दूध ही क्यों देना चाहिए?", "kind": "prevention"}
+{"disease": "maternal-newborn-care", "language": "hi", "question": "नवजात शिशु को ठंड से बचाने और गर्म रखने के क्या उपाय हैं?", "kind": "care"}
+{"disease": "child-immunization", "language": "en", "question": "Which vaccines are due at 9 months of age under the National Immunization Schedule?", "kind": "prevention"}
+{"disease": "child-immunization", "language": "en", "question": "Why is it important to complete all childhood vaccine doses on time?", "kind": "prevention"}
+{"disease": "child-immunization", "language": "en", "question": "What minor symptoms like mild fever can happen after routine vaccination?", "kind": "care"}
+{"disease": "child-immunization", "language": "hi", "question": "राष्ट्रीय टीकाकरण सारणी के अनुसार 9 महीने पर कौन से टीके लगते हैं?", "kind": "prevention"}
+{"disease": "child-immunization", "language": "hi", "question": "बच्चों के सभी टीके समय पर लगवाना क्यों बहुत जरूरी है?", "kind": "prevention"}
+{"disease": "child-immunization", "language": "hi", "question": "टीकाकरण के बाद हल्का बुखार आने पर क्या देखभाल करनी चाहिए?", "kind": "care"}
+{"disease": "heat-illness", "language": "en", "question": "What are the early warning symptoms of heat exhaustion and heat stroke?", "kind": "warning"}
+{"disease": "heat-illness", "language": "en", "question": "What immediate first aid should be given to a person suffering from heat stroke?", "kind": "treatment"}
+{"disease": "heat-illness", "language": "en", "question": "How to stay hydrated and protected from intense sun during a heat wave?", "kind": "prevention"}
+{"disease": "heat-illness", "language": "hi", "question": "लू (हीट स्ट्रोक) लगने के शुरुआती और गंभीर लक्षण क्या हैं?", "kind": "warning"}
+{"disease": "heat-illness", "language": "hi", "question": "लू लगने पर मरीज को तुरंत क्या प्राथमिक उपचार देना चाहिए?", "kind": "treatment"}
+{"disease": "heat-illness", "language": "hi", "question": "गर्मियों में लू से बचने और शरीर में पानी बनाए रखने के क्या उपाय हैं?", "kind": "prevention"}
+{"disease": "mental-health-basics", "language": "en", "question": "What are common signs of persistent sadness and clinical depression?", "kind": "awareness"}
+{"disease": "mental-health-basics", "language": "en", "question": "How can family and community support someone dealing with severe anxiety?", "kind": "care"}
+{"disease": "mental-health-basics", "language": "en", "question": "When should a person seek professional help for psychological distress?", "kind": "care"}
+{"disease": "mental-health-basics", "language": "hi", "question": "लगातार उदासी और अवसाद (डिप्रेशन) के आम लक्षण क्या होते हैं?", "kind": "awareness"}
+{"disease": "mental-health-basics", "language": "hi", "question": "चिंता और तनाव से जूझ रहे व्यक्ति की परिवार वाले कैसे मदद कर सकते हैं?", "kind": "care"}
+{"disease": "mental-health-basics", "language": "hi", "question": "मानसिक तनाव होने पर डॉक्टर या काउंसलर से कब संपर्क करना चाहिए?", "kind": "care"}
+{"disease": "hygiene-sanitation-safe-water", "language": "en", "question": "What are the key steps for safe drinking water purification at home?", "kind": "prevention"}
+{"disease": "hygiene-sanitation-safe-water", "language": "en", "question": "When are the critical moments for handwashing with soap to prevent disease?", "kind": "prevention"}
+{"disease": "hygiene-sanitation-safe-water", "language": "en", "question": "Why is stopping open defecation and using clean toilets vital for community health?", "kind": "prevention"}
+{"disease": "hygiene-sanitation-safe-water", "language": "hi", "question": "पीने के पानी को घर पर सुरक्षित और साफ करने के क्या तरीके हैं?", "kind": "prevention"}
+{"disease": "hygiene-sanitation-safe-water", "language": "hi", "question": "बीमारियों से बचने के लिए साबुन से हाथ धोना कब-कब जरूरी है?", "kind": "prevention"}
+{"disease": "hygiene-sanitation-safe-water", "language": "hi", "question": "शौचालय का उपयोग करने से गांव में बीमारियां फैलने से कैसे रुकती हैं?", "kind": "prevention"}

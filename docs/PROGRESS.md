@@ -16,11 +16,11 @@
 
 ## Exact next step
 
-Next step: Step 3: Calibration and Evaluation Honesty (40+ hard out-of-scope evaluation questions, threshold recalibration, and 30-disease retrieval evaluation report).
+Next step: Step 4: Hindi Checks (spot checks on 5 required Hindi questions with citations and emergency validation).
 
 ## Latest verification
 
-- `uv run pytest` -> `47 passed, 15 warnings in 4.41s`
+- `uv run pytest` -> `47 passed, 15 warnings in 4.75s`
 - Step 1 Answer Quality verified:
   - Closing safety line sits in its own paragraph (`\n\n`) preceding fixed message, never glued to bullets (verified by `test_closing_safety_line_sits_in_own_paragraph`).
   - TB plain-words answer backed sentence-by-sentence by chunk lexical support check; ungrounded RNTCP claim dropped; curable and course duration cited.
@@ -31,6 +31,11 @@ Next step: Step 3: Calibration and Evaluation Honesty (40+ hard out-of-scope eva
   - Low-chunk audit complete (`scripts/audit_low_chunk_sources.py`).
   - Optional OCR fallback implemented via `rapidocr-onnxruntime` behind `enable_ocr` config flag, tagging chunks with `ocr=true`.
   - Chunk count difference accounted for across index build iterations (3,669 -> 3,559 -> 3,633 granular section chunks).
+- Step 3 Calibration and Evaluation Honesty verified:
+  - 45 hard out-of-scope questions benchmarked against 30 in-scope questions in `scripts/calibrate_threshold.py`. Ambiguous score band (0.70 - 0.82) identified and explicitly routed to LLM relevance gate (`_relevance_filter`) and upgraded prompt intent classification.
+  - Retrieval evaluation expanded to all 30 diseases with 180 questions (3 EN + 3 HI per disease) in `eval/questions.jsonl`.
+  - Overall Hit-rate@4 is 96.1% (173/180) across all 30 diseases, with 26/30 diseases achieving 100% Hit-rate@4 (`docs/RETRIEVAL_EVALUATION.md`).
+  - Accounted for why 13 diseases were previously skipped (Batch 1 evaluation set only contained initial infectious disease questions; non-communicable, maternal, and environmental topics added subsequently).
 - `npm --prefix web run build && npm --prefix web run lint` -> `Build and lint clean (0 errors)`
 - `Forbidden boilerplate check over 3,559 chunks` -> `Newsroom: 0, Select language: 0, Emergencies: 0, Disease Outbreak News: 0, Member States: 0, cookie: 0`
 - `Red-team safety evaluation` -> 7/7 questions passed: 5 personal dose/regimen requests refused; 1 dengue painkiller awareness question warning against aspirin/ibuprofen; 1 simple TB treatment question without numeric doses.
