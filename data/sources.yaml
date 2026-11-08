@@ -263,12 +263,13 @@ sources:
   - diphtheria-pertussis-tetanus
   coverage: general
   language: en
-  doc_type: guideline
+  doc_type: handbook
   year: 2008
   license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
     link.
   status: downloaded
   doc_id: 3e0d5e4a52c88c5f3e07a517e8a344fd7d4799749c4026bc6c8f336675c57b71
+  outdated: true
 - id: doc-influenza-stw-ari-icmr
   title: 'Standard Treatment Workflows: Acute Respiratory Infections in Adults'
   publisher: Indian Council of Medical Research (ICMR), Government of India
@@ -519,6 +520,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 4e7ac60069937dc82b08d32fe2cdfcf5845f066c4cca4259379e33577d52c902
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-animal-bites
   title: 'WHO Fact Sheet: Animal bites'
   publisher: World Health Organization (WHO)
@@ -532,6 +534,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 0c1b932cc5184798a4c0e70351e230a915cb740e23996225a65ef3ff2cdd74df
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-chikungunya
   title: 'WHO Fact Sheet: Chikungunya'
   publisher: World Health Organization (WHO)
@@ -545,6 +548,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 74b2df5da7f6d1325137151d63265943a55c42348d1155363388c9233aabcebb
   status: downloaded
+  year: 2025
 - id: doc-who-factsheet-cholera
   title: 'WHO Fact Sheet: Cholera'
   publisher: World Health Organization (WHO)
@@ -558,6 +562,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 7115cda90432343a8e9c5a0e761bad03554d7588fe6e3dcc391494c0682224e8
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-climate-change-heat-and-health
   title: 'WHO Fact Sheet: Heat and health'
   publisher: World Health Organization (WHO)
@@ -571,6 +576,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 98eb0f625c8d32ca71ed178e82ea980c0c0c986c4aa0e4534e7e5c712ddfc7fe
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-coronavirus-disease-covid-19
   title: 'WHO Fact Sheet: Coronavirus disease (COVID-19)'
   publisher: World Health Organization (WHO)
@@ -584,6 +590,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 36bd5719fb8adbd8fbaf3c36d0a37647493077077e71ec0ed185b2d389a7eabf
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-dengue-and-severe-dengue
   title: 'WHO Fact Sheet: Dengue'
   publisher: World Health Organization (WHO)
@@ -597,6 +604,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 8146efab8110fcfff3f8ba87559ff07e3d57712fc1bf20e76c8092e0f439ffa2
   status: downloaded
+  year: 2025
 - id: doc-who-factsheet-diabetes
   title: 'WHO Fact Sheet: Diabetes'
   publisher: World Health Organization (WHO)
@@ -610,6 +618,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 2e88b7cebe7325344c8ac75ca74d2ed1bd50fd408be95c6b86678ff47957ca47
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-diarrhoeal-disease
   title: 'WHO Fact Sheet: Diarrhoeal disease'
   publisher: World Health Organization (WHO)
@@ -623,6 +632,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: ca39444c46a6efbabefacf908b2d7af4fcba27064b90cce3c5a0fb42ef6014bc
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-diphtheria
   title: 'WHO Fact Sheet: Diphtheria'
   publisher: World Health Organization (WHO)
@@ -636,6 +646,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: e809a15b5d688debbca67163ec089a1b2b5b26bf9e71850a18861f166d3dac0d
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-drinking-water
   title: 'WHO Fact Sheet: Drinking-water'
   publisher: World Health Organization (WHO)
@@ -649,6 +660,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 0f18ae944dc236cf21980e8599199d39c3277b5cc900392bee999eebac699192
   status: local_file
+  year: 2023
 - id: doc-who-factsheet-hepatitis-a
   title: 'WHO Fact Sheet: Hepatitis A'
   publisher: World Health Organization (WHO)
@@ -662,6 +674,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 892702548972c010be1a8922da8c33c0050c30b0f23ca089641442d22402e277
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-hepatitis-b
   title: 'WHO Fact Sheet: Hepatitis B'
   publisher: World Health Organization (WHO)
@@ -675,6 +688,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 5e03d400d9ca4db89493eaec18d9d1b1158fa894fc3709e2f95ef7975ef12662
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-hepatitis-e
   title: 'WHO Fact Sheet: Hepatitis E'
   publisher: World Health Organization (WHO)
@@ -688,6 +702,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 360c3b64ef818be06c7c8696d38cc21f7fee883c22b5db9034c1290a9404b7f5
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-hiv-aids
   title: 'WHO Fact Sheet: HIV and AIDS'
   publisher: World Health Organization (WHO)
@@ -701,6 +716,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: ddee19241985a285c43e96a22a458ab8e1dbf3bada4f24d88e945636bb8571df
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-hypertension
   title: 'WHO Fact Sheet: Hypertension'
   publisher: World Health Organization (WHO)
@@ -714,6 +730,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 77704989356e109faffdd730d51f1c76de40a50b036da332e145e767bbb420c4
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-immunization-coverage
   title: 'WHO Fact Sheet: Immunization coverage'
   publisher: World Health Organization (WHO)
@@ -727,6 +744,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 5927b466cd2a82558f9f2fa8a927defffda8e9e0d4de9bdd4b5d9e0978ab3fe1
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-influenza-seasonal
   title: 'WHO Fact Sheet: Influenza (seasonal)'
   publisher: World Health Organization (WHO)
@@ -740,6 +758,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 64523644d669c9b1996404da2c103fec547acd42a7abe6c5897a3c88c9a9d2ee
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-japanese-encephalitis
   title: 'WHO Fact Sheet: Japanese encephalitis'
   publisher: World Health Organization (WHO)
@@ -753,6 +772,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 04d6300ed32114b445ac7d10351dedd5eb12b7fb02c6b58e4cf30ea0e5a5157c
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-leishmaniasis
   title: 'WHO Fact Sheet: Leishmaniasis'
   publisher: World Health Organization (WHO)
@@ -766,6 +786,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 0222d4a8c11e7974b02b129137a3ef03a63e5babac48475b6daa4d91ecabe6c1
   status: local_file
+  year: 2023
 - id: doc-who-factsheet-leprosy
   title: 'WHO Fact Sheet: Leprosy'
   publisher: World Health Organization (WHO)
@@ -779,6 +800,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 43c2745e557d9aeee188d1e08ddfef82385b2ab93d466166dc033bd59598f45c
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-lymphatic-filariasis
   title: 'WHO Fact Sheet: Lymphatic filariasis'
   publisher: World Health Organization (WHO)
@@ -792,6 +814,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 41f132f104ff5bb47e51864182b2ddce4c5a83f993fa3a582018f8fc0c6822b3
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-malaria
   title: 'WHO Fact Sheet: Malaria'
   publisher: World Health Organization (WHO)
@@ -805,6 +828,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: b819632c80810394631a24657033edb726cfb3677803e5dde56e827bdfb74756
   status: downloaded
+  year: 2025
 - id: doc-who-factsheet-malnutrition
   title: 'WHO Fact Sheet: Malnutrition'
   publisher: World Health Organization (WHO)
@@ -818,6 +842,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 05a6c37520afd8a8fcfa9e770703a7e794c23700be57d57776902f8c26257e28
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-maternal-mortality
   title: 'WHO Fact Sheet: Maternal mortality'
   publisher: World Health Organization (WHO)
@@ -831,6 +856,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 9eb3740de1d30b5fc4c28ad6be01f45808344d095885e786c9328c4f6cfc3c3b
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-measles
   title: 'WHO Fact Sheet: Measles'
   publisher: World Health Organization (WHO)
@@ -844,6 +870,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: b8f5424934c816f1e973c755950afadbef56fda971816900d9f45e5d82080da9
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-mental-health-strengthening-our-response
   title: 'WHO Fact Sheet: Mental health'
   publisher: World Health Organization (WHO)
@@ -857,6 +884,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 3454b7ad375a7458caa4a92da9996f445f485bdeba99e7e94c70c1f2fd24f8f8
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-newborn-mortality
   title: 'WHO Fact Sheet: Newborn mortality'
   publisher: World Health Organization (WHO)
@@ -870,6 +898,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 8b1eea0611b4f0ebcd5e4618a8b391360254f912d75d79e673d67530f741e4b7
   status: local_file
+  year: 2024
 - id: doc-who-factsheet-poliomyelitis
   title: 'WHO Fact Sheet: Poliomyelitis'
   publisher: World Health Organization (WHO)
@@ -883,6 +912,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 3f3b6aa98606be71b5968ef2293b7bdd66c9eeddae4d778e45dcdfac2b4f9b7f
   status: local_file
+  year: 2025
 - id: doc-who-factsheet-rabies
   title: 'WHO Fact Sheet: Rabies'
   publisher: World Health Organization (WHO)
@@ -896,6 +926,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: dbc92b30d52a2c7eef20c7915c3bb1ff97c05a3fcd882fd58df516e773dc0df5
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-sanitation
   title: 'WHO Fact Sheet: Sanitation'
   publisher: World Health Organization (WHO)
@@ -909,6 +940,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 2fa146a3d0c949c085338cc55913cc33e7afd8156058ecf8945273358a1b5a12
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-snakebite-envenoming
   title: 'WHO Fact Sheet: Snakebite envenoming'
   publisher: World Health Organization (WHO)
@@ -922,6 +954,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 8a98a8aa8918a7b9c493ec6eb5e0f37165f5992d4eae073e6b98fdea967a86f1
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-tetanus
   title: 'WHO Fact Sheet: Tetanus'
   publisher: World Health Organization (WHO)
@@ -935,6 +968,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 23bde82f54fe84e8116a086634a5d4e124f0e805f230b7083ccfa2f4c3219e94
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-tuberculosis
   title: 'WHO Fact Sheet: Tuberculosis'
   publisher: World Health Organization (WHO)
@@ -948,6 +982,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 5e63cfebab477e86b721ee16adbaeeca0f9506a931d04e14c176e194d71560f2
   status: local_file
+  year: 2026
 - id: doc-who-factsheet-typhoid
   title: 'WHO Fact Sheet: Typhoid'
   publisher: World Health Organization (WHO)
@@ -961,22 +996,7 @@ sources:
   license_note: WHO content, CC BY-NC-SA 3.0 IGO; retain attribution and link.
   doc_id: 507f888e180fa29bc1a4be470a1e5bf550d34fd4e74fb9f7b087796c9afac8de
   status: local_file
-- id: doc-who-health-topics-8ddec6
-  doc_id: 8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6
-  title: WHO India health topics
-  publisher: World Health Organization
-  url: https://www.who.int/india/health-topics
-  file: data/raw/dengue/who-india-health-topics.html
-  status: downloaded
-  disease_ids:
-  - dengue
-  - malaria
-  - tuberculosis
-  - maternal-newborn-care
-  coverage: general
-  language: en
-  doc_type: health_topics
-  license_note: WHO content; retain attribution and source link.
+  year: 2023
 - id: doc-who-vector-0eacf9
   doc_id: 0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c
   title: 'India BITE: Fact sheets on vector-borne diseases in India'
@@ -1016,3 +1036,4 @@ sources:
   doc_type: fact_sheet
   license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
     link.
+  year: 2014
