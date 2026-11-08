@@ -1,4 +1,44 @@
 sources:
+- id: doc-anaemia-stw-haemolytic-icmr
+  title: 'Standard Treatment Workflows: Haemolytic Anaemia'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1726568316_haemolytic_anaemia_all.pdf
+  file: data/raw/anaemia-nutrition/icmr-stw-haemolytic-anaemia.pdf
+  disease_ids:
+  - anaemia-nutrition
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 7522f6b07838966b5c0b804b3b4749c4a59192f5c705e81fccdd5743443e2801
+  status: downloaded
+- id: doc-anaemia-stw-malnutrition-icmr
+  title: 'Standard Treatment Workflows: Severe Acute Malnutrition in Children'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952337_paediatrics_severe_acute_malnutrition.pdf
+  file: data/raw/anaemia-nutrition/icmr-stw-severe-acute-malnutrition.pdf
+  disease_ids:
+  - anaemia-nutrition
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 0d7bf610dd5ffc8004b0962842e434956fea428a51dafcd016f9c25221dac144
+  status: downloaded
+- id: doc-chikungunya-stg-mohfw
+  title: 'Standard Treatment Guidelines: Chikungunya Fever'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/155.pdf
+  file: data/raw/chikungunya/mohfw-stg-chikungunya-fever.pdf
+  disease_ids:
+  - chikungunya
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: 7d958b7abb7c4942ae2b0c4020dffc29d4a3f4757e215d51b2fe29cf5ea76746
+  status: downloaded
 - id: doc-dengue-guideline-7c8ffb
   title: National Guidelines for Clinical Management of Dengue Fever 2023
   publisher: NCVBDC, Ministry of Health and Family Welfare, Government of India
@@ -12,6 +52,130 @@ sources:
   year: 2023
   doc_id: 7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407
   status: local_file
+- id: doc-dengue-stw-icmr
+  title: 'Standard Treatment Workflows: Dengue Fever in Children'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952338_paediatrics_dengue_fever.pdf
+  file: data/raw/dengue/icmr-stw-dengue-fever.pdf
+  disease_ids:
+  - dengue
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 81b6c4477a3902de582653c1273668f7ec8cbcab8688f6ee126f4a373b2f90f5
+  status: downloaded
+- id: doc-diabetes-stw-type1-icmr
+  title: 'Standard Treatment Workflows: Diabetes Mellitus Type 1'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1726567249_diabetes_mellitus_type_1.pdf
+  file: data/raw/diabetes/icmr-stw-diabetes-type-1.pdf
+  disease_ids:
+  - diabetes
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: cc3dc5bc01a0a70ef2ae591c334aa7381858bc5350022c59be5f6dd61a3f2263
+  status: downloaded
+- id: doc-diabetes-stw-type2-icmr
+  title: 'Standard Treatment Workflows: Diabetes Mellitus Type 2'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1726567245_diabetes_mellitus_type_2.pdf
+  file: data/raw/diabetes/icmr-stw-diabetes-type-2.pdf
+  disease_ids:
+  - diabetes
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: bcad0bfca7c2ec3a10a9b695cec7b1f2f91881bad01d05d0ed3c94925ad820fb
+  status: downloaded
+- id: doc-diarrhoea-stg-mohfw
+  title: 'Standard Treatment Guidelines: Gastroenterological Diseases - Acute Diarrhoeal
+    Diseases'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/9721.pdf
+  file: data/raw/diarrhoeal-disease/mohfw-stg-gastroenterological-diarrhoea.pdf
+  disease_ids:
+  - diarrhoeal-disease
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: cf4469a54b938a77930908d023504beaf6fd24d9420a9507f08e5b748c2ac08d
+  status: downloaded
+- id: doc-diarrhoea-stw-icmr
+  title: 'Standard Treatment Workflows: Acute Diarrhea in Children'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952338_paediatrics_diarrhea.pdf
+  file: data/raw/diarrhoeal-disease/icmr-stw-acute-diarrhea.pdf
+  disease_ids:
+  - diarrhoeal-disease
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 22a2fcdfb18c7a5c1fce3c366090d4b34041a9ba8cd4372683e1cc7e96ca7b38
+  status: downloaded
+- id: doc-filariasis-stg-mohfw
+  title: 'Standard Treatment Guidelines: Filariasis Control in India and Its Elimination'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/5021.pdf
+  file: data/raw/lymphatic-filariasis/mohfw-stg-filariasis-control.pdf
+  disease_ids:
+  - lymphatic-filariasis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: bfaabe67dac15db640a4a628c32ff08d84c355f11b8775597ea6dfa1bebc9d85
+  status: downloaded
+- id: doc-hepatitis-stg-mohfw
+  title: National Guidelines for Diagnosis & Management of Viral Hepatitis
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/3591.pdf
+  file: data/raw/hepatitis-b/mohfw-stg-viral-hepatitis.pdf
+  disease_ids:
+  - hepatitis-a
+  - hepatitis-b
+  - hepatitis-e
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2018
+  doc_id: 167d0852b0202fc2e0617a6358d8068fdc0135fec1f23fc364708eb36b09162c
+  status: downloaded
+- id: doc-hypertension-stg-mohfw
+  title: 'Standard Treatment Guidelines: Cardiovascular Diseases - Hypertension'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/3811.pdf
+  file: data/raw/hypertension/mohfw-stg-cardiovascular-hypertension.pdf
+  disease_ids:
+  - hypertension
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: 92ed8b17fbe6725d473b4d1e3d64650bc5998cb9636d74cb79a3597a5fa68cad
+  status: downloaded
+- id: doc-hypertension-stw-icmr
+  title: 'Standard Treatment Workflows: Hypertension in Adults'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1778941063_hypertensioninadults_final.pdf
+  file: data/raw/hypertension/icmr-stw-hypertension-adults.pdf
+  disease_ids:
+  - hypertension
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: bffc8acfa65ce92ec2d9bb914f8232b397603b8c1b0a30f1906261492a0f2ab0
+  status: downloaded
 - id: doc-immunization-cf8bd1
   doc_id: cf8bd1bb3d8c5a4a9b045f297df574813dda17a9a2ce109fac4700a92ee384b3
   title: National Immunization Schedule
@@ -105,6 +269,61 @@ sources:
     link.
   status: downloaded
   doc_id: 3e0d5e4a52c88c5f3e07a517e8a344fd7d4799749c4026bc6c8f336675c57b71
+- id: doc-influenza-stw-ari-icmr
+  title: 'Standard Treatment Workflows: Acute Respiratory Infections in Adults'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725963734_pulmonology_acute_respiratory_infections.pdf
+  file: data/raw/seasonal-influenza/icmr-stw-acute-respiratory-infections.pdf
+  disease_ids:
+  - seasonal-influenza
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 69ef4297568165b53a3906579e5bde9adb35767ae1e245fcf5ced15be58e943f
+  status: downloaded
+- id: doc-influenza-stw-pneumonia-icmr
+  title: 'Standard Treatment Workflows: Severe Pneumonia in Children'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952336_paediatrics_severe_pneumonia.pdf
+  file: data/raw/seasonal-influenza/icmr-stw-severe-pneumonia.pdf
+  disease_ids:
+  - seasonal-influenza
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 71902c9b3a61d97e4192d062cb46d5b27003331855679de41b212720eaf2574f
+  status: downloaded
+- id: doc-je-stg-mohfw
+  title: 'Standard Treatment Guidelines: Case Management of Acute Encephalitis Syndrome
+    / Japanese Encephalitis'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/5041.pdf
+  file: data/raw/japanese-encephalitis/mohfw-stg-japanese-encephalitis.pdf
+  disease_ids:
+  - japanese-encephalitis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: 56e38290807ad972f917c56ff5b5b7b525078daa08c79ff8101530288d977b7e
+  status: downloaded
+- id: doc-kala-azar-stg-mohfw
+  title: 'Standard Treatment Guidelines: Road Map for Kala-Azar Elimination'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/7051.pdf
+  file: data/raw/kala-azar/mohfw-stg-kala-azar-elimination.pdf
+  disease_ids:
+  - kala-azar
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: d5ce5698af35c5f9d6e3653aff504fc814e4b5e21f34b2d907e7747c925e5666
+  status: downloaded
 - id: doc-malaria-framework-2016-30
   title: National Framework for Malaria Elimination in India 2016-2030
   publisher: National Center for Vector Borne Diseases Control (NCVBDC), MoHFW, Government
@@ -161,6 +380,60 @@ sources:
   year: 2014
   status: downloaded
   doc_id: 3f6e8f9435cbe3671f70aa8ea8c47c18bcd8be23afdf180a8021edb1c914a766
+- id: doc-maternal-stw-pregnancy-icmr
+  title: 'Standard Treatment Workflows: Antenatal Management of Normal Pregnancy'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1771568619_ante-natalmanagementofnormalpregnancy-7.pdf
+  file: data/raw/maternal-newborn-care/icmr-stw-antenatal-management-pregnancy.pdf
+  disease_ids:
+  - maternal-newborn-care
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: e594042e40da95f17254f33ae7a0147c63ca4c095fb94686c3561568f62e0366
+  status: downloaded
+- id: doc-mental-health-stg-mohfw
+  title: 'Standard Treatment Guidelines: Management of Common Mental Disorders'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/606.pdf
+  file: data/raw/mental-health-basics/mohfw-stg-common-mental-disorders.pdf
+  disease_ids:
+  - mental-health-basics
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: 1deb5865e6772159e3f929a51461f402e697520bd20172f71248859726a011d7
+  status: downloaded
+- id: doc-newborn-stw-thermal-icmr
+  title: 'Standard Treatment Workflows: Thermal Care of the Newborn'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1726568617_thermal_care_newborn.pdf
+  file: data/raw/maternal-newborn-care/icmr-stw-thermal-care-newborn.pdf
+  disease_ids:
+  - maternal-newborn-care
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  doc_id: 9df8217c91474c7fa21c7a8fbb41dbf40b2efe77899d7e36ebd7e828228c1b4c
+  status: downloaded
+- id: doc-rabies-stg-mohfw
+  title: National Guidelines on Rabies Prophylaxis
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/238.pdf
+  file: data/raw/rabies-animal-bites/mohfw-stg-rabies-prophylaxis.pdf
+  disease_ids:
+  - rabies-animal-bites
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  doc_id: c8c6cb6c88aa0377ea6c5cb114aea8adc12349290a01e81c60f7193ac2cf9951
+  status: downloaded
 - id: doc-tb-guidance-differential-care-2025
   title: National Guidance on Differential TB Care
   publisher: Central TB Division, Ministry of Health and Family Welfare, Government

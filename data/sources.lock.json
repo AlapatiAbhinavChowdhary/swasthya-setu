@@ -17,6 +17,78 @@
     "fallback": "Python urllib (attempt 1)"
   },
   {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/155.pdf",
+    "file": "data\\raw\\chikungunya\\mohfw-stg-chikungunya-fever.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "7d958b7abb7c4942ae2b0c4020dffc29d4a3f4757e215d51b2fe29cf5ea76746",
+    "bytes": 81556,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/238.pdf",
+    "file": "data\\raw\\rabies-animal-bites\\mohfw-stg-rabies-prophylaxis.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "c8c6cb6c88aa0377ea6c5cb114aea8adc12349290a01e81c60f7193ac2cf9951",
+    "bytes": 1339402,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/3591.pdf",
+    "file": "data\\raw\\hepatitis-b\\mohfw-stg-viral-hepatitis.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "167d0852b0202fc2e0617a6358d8068fdc0135fec1f23fc364708eb36b09162c",
+    "bytes": 828497,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/3811.pdf",
+    "file": "data\\raw\\hypertension\\mohfw-stg-cardiovascular-hypertension.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "92ed8b17fbe6725d473b4d1e3d64650bc5998cb9636d74cb79a3597a5fa68cad",
+    "bytes": 1358378,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/5021.pdf",
+    "file": "data\\raw\\lymphatic-filariasis\\mohfw-stg-filariasis-control.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "bfaabe67dac15db640a4a628c32ff08d84c355f11b8775597ea6dfa1bebc9d85",
+    "bytes": 208848,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/5041.pdf",
+    "file": "data\\raw\\japanese-encephalitis\\mohfw-stg-japanese-encephalitis.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "56e38290807ad972f917c56ff5b5b7b525078daa08c79ff8101530288d977b7e",
+    "bytes": 317454,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/606.pdf",
+    "file": "data\\raw\\mental-health-basics\\mohfw-stg-common-mental-disorders.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "1deb5865e6772159e3f929a51461f402e697520bd20172f71248859726a011d7",
+    "bytes": 1971588,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/7051.pdf",
+    "file": "data\\raw\\kala-azar\\mohfw-stg-kala-azar-elimination.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "d5ce5698af35c5f9d6e3653aff504fc814e4b5e21f34b2d907e7747c925e5666",
+    "bytes": 1208809,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
     "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/892.pdf",
     "file": "data\\raw\\malaria\\standard-treatment-guidelines-malaria.pdf",
     "date": "2026-11-08",
@@ -24,6 +96,15 @@
     "hash": "3f6e8f9435cbe3671f70aa8ea8c47c18bcd8be23afdf180a8021edb1c914a766",
     "bytes": 288860,
     "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/9721.pdf",
+    "file": "data\\raw\\diarrhoeal-disease\\mohfw-stg-gastroenterological-diarrhoea.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "cf4469a54b938a77930908d023504beaf6fd24d9420a9507f08e5b748c2ac08d",
+    "bytes": 1627088,
+    "fallback": "urllib (attempt 1)"
   },
   {
     "url": "https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content",
@@ -139,6 +220,51 @@
     "fallback": "Python urllib (attempt 1)"
   },
   {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952336_paediatrics_severe_pneumonia.pdf",
+    "file": "data\\raw\\seasonal-influenza\\icmr-stw-severe-pneumonia.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "71902c9b3a61d97e4192d062cb46d5b27003331855679de41b212720eaf2574f",
+    "bytes": 845995,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952337_paediatrics_severe_acute_malnutrition.pdf",
+    "file": "data\\raw\\anaemia-nutrition\\icmr-stw-severe-acute-malnutrition.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "0d7bf610dd5ffc8004b0962842e434956fea428a51dafcd016f9c25221dac144",
+    "bytes": 797857,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952338_paediatrics_dengue_fever.pdf",
+    "file": "data\\raw\\dengue\\icmr-stw-dengue-fever.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "81b6c4477a3902de582653c1273668f7ec8cbcab8688f6ee126f4a373b2f90f5",
+    "bytes": 880950,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725952338_paediatrics_diarrhea.pdf",
+    "file": "data\\raw\\diarrhoeal-disease\\icmr-stw-acute-diarrhea.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "22a2fcdfb18c7a5c1fce3c366090d4b34041a9ba8cd4372683e1cc7e96ca7b38",
+    "bytes": 835961,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725963734_pulmonology_acute_respiratory_infections.pdf",
+    "file": "data\\raw\\seasonal-influenza\\icmr-stw-acute-respiratory-infections.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "69ef4297568165b53a3906579e5bde9adb35767ae1e245fcf5ced15be58e943f",
+    "bytes": 1739946,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
     "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725964687_adult-extrapulmonary-tuberculosis-all.pdf",
     "file": "data\\raw\\tuberculosis\\icmr-adult-extrapulmonary-tuberculosis-stw.pdf",
     "date": "2026-11-08",
@@ -146,6 +272,60 @@
     "hash": "a5ce736dbc59ea0ec4d02ef9527050f37ab37ecae243b0de7cff2db32c571e42",
     "bytes": 3125759,
     "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1726567245_diabetes_mellitus_type_2.pdf",
+    "file": "data\\raw\\diabetes\\icmr-stw-diabetes-type-2.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "bcad0bfca7c2ec3a10a9b695cec7b1f2f91881bad01d05d0ed3c94925ad820fb",
+    "bytes": 332368,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1726567249_diabetes_mellitus_type_1.pdf",
+    "file": "data\\raw\\diabetes\\icmr-stw-diabetes-type-1.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "cc3dc5bc01a0a70ef2ae591c334aa7381858bc5350022c59be5f6dd61a3f2263",
+    "bytes": 393632,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1726568316_haemolytic_anaemia_all.pdf",
+    "file": "data\\raw\\anaemia-nutrition\\icmr-stw-haemolytic-anaemia.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "7522f6b07838966b5c0b804b3b4749c4a59192f5c705e81fccdd5743443e2801",
+    "bytes": 1631885,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1726568617_thermal_care_newborn.pdf",
+    "file": "data\\raw\\maternal-newborn-care\\icmr-stw-thermal-care-newborn.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "9df8217c91474c7fa21c7a8fbb41dbf40b2efe77899d7e36ebd7e828228c1b4c",
+    "bytes": 409754,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1771568619_ante-natalmanagementofnormalpregnancy-7.pdf",
+    "file": "data\\raw\\maternal-newborn-care\\icmr-stw-antenatal-management-pregnancy.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "e594042e40da95f17254f33ae7a0147c63ca4c095fb94686c3561568f62e0366",
+    "bytes": 256798,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1778941063_hypertensioninadults_final.pdf",
+    "file": "data\\raw\\hypertension\\icmr-stw-hypertension-adults.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "bffc8acfa65ce92ec2d9bb914f8232b397603b8c1b0a30f1906261492a0f2ab0",
+    "bytes": 3297566,
+    "fallback": "urllib (attempt 1)"
   },
   {
     "url": "https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf",
