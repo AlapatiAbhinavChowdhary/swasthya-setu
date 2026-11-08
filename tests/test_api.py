@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from fastapi.testclient import TestClient
 
 from swasthya_setu.api import app as api_module
@@ -292,6 +293,85 @@ def test_facilities_endpoint_returns_sample_data():
         assert resp_hi.status_code == 200
         assert "108" in resp_hi.json()["disclaimer"]
         assert "नमूना" in resp_hi.json()["disclaimer"]
+
+
+def test_languages_endpoint():
+    with TestClient(api_module.app) as client:
+        resp = client.get("/languages")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "languages" in data
+        codes = [lang["code"] for lang in data["languages"]]
+        assert "en" in codes
+        assert "hi" in codes
+        assert "or" in codes
+        assert "pa" in codes
+
+
+def test_admin_feedback_protected_by_token(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    from swasthya_setu.config import get_settings
+
+    # 1. Unset admin_token -> route disabled (404)
+    monkeypatch.setenv("ADMIN_TOKEN", "")
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        resp = client.get("/admin/feedback")
+        assert resp.status_code == 404
+
+    # 2. Set admin_token -> unauthorized on missing / wrong token
+    test_secret = "super-secret-admin-token-12345"
+    monkeypatch.setenv("ADMIN_TOKEN", test_secret)
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        # Missing token
+        assert client.get("/admin/feedback").status_code == 401
+        # Wrong token
+        assert client.get("/admin/feedback", headers={"Authorization": "Bearer wrong"}).status_code == 401
+        assert client.get("/admin/feedback", headers={"X-Admin-Token": "wrong"}).status_code == 401
+
+        # Submit feedback first
+        client.post("/feedback", json={"session_id": "test-admin-sess", "rating": "up", "comment": "Great app!"})
+
+        # Correct Bearer token
+        resp_bearer = client.get("/admin/feedback", headers={"Authorization": f"Bearer {test_secret}"})
+        assert resp_bearer.status_code == 200
+        assert resp_bearer.json()["count"] >= 1
+        assert resp_bearer.json()["feedback"][0]["comment"] == "Great app!"
+
+        # Correct X-Admin-Token header
+        resp_header = client.get("/admin/feedback", headers={"X-Admin-Token": test_secret})
+        assert resp_header.status_code == 200
+        assert resp_header.json()["count"] >= 1
+
+
+def test_frontend_serving_flag(monkeypatch):
+    from swasthya_setu.config import get_settings
+
+    # Disabled by default
+    monkeypatch.setenv("ENABLE_FRONTEND", "false")
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        resp = client.get("/nonexistent-frontend-route")
+        assert resp.status_code == 404
+
+    # Enabled
+    monkeypatch.setenv("ENABLE_FRONTEND", "true")
+    get_settings.cache_clear()
+    with TestClient(api_module.app) as client:
+        resp = client.get("/")
+        # Should return built index.html if dist exists
+        dist_index = Path("web/dist/index.html")
+        if dist_index.exists():
+            assert resp.status_code == 200
+            assert "html" in resp.headers.get("content-type", "").lower()
+
+
+def test_cors_headers():
+    with TestClient(api_module.app) as client:
+        resp = client.options("/health", headers={"Origin": "http://localhost:5173", "Access-Control-Request-Method": "GET"})
+        assert resp.status_code == 200
+        assert resp.headers.get("access-control-allow-origin") == "*"
 
 
 def test_health_when_dummy_placeholder(monkeypatch, tmp_path):

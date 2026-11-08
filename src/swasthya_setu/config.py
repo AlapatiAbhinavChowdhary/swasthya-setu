@@ -39,6 +39,8 @@ class Settings(BaseSettings):
     vectorstore_backend: str = "chroma"
     enable_ocr: bool = Field(default=False)
     enable_overpass: bool = Field(default=False)
+    admin_token: str | None = Field(default=None)
+    enable_frontend: bool = Field(default=False)
 
 
 @cache

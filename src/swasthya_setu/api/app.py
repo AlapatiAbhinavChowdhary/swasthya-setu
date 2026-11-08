@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import secrets
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
@@ -12,10 +13,10 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 
 from swasthya_setu.api.db import Database
@@ -26,7 +27,7 @@ from swasthya_setu.api.models import (
     FeedbackResponse,
     SourceResponse,
 )
-from swasthya_setu.config import check_llm_configured, settings
+from swasthya_setu.config import check_llm_configured, get_settings, settings
 from swasthya_setu.coverage import get_coverage
 from swasthya_setu.generation.agent import run_agent
 from swasthya_setu.generation.chain import _store
@@ -260,6 +261,41 @@ def chat_stream(payload: ChatRequest, request: Request) -> StreamingResponse:
     return StreamingResponse(events(), media_type="text/event-stream")
 
 
+@app.get("/languages")
+def get_languages() -> dict[str, Any]:
+    return {
+        "languages": [
+            {"code": "en", "name": "English", "native_name": "English", "status": "supported"},
+            {"code": "hi", "name": "Hindi", "native_name": "हिन्दी", "status": "supported"},
+            {"code": "or", "name": "Odia", "native_name": "ଓଡ଼ିଆ", "status": "draft"},
+            {"code": "pa", "name": "Punjabi", "native_name": "ਪੰਜਾਬੀ", "status": "draft"},
+        ]
+    }
+
+
+@app.get("/admin/feedback")
+def get_admin_feedback(
+    request: Request,
+    authorization: str | None = Header(default=None),
+    x_admin_token: str | None = Header(default=None),
+) -> dict[str, Any]:
+    current_settings = get_settings()
+    if not current_settings.admin_token:
+        raise HTTPException(status_code=404, detail="Admin feedback route is disabled.")
+
+    token = None
+    if authorization and authorization.lower().startswith("bearer "):
+        token = authorization[7:].strip()
+    elif x_admin_token:
+        token = x_admin_token.strip()
+
+    if not token or not secrets.compare_digest(token, current_settings.admin_token):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    records = app.state.database.list_feedback()
+    return {"feedback": records, "count": len(records)}
+
+
 @app.post("/feedback", response_model=FeedbackResponse)
 def feedback(payload: FeedbackRequest, request: Request) -> FeedbackResponse:
     _check_rate_limit(request, payload.session_id)
@@ -270,3 +306,20 @@ def feedback(payload: FeedbackRequest, request: Request) -> FeedbackResponse:
         request.state.request_id,
     )
     return FeedbackResponse(accepted=True, request_id=request.state.request_id)
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_spa(full_path: str):
+    current_settings = get_settings()
+    if not getattr(current_settings, "enable_frontend", False):
+        raise HTTPException(status_code=404, detail="Not Found")
+    dist_dir = Path(__file__).resolve().parents[3] / "web" / "dist"
+    if not dist_dir.exists():
+        raise HTTPException(status_code=404, detail="Frontend build directory not found.")
+    target = dist_dir / full_path
+    if full_path and target.is_file():
+        return FileResponse(target)
+    index_file = dist_dir / "index.html"
+    if index_file.is_file():
+        return FileResponse(index_file)
+    raise HTTPException(status_code=404, detail="Frontend index.html not found.")

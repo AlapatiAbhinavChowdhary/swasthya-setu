@@ -92,3 +92,23 @@ class Database:
                 request_id=request_id,
                 created_at=datetime.now(timezone.utc),
             ))
+
+    def list_feedback(self, limit: int = 100) -> list[dict[str, object]]:
+        with self.session_factory() as db:
+            records = (
+                db.query(FeedbackRecord)
+                .order_by(FeedbackRecord.created_at.desc())
+                .limit(limit)
+                .all()
+            )
+            return [
+                {
+                    "id": r.id,
+                    "session_hash": r.session_hash,
+                    "rating": "up" if r.rating else "down",
+                    "comment": r.comment,
+                    "request_id": r.request_id,
+                    "created_at": r.created_at.isoformat() if r.created_at else None,
+                }
+                for r in records
+            ]

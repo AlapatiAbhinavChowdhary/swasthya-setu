@@ -16,11 +16,17 @@
 
 ## Exact next step
 
-Next step: Step 1: Backend Additions (GET /languages, optional static mounting of web/dist, GET /admin/feedback with ADMIN_TOKEN, CORS for Vite).
+Next step: Step 2: Frontend Foundation (React + Vite + TypeScript + Tailwind, typed API client, SSE streaming fetch parser, i18n, design, security).
 
 ## Latest verification
 
-- `uv run pytest` -> `59 passed, 15 warnings in 7.82s`
+- `uv run pytest` -> `63 passed, 15 warnings in 4.86s`
+- Step 1 Backend Additions verified:
+  - `GET /languages`: Returns list of available languages (English, Hindi, Odia, Punjabi) with codes, native names, and status (supported/draft).
+  - `GET /admin/feedback`: Protected by `ADMIN_TOKEN` via `secrets.compare_digest` constant-time comparison; route disabled (404) when token is unset; supports both `Authorization: Bearer <token>` and `X-Admin-Token: <token>`; token is never logged.
+  - Optional frontend serving: Built `web/dist` served at `/` behind `enable_frontend` config flag with SPA fallback for client-side routing.
+  - CORS: Allows Vite dev origin (`localhost:5173`) and returns standard permissive headers.
+  - Verified by unit tests in `tests/test_api.py`.
 - Step 0 Missing Evidence verified (`scripts/verify_step0_all.py`):
   - TB treatment English answer verified sentence-by-sentence; ungrounded RNTCP claim completely gone; curable and 4-6 month course cited to WHO; retrieved chunk text printed.
   - Malaria symptoms English answer capped at 3 common symptoms (fever, headache, chills) with warning signs in separate list.
