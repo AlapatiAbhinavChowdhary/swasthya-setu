@@ -220,13 +220,41 @@ def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     return _run_chat(request, payload)
 
 
+def split_into_sentence_chunks(text: str) -> list[str]:
+    """Split verified text into sentence or paragraph chunks, strictly preserving all whitespace."""
+    if not text:
+        return []
+    pattern = re.compile(r"([^.!?।\n]+(?:[.!?।]+(?:\s*|$)|(?:\n+|$))|[\n]+)")
+    chunks = pattern.findall(text)
+    if not chunks or "".join(chunks) != text:
+        return [text]
+    return chunks
+
+
 @app.post("/chat/stream")
 def chat_stream(payload: ChatRequest, request: Request) -> StreamingResponse:
+    # 1. Run the FULL pipeline first (safety, intent, retrieval, verification, dose filter, closing safety line)
     response = _run_chat(request, payload)
-    data = response.model_dump_json()
 
     def events():
-        yield f"event: message\ndata: {data}\n\n"
+        # 2. Stream verified sentence chunks as multiple SSE message events
+        chunks = split_into_sentence_chunks(response.answer)
+        for chunk in chunks:
+            data = json.dumps({"chunk": chunk}, separators=(",", ":"))
+            yield f"event: message\ndata: {data}\n\n"
+
+        # 3. Final event with sources, intent, and flags
+        meta = {
+            "sources": [s.model_dump() for s in response.sources],
+            "intent": response.intent,
+            "emergency": response.emergency,
+            "language": response.language,
+            "language_consistent": response.language_consistent,
+            "request_id": response.request_id,
+        }
+        yield f"event: metadata\ndata: {json.dumps(meta, separators=(',', ':'))}\n\n"
+
+        # 4. Terminal done event
         yield "event: done\ndata: {}\n\n"
 
     return StreamingResponse(events(), media_type="text/event-stream")

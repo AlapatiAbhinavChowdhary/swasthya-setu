@@ -48,6 +48,67 @@ def test_api_health_and_chat(monkeypatch, tmp_path):
     assert '"number":1' in stream.text
 
 
+def test_safe_streaming_event_order_and_content_equality(monkeypatch, tmp_path):
+    import json
+
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    multi_sentence_answer = (
+        "Dengue fever causes high fever and severe headache [1]. "
+        "Joint pain is also commonly reported [1].\n\n"
+        "This is health awareness information, not medical advice. "
+        "In an emergency, go to the nearest hospital or call 108."
+    )
+    monkeypatch.setattr(api_module, "run_agent", lambda *_args: _state(multi_sentence_answer))
+
+    with TestClient(api_module.app) as client:
+        chat_resp = client.post("/chat", json={"message": "What are dengue symptoms?"}).json()
+        stream_resp = client.post("/chat/stream", json={"message": "What are dengue symptoms?"})
+
+    assert stream_resp.status_code == 200
+    blocks = [b for b in stream_resp.text.strip().split("\n\n") if b.strip()]
+
+    events = []
+    for block in blocks:
+        parts = block.strip().split("\n")
+        event_type = parts[0].replace("event: ", "").strip()
+        data_str = parts[1].replace("data: ", "").strip()
+        events.append((event_type, json.loads(data_str)))
+
+    # Verify event order: multiple 'message' events, followed by 'metadata', followed by 'done'
+    assert len(events) >= 3
+    event_types = [e[0] for e in events]
+    assert event_types[-2] == "metadata"
+    assert event_types[-1] == "done"
+    assert all(t == "message" for t in event_types[:-2])
+    assert len([t for t in event_types if t == "message"]) > 1
+
+    # Verify concatenated chunks EQUAL the /chat answer exactly
+    reconstructed_text = "".join(e[1]["chunk"] for e in events[:-2])
+    assert reconstructed_text == chat_resp["answer"]
+
+    # Verify metadata fields match /chat
+    metadata = events[-2][1]
+    assert metadata["sources"] == chat_resp["sources"]
+    assert metadata["intent"] == chat_resp["intent"]
+    assert metadata["emergency"] == chat_resp["emergency"]
+    assert metadata["language"] == chat_resp["language"]
+    assert metadata["language_consistent"] == chat_resp["language_consistent"]
+    assert len(metadata["request_id"]) > 0
+
+
+def test_safe_streaming_emergency_response(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
+    emergency_text = "This may be an emergency. Go to the nearest hospital immediately or call 108."
+    monkeypatch.setattr(api_module, "run_agent", lambda *_args: _state(emergency_text, emergency=True))
+
+    with TestClient(api_module.app) as client:
+        stream_resp = client.post("/chat/stream", json={"message": "vomiting blood"})
+
+    assert stream_resp.status_code == 200
+    assert "call 108" in stream_resp.text
+    assert '"emergency":true' in stream_resp.text
+
+
 def test_coverage_reports_indexed_and_coming_soon_diseases():
     with TestClient(api_module.app) as client:
         response = client.get("/coverage")

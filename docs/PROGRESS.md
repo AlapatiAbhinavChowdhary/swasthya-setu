@@ -16,11 +16,16 @@
 
 ## Exact next step
 
-Next step: Step 7: Safe Streaming (full pipeline verification before SSE sentence streaming + metadata/done events).
+Next step: Step 8: Wrap-Up (sync docs/PROGRESS.md and docs/HANDOFF.md, verify CI green on branch, merge to main, verify main).
 
 ## Latest verification
 
-- `uv run pytest` -> `57 passed, 15 warnings in 4.29s`
+- `uv run pytest` -> `59 passed, 15 warnings in 4.56s`
+- Step 7 Safe Streaming verified:
+  - Full pipeline (safety check, intent routing, retrieval, verification, dose filter, closing line) executes synchronously first. Nothing unverified is ever streamed.
+  - Emergency responses streamed immediately with 108 emergency card and empty sources.
+  - Verified answer streamed over `POST /chat/stream` as multiple SSE `event: message` sentence chunks (`split_into_sentence_chunks`), followed by `event: metadata` containing sources, intent, emergency, language, and request_id, ending with `event: done`.
+  - Concatenation of sentence chunks strictly equals the `/chat` answer string (verified by `test_safe_streaming_event_order_and_content_equality`).
 - Step 6 Outbreak Alerts and Facilities Tools verified:
   - `outbreak_alerts`: Structured `AlertProvider` protocol and `JsonAlertProvider` reading `data/structured/outbreak_alerts.json`. Every entry labelled `DEMO` and all responses carry `"demo data, not a live alert"` disclaimer with official IDSP reference (`idsp.nic.in`) in both EN and HI. Endpoint `GET /alerts` with district/disease/state query filtering.
   - `find_hospital`: Backed by `data/structured/facilities.csv` with official helpline (108) and all rows labelled `SAMPLE`. Searchable by district and state. Optional Overpass OSM behind config flag (`enable_overpass`, default `False`). Endpoint `GET /facilities`. Fixed emergency message that data is sample and in a medical emergency the user should go to the nearest hospital or call 108.
