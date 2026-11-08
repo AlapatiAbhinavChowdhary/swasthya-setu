@@ -2,21 +2,21 @@
 
 | Phase | Status | Last commit | Notes |
 |---|---|---|---|
-| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings, emergency checks, and deterministic post-generation numeric dose filter verified by safety suite. |
-| 1 Sources and coverage | complete | `93e9297` | 72 official sources in manifest. 30/30 target diseases have verified official disease-specific documentation, and 10 diseases have 3+ official disease-specific sources. Unique document counting enforced by content hash. |
-| 2 Chroma and incremental ingestion | complete | `93e9297` | Chroma has 3,559 vectors indexed from verified official sources; all 30 diseases indexed with real content. HTML loader isolates article body wrapper, truncates at WHO response/references, with strictly 0 boilerplate tokens in vectorstore. |
-| 3 Retrieval, agent and tools | complete | `93e9297` | Deterministic dose filter blocks numeric doses; structured `vaccination_schedule(age)` tool implemented; outdated sources excluded from vaccination queries; strategy documents demoted below guidelines; hybrid BM25+RRF reaches 97.0% hit-rate@4. |
-| 4 API | complete | `93e9297` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination` (with optional age_months filter), `POST /chat`, `POST /chat/stream`, and `POST /feedback`. |
-| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only, live facility tools missing, streaming not real. |
+| 0 Safety | complete | `5d037a4` | Deterministic localized safety closings, emergency checks, dose filter edge cases, and sentence citation support check verified by safety suite. |
+| 1 Sources and coverage | complete | `55d9f44` | 72 official sources in manifest. 30/30 target diseases have verified official disease-specific documentation. Honest depth tiers enforced (`specific_docs_count >= 2` & `specific_chunks >= 50` for `deep`). Optional OCR fallback implemented. |
+| 2 Chroma and incremental ingestion | complete | `0780cb3` | Chroma has 3,633 section-level granular vectors indexed from verified official sources across all 30 diseases; section-level HTML heading extraction with strictly 0 boilerplate tokens in vectorstore. |
+| 3 Retrieval, agent and tools | complete | `2d1d936` | Deterministic dose filter blocks numeric doses while preserving legitimate volume/timing; structured `vaccination_schedule`, `outbreak_alerts` (demo data), and `find_hospital` (sample data) tools implemented; hybrid BM25+RRF reaches 96.1% hit-rate@4 across all 30 diseases. |
+| 4 API | complete | `d8b12ed` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination`, `GET /alerts`, `GET /facilities`, `POST /chat`, `POST /chat/stream` (safe verified SSE sentence streaming), and `POST /feedback`. |
+| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only. |
 | 6 Telegram | partial | `ba9baa7` | Env-gated dry-run adapter; live polling intentionally disabled pending token. |
 | 7 Production | partial | `ba9baa7` | Dockerfile and compose path added; deployment account and monitoring remain. |
 | 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, retrieval evaluation, progress, and comprehensive handoff verified. |
-| 9 Tests and CI | complete | `93e9297` | 45 tests pass in 4.10s; offline test isolation confirmed with mocked LLM and temporary databases; GitHub Actions CI workflow green for both python and web jobs (Run 42458655523). |
-| 10 Acceptance | partial | `93e9297` | Retrieval-only evaluation reached 97.0% hit-rate@4 across covered diseases (100% on 15 of 17 evaluated diseases). Gemini end-to-end evaluation remaining. |
+| 9 Tests and CI | complete | `d8b12ed` | 59 tests pass in 4.56s; offline test isolation confirmed with mocked LLM and temporary databases; GitHub Actions CI workflow green for both python and web jobs. |
+| 10 Acceptance | partial | `b3da9c3` | Retrieval evaluation expanded to all 30 diseases with 180 questions (96.1% hit-rate@4). Gemini end-to-end evaluation remaining. |
 
 ## Exact next step
 
-Next step: Step 8: Wrap-Up (sync docs/PROGRESS.md and docs/HANDOFF.md, verify CI green on branch, merge to main, verify main).
+Next step: Website UI enhancement (connect live facility tools and streaming UI) and Telegram adapter live testing.
 
 ## Latest verification
 
