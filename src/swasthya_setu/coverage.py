@@ -144,6 +144,7 @@ def get_coverage() -> dict[str, Any]:
             "id": disease["id"],
             "name_en": disease["name_en"],
             "name_hi": disease["name_hi"],
+            "category": disease.get("category", "other"),
             "documents": total_unique_docs,
             "specific_documents": specific_docs_count,
             "chunks": total_chunks,
