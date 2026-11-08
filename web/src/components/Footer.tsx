@@ -24,7 +24,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
           <a
             href="tel:108"
             className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg shadow-sm transition focus:outline-none focus:ring-2 focus:ring-red-500 flex-shrink-0"
-            aria-label="Call 108 national medical helpline"
+            aria-label="Emergency: Call 108 national medical helpline"
           >
             <PhoneCall className="w-4 h-4" aria-hidden="true" />
             <span>Emergency: Call 108</span>

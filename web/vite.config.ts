@@ -1,22 +1,52 @@
-import { defineConfig } from "vite";
+import { defineConfig, type HttpProxy } from "vite";
 import react from "@vitejs/plugin-react";
+import type { IncomingMessage } from "http";
+
+const createApiProxy = () => ({
+  target: "http://127.0.0.1:8000",
+  changeOrigin: true,
+  bypass: (req: IncomingMessage) => {
+    const accept = req.headers?.accept || "";
+    if (accept.includes("text/html")) {
+      return "/index.html";
+    }
+  },
+});
 
 export default defineConfig({
   plugins: [react()],
+  appType: "spa",
   server: {
     port: 5173,
     proxy: {
-      "/chat": "http://127.0.0.1:8000",
-      "/health": "http://127.0.0.1:8000",
-      "/coverage": "http://127.0.0.1:8000",
-      "/diseases": "http://127.0.0.1:8000",
-      "/vaccination": "http://127.0.0.1:8000",
-      "/alerts": "http://127.0.0.1:8000",
-      "/facilities": "http://127.0.0.1:8000",
-      "/languages": "http://127.0.0.1:8000",
-      "/feedback": "http://127.0.0.1:8000",
-      "/sources": "http://127.0.0.1:8000",
-      "/admin": "http://127.0.0.1:8000",
+      "/chat": createApiProxy(),
+      "/health": createApiProxy(),
+      "/coverage": createApiProxy(),
+      "/diseases": createApiProxy(),
+      "/vaccination": createApiProxy(),
+      "/alerts": createApiProxy(),
+      "/facilities": createApiProxy(),
+      "/languages": createApiProxy(),
+      "/feedback": createApiProxy(),
+      "/sources": createApiProxy(),
+      "/admin/feedback": createApiProxy(),
+    },
+  },
+  preview: {
+    port: 4173,
+    host: "127.0.0.1",
+    proxy: {
+      "/chat": createApiProxy(),
+      "/health": createApiProxy(),
+      "/coverage": createApiProxy(),
+      "/diseases": createApiProxy(),
+      "/vaccination": createApiProxy(),
+      "/alerts": createApiProxy(),
+      "/facilities": createApiProxy(),
+      "/languages": createApiProxy(),
+      "/feedback": createApiProxy(),
+      "/sources": createApiProxy(),
+      "/admin/feedback": createApiProxy(),
     },
   },
 });

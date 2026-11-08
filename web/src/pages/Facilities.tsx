@@ -99,7 +99,7 @@ export const Facilities: React.FC<FacilitiesProps> = ({ language }) => {
         <a
           href="tel:108"
           className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-white text-red-700 hover:bg-red-50 font-extrabold text-base shadow transition focus:outline-none focus:ring-4 focus:ring-white/50 flex-shrink-0"
-          aria-label="Call 108 Emergency Helpline now"
+          aria-label="Call 108 Now - Emergency Helpline"
         >
           <PhoneCall className="w-5 h-5 animate-pulse" aria-hidden="true" />
           <span>Call 108 Now</span>

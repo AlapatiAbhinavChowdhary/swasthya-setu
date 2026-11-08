@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import path from "path";
+import { fileURLToPath } from "url";
 
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const SCREENSHOT_DIR = path.resolve(__dirname, "../../docs/screenshots");
 
 const MOCK_COVERAGE = {
@@ -163,20 +165,57 @@ const MOCK_ADMIN_FEEDBACK = {
 };
 
 test.beforeEach(async ({ page }) => {
+  // Helper to ensure page document navigations are never intercepted as API mocks
+  const apiRoute = (
+    pattern: string | RegExp,
+    handler: (route: Parameters<Parameters<typeof page.route>[1]>[0]) => Promise<void>
+  ) => {
+    return page.route(pattern, async (route) => {
+      if (route.request().resourceType() === "document") {
+        return route.continue();
+      }
+      return handler(route);
+    });
+  };
+
   // Mock API routes for reliable, offline-deterministic E2E runs
-  await page.route("**/coverage", async (route) => {
+  await apiRoute("**/coverage", async (route) => {
     await route.fulfill({ json: MOCK_COVERAGE });
   });
-  await page.route("**/vaccination*", async (route) => {
+  await apiRoute("**/diseases", async (route) => {
+    await route.fulfill({ json: MOCK_COVERAGE });
+  });
+  await apiRoute("**/health", async (route) => {
+    await route.fulfill({ json: { status: "ok", llm_configured: true } });
+  });
+  await apiRoute("**/languages", async (route) => {
+    await route.fulfill({
+      json: {
+        languages: [
+          { code: "en", name: "English", native_name: "English", status: "supported" },
+          { code: "hi", name: "Hindi", native_name: "हिन्दी", status: "supported" },
+          { code: "or", name: "Odia", native_name: "ଓଡ଼ିଆ", status: "draft" },
+          { code: "pa", name: "Punjabi", native_name: "ਪੰਜਾਬੀ", status: "draft" },
+        ],
+      },
+    });
+  });
+  await apiRoute("**/sources", async (route) => {
+    await route.fulfill({ json: { content: "# Verified Official Sources" } });
+  });
+  await apiRoute("**/vaccination*", async (route) => {
     await route.fulfill({ json: MOCK_VACCINATION });
   });
-  await page.route("**/alerts*", async (route) => {
+  await apiRoute("**/alerts*", async (route) => {
     await route.fulfill({ json: MOCK_ALERTS });
   });
-  await page.route("**/facilities*", async (route) => {
+  await apiRoute("**/facilities*", async (route) => {
     await route.fulfill({ json: MOCK_FACILITIES });
   });
-  await page.route("**/admin/feedback*", async (route) => {
+  await apiRoute("**/feedback", async (route) => {
+    await route.fulfill({ json: { accepted: true, request_id: "req-fb" } });
+  });
+  await apiRoute("**/admin/feedback*", async (route) => {
     const auth = route.request().headers()["authorization"];
     if (auth && auth.includes("test-admin-secret")) {
       await route.fulfill({ json: MOCK_ADMIN_FEEDBACK });
@@ -184,7 +223,21 @@ test.beforeEach(async ({ page }) => {
       await route.fulfill({ status: 401, json: { detail: "Unauthorized" } });
     }
   });
-  await page.route("**/chat/stream", async (route) => {
+  await apiRoute("**/chat", async (route) => {
+    await route.fulfill({
+      json: {
+        answer: "Malaria is caused by Plasmodium parasites [1]. Common symptoms include fever, chills, and headache [1].",
+        citations: [1],
+        sources: [{ number: 1, source: "WHO Malaria Fact Sheet", page: "1", snippet: "High fever and chills" }],
+        intent: "symptoms",
+        emergency: false,
+        language: "en",
+        language_consistent: true,
+        request_id: "req-test",
+      },
+    });
+  });
+  await apiRoute("**/chat/stream", async (route) => {
     const sseBody = [
       'event: message\ndata: {"chunk":"Malaria is caused by Plasmodium parasites [1]. "}\n\n',
       'event: message\ndata: {"chunk":"Common symptoms include fever, chills, and headache [1]. "}\n\n',
@@ -246,7 +299,7 @@ for (const p of pagesToTest) {
     await page.screenshot({ path: screenshotPathLight, fullPage: false });
 
     // Toggle dark mode
-    const themeBtn = page.getByRole("button", { name: /switch to dark theme/i });
+    const themeBtn = page.getByRole("button", { name: /switch to dark mode/i });
     if (await themeBtn.isVisible()) {
       await themeBtn.click();
       await page.waitForTimeout(100);
@@ -274,12 +327,12 @@ test("chat interaction: sends message, streams response, displays source chip", 
   // Answer renders
   await expect(page.getByText(/Plasmodium parasites/i)).toBeVisible();
   // Citation chip rendered
-  const chip = page.getByRole("button", { name: "View cited source 1" });
+  const chip = page.getByRole("button", { name: "View cited source 1" }).first();
   await expect(chip).toBeVisible();
 
   // Click citation chip opens source panel
   await chip.click();
-  await expect(page.getByText(/WHO Malaria Fact Sheet/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "WHO Malaria Fact Sheet" })).toBeVisible();
 });
 
 test("admin interaction: authenticates with token and shows feedback", async ({

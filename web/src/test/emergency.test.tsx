@@ -6,7 +6,7 @@ import { EmergencyCard } from "../components/EmergencyCard";
 describe("EmergencyCard", () => {
   it("renders the 108 emergency call link", () => {
     render(<EmergencyCard />);
-    const link = screen.getByRole("link", { name: /Dial 108 emergency helpline/i });
+    const link = screen.getByRole("link", { name: /Call 108/i });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "tel:108");
     expect(screen.getByText("Call 108 Emergency Helpline")).toBeInTheDocument();

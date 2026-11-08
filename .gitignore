@@ -17,5 +17,7 @@ data/raw/*
 data/*.db
 web/node_modules/
 web/dist/
+web/test-results/
+web/playwright-report/
 web/tsconfig.tsbuildinfo
 logs/

@@ -25,7 +25,7 @@ export const EmergencyCard: React.FC<EmergencyCardProps> = ({
             <a
               href="tel:108"
               className="inline-flex items-center gap-2 px-5 py-3 bg-white text-red-700 font-bold text-lg rounded-lg shadow hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-white transition"
-              aria-label="Dial 108 emergency helpline"
+              aria-label={callLabel}
             >
               <PhoneCall className="w-6 h-6 text-red-600" aria-hidden="true" />
               <span>{callLabel}</span>

@@ -239,7 +239,7 @@ export const DiseaseDetail: React.FC<DiseaseDetailProps> = ({ language }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-800 dark:text-zinc-200 text-xs font-semibold transition flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    aria-label={`Open source document ${doc.title} on official website`}
+                    aria-label={`View Official Source: ${doc.title}`}
                   >
                     <span>View Official Source</span>
                     <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
