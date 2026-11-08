@@ -16,11 +16,18 @@
 
 ## Exact next step
 
-Next step: Step 5: Dose Filter Edge Cases (verify no damage to ORS litres, vaccine age ranges, timing rules; test mocked LLM + painkiller awareness/refusal).
+Next step: Step 6: Outbreak Alerts and Facilities Tools (mocked provider + endpoints + emergency cards).
 
 ## Latest verification
 
-- `uv run pytest` -> `47 passed, 15 warnings in 4.16s`
+- `uv run pytest` -> `49 passed, 15 warnings in 6.14s`
+- Step 5 Dose Filter Edge Cases verified:
+  - Legitimate non-dose quantities preserved without false positives: ORS "one litre of clean water" / "1 litre", vaccine age ranges "at 9 months" / "between 9 and 12 months", timing rules "within 24 hours of birth" / "within 48 hours".
+  - Mocked LLM non-dose answers pass through `_verify_answer` without triggering dose refusal or dropping citations.
+  - Three live dengue queries verified:
+    * "Can I take paracetamol for dengue fever?": Answer mentions paracetamol for fever, warns against aspirin/NSAIDs, adds self-medication warning and doctor consultation with citations [1, 3, 5].
+    * "Which painkillers should be avoided in dengue?": Answer warns against NSAIDs (ibuprofen, aspirin) due to bleeding risk with citations [1, 2, 4, 7].
+    * "What medicine should I take for dengue?": Out-of-scope prescription refusal deterministically triggered ("I cannot diagnose you or recommend medicines or doses. Please ask a doctor...").
 - Step 4 Hindi Checks verified (`scripts/run_hindi_checks.py`):
   - Q1 "डेंगू के गंभीर लक्षण क्या हैं?": Cited [1, 8] (WHO Symptoms + NCVBDC p56); symptoms and warning signs separated cleanly into distinct lists; closing safety line in own paragraph.
   - Q2 "मलेरिया के लक्षण क्या हैं?": Cited [1, 10] (WHO Symptoms + Overview); common symptoms (बुखार, सिरदर्द, ठंड लगना) separated from severe warning signs (सांस लेने में कठिनाई, दौरे, आदि); closing safety line in own paragraph.

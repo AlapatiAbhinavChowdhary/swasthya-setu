@@ -304,6 +304,44 @@ def test_deterministic_dose_filter_blocks_dose_patterns():
     assert "500 mg" not in filtered
 
 
+def test_dose_filter_edge_cases_preserve_legitimate_content():
+    """Ensure the dose filter does not damage legitimate awareness content."""
+    from swasthya_setu.generation.verification import filter_dose_patterns, has_numeric_dose
+
+    legitimate_cases = [
+        "Mix one packet of ORS in one litre of clean drinking water [1].",
+        "Prepare ORS using 1 litre of clean water [1].",
+        "The first dose of MR vaccine is administered at 9 months [1].",
+        "Vaccines can be given between 9 and 12 months of age [1].",
+        "Hepatitis B birth dose must be given within 24 hours of birth [1].",
+        "Administer within 48 hours if indicated [1].",
+        "Drink plenty of fluids including tender coconut water and ORS [1].",
+    ]
+    for text in legitimate_cases:
+        assert not has_numeric_dose(text), f"False positive dose detection on: {text}"
+        filtered, is_clean = filter_dose_patterns(text)
+        assert is_clean, f"Filter damaged legitimate content: {text}"
+        assert filtered == text
+
+
+def test_mocked_llm_preserves_legitimate_content_in_verify_answer(monkeypatch):
+    """Test that legitimate non-dose answers pass through verification without dose refusal."""
+    doc = Document(page_content="Mix ORS in 1 litre clean water. BCG within 24 hours.", metadata={"source": "ors.pdf"})
+    state = {
+        "question": "How to prepare ORS?",
+        "intent": "disease_info",
+        "language": "en",
+        "answer": "Mix one packet in 1 litre of clean water within 24 hours [1].",
+        "citations": [1],
+        "documents": [doc],
+    }
+    result = _verify_answer(state)
+    assert "1 litre of clean water" in result["answer"]
+    assert "within 24 hours" in result["answer"]
+    assert result["citations"] == [1]
+    assert "cannot provide specific drug doses" not in result["answer"]
+
+
 def test_mocked_llm_dose_output_is_blocked_in_verify_answer(monkeypatch):
     from swasthya_setu.generation.verification import FIXED_MESSAGES
 
