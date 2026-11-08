@@ -17,6 +17,54 @@ def test_html_extractor_drops_navigation_and_keeps_article_text():
     assert "Copyright" not in text
 
 
+def test_html_extractor_who_fixture_page():
+    fixture_html = """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Diabetes - WHO</title></head>
+    <body>
+      <header>
+        <div class="sf-header">
+          <nav>
+            <a href="/newsroom">Newsroom</a>
+            <a href="/emergencies">Emergencies</a>
+            <a href="/don">Disease Outbreak News</a>
+          </nav>
+          <div class="language-selector">Select language</div>
+        </div>
+      </header>
+      <div class="cookie-banner">This site uses cookies.</div>
+      <article class="sf-detail-body-wrapper">
+        <h1>Diabetes</h1>
+        <div class="credits">Reading time: 3 mins</div>
+        <h2>Key facts</h2>
+        <p>Diabetes is a chronic disease that occurs either when the pancreas does not produce enough insulin.</p>
+        <h2>Symptoms</h2>
+        <p>Symptoms include feeling more thirsty, needing to urinate more often, and blurred vision.</p>
+        <h2>WHO response</h2>
+        <p>WHO works with Member States to improve diabetes prevention and treatment.</p>
+        <h2>References</h2>
+        <p>1. Global report on diabetes. Geneva: World Health Organization; 2016.</p>
+      </article>
+      <footer>
+        <p>&copy; 2026 World Health Organization</p>
+      </footer>
+    </body>
+    </html>
+    """
+    heading, text = extract_html_text(fixture_html)
+    assert heading == "Diabetes"
+    assert "Key facts" in text
+    assert "Symptoms include feeling more thirsty" in text
+    # Verify institutional response and references are dropped
+    assert "pancreas does not produce enough insulin" in text
+    assert "WHO works with Member States" not in text
+    assert "Global report on diabetes" not in text
+    # Verify forbidden boilerplate strings are strictly absent
+    for forbidden in ["Newsroom", "Select language", "Emergencies", "Disease Outbreak News", "Member States", "cookie"]:
+        assert forbidden.lower() not in text.lower(), f"Forbidden string '{forbidden}' found in extracted text"
+
+
 def test_local_source_files_are_present():
     dengue_pdf = Path("data/raw/dengue_guidelines_2023.pdf")
     who_pdf = Path("data/raw/Fact_Sheet_WHD_2014_EN_1629.pdf")
