@@ -1,23 +1,28 @@
 # Source download report
 
-Generated from `data/sources.lock.json` after running:
+Generated from `data/sources.lock.json` and official acquisition runs.
 
-```powershell
-uv run python scripts/download_data.py --retry-unreachable
-```
-
-| Source | Status | Bytes | Fallback | Reason |
+| Source URL | Status | Bytes | Fallback Step | Reason / Details |
 |---|---|---:|---|---|
-| who-india-health-topics | downloaded | 67874 | Python | WHO HTML page returned HTTP 200 |
-| dengue-guidelines-2023 | downloaded | 4917466 | Python | NCVBDC PDF returned `%PDF` |
-| who-vector-borne-fact-sheets-2014 | skipped | 283187 | Existing file | WHO IRIS PDF is valid |
-| local-who-vector-borne-fact-sheets-2014 | downloaded | 5062009 | Python | WHO CDN PDF returned `%PDF` |
-| national-immunization-schedule | skipped | 94522 | Existing file | NHM PDF is valid |
+| https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf | skipped | 283187 | - | Verified official file |
+| https://cdn.who.int/media/docs/default-source/searo/india/routine-immunization/immunization-handbook-for-medical-officers-2008.pdf | downloaded | 9504852 | Python urllib (attempt 1) | Verified official file |
+| https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/892.pdf | downloaded | 288860 | Python urllib (attempt 1) | Verified official file |
+| https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content | skipped | 283187 | - | Verified official file |
+| https://main.mohfw.gov.in/sites/default/files/Unit2NationalImmunizationSchedule.pdf | unreachable | 0 | - | urllib: <urlopen error [Errno 11001] getaddrinfo failed>; curl: curl: (6) Could not resolve host: main.mohfw.gov.in |
+| https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf | skipped | 4917466 | - | Verified official file |
+| https://ncvbdc.mohfw.gov.in/Doc/National-Strategic-Plan-Malaria-2023-27.pdf | downloaded | 11067843 | Python urllib (attempt 1) | Verified official file |
+| https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/5232542721532941542.pdf | downloaded | 3286256 | Python urllib (attempt 1) | Verified official file |
+| https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/National-framework-for-malaria-elimination-in-India-2016%E2%80%932030.pdf | downloaded | 5679862 | Python urllib (attempt 1) | Verified official file |
+| https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Health_Workers-English.pdf | downloaded | 15833562 | Python urllib (attempt 1) | Verified official file |
+| https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Program_Manager-English.pdf | downloaded | 12947301 | Python urllib (attempt 1) | Verified official file |
+| https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/report/National_%20Immunization_Schedule.pdf | downloaded | 162237 | Python urllib (attempt 1) | Verified official file |
+| https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/1394742221TOG-Chapter-3-Case-finding-diagnosis-strategy1.pdf | downloaded | 10070084 | Python urllib (attempt 1) | Verified official file |
+| https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/8337437943TOG-Chapter-4-Treatment-of-TB-Part-1.pdf | downloaded | 3352228 | Python urllib (attempt 1) | Verified official file |
+| https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/934546848TOG-Chapter-4-Treatment-of-TB-Part-2.pdf | downloaded | 5071627 | Python urllib (attempt 1) | Verified official file |
+| https://tbcindia.mohfw.gov.in/wp-content/uploads/2025/07/National-Guidance-on-Differential-TB-Care_Final_March-2025-3.pdf | downloaded | 18085565 | Python urllib (attempt 1) | Verified official file |
+| https://www.icmr.gov.in/icmrobject/uploads/STWs/1725964687_adult-extrapulmonary-tuberculosis-all.pdf | downloaded | 3125759 | Python urllib (attempt 1) | Verified official file |
+| https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf | skipped | 94522 | - | Verified official file |
+| https://www.who.int/india/health-topics | skipped | 67874 | - | Verified official file |
 
-The two root-level legacy files were registered as `local_file` sources and
-are indexed directly; they are never discarded when a network URL is
-unreachable.
-
-Only downloaded or valid pre-existing files in the lockfile are eligible for
-indexing. The existing root-level files in `data/raw/` are intentionally not
-used by the rebuild because they are not tied to this verified manifest.
+## Unreachable sources log
+- **https://main.mohfw.gov.in/sites/default/files/Unit2NationalImmunizationSchedule.pdf**: `urllib: <urlopen error [Errno 11001] getaddrinfo failed>; curl: curl: (6) Could not resolve host: main.mohfw.gov.in`

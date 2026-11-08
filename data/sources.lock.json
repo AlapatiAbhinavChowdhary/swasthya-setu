@@ -1,27 +1,29 @@
 [
   {
-    "url": "https://www.who.int/india/health-topics",
-    "file": "data\\raw\\dengue\\who-india-health-topics.html",
+    "url": "https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf",
+    "file": "data\\raw\\Fact_Sheet_WHD_2014_EN_1629.pdf",
     "date": "2026-11-07",
     "status": "skipped",
-    "hash": "8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6",
-    "bytes": 67874
+    "hash": "0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c",
+    "bytes": 283187
   },
   {
-    "url": "https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf",
-    "file": "data\\raw\\dengue_guidelines_2023.pdf",
-    "date": "2026-11-07",
-    "status": "skipped",
-    "hash": "7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407",
-    "bytes": 4917466
+    "url": "https://cdn.who.int/media/docs/default-source/searo/india/routine-immunization/immunization-handbook-for-medical-officers-2008.pdf",
+    "file": "data\\raw\\child-immunization\\who-immunization-handbook-medical-officers-2008.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "3e0d5e4a52c88c5f3e07a517e8a344fd7d4799749c4026bc6c8f336675c57b71",
+    "bytes": 9504852,
+    "fallback": "Python urllib (attempt 1)"
   },
   {
-    "url": "https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf",
-    "file": "data\\raw\\dengue\\dengue-guidelines-2023.pdf",
-    "date": "2026-11-07",
-    "status": "skipped",
-    "hash": "7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407",
-    "bytes": 4917466
+    "url": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/892.pdf",
+    "file": "data\\raw\\malaria\\standard-treatment-guidelines-malaria.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "3f6e8f9435cbe3671f70aa8ea8c47c18bcd8be23afdf180a8021edb1c914a766",
+    "bytes": 288860,
+    "fallback": "Python urllib (attempt 1)"
   },
   {
     "url": "https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content",
@@ -32,12 +34,118 @@
     "bytes": 283187
   },
   {
-    "url": "https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf",
-    "file": "data\\raw\\Fact_Sheet_WHD_2014_EN_1629.pdf",
-    "date": "2026-11-07",
+    "url": "https://main.mohfw.gov.in/sites/default/files/Unit2NationalImmunizationSchedule.pdf",
+    "file": "data\\raw\\child-immunization\\mohfw-unit2-immunization-schedule-2008.pdf",
+    "date": "2026-11-08",
+    "status": "unreachable",
+    "error": "urllib: <urlopen error [Errno 11001] getaddrinfo failed>; curl: curl: (6) Could not resolve host: main.mohfw.gov.in"
+  },
+  {
+    "url": "https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf",
+    "file": "data\\raw\\dengue_guidelines_2023.pdf",
+    "date": "2026-11-08",
     "status": "skipped",
-    "hash": "0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c",
-    "bytes": 283187
+    "hash": "7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407",
+    "bytes": 4917466
+  },
+  {
+    "url": "https://ncvbdc.mohfw.gov.in/Doc/National-Strategic-Plan-Malaria-2023-27.pdf",
+    "file": "data\\raw\\malaria\\national-strategic-plan-malaria-2023-27.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "aa0aaa1e18e8a8f0ba6508a2f87c6f06a6e209b42b3dcf62b1054f39a2e83ac0",
+    "bytes": 11067843,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/5232542721532941542.pdf",
+    "file": "data\\raw\\malaria\\operational-manual-malaria-elimination-2016.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "7a96bec0038e74fff48ee324e8a6ce13808fcaa8bb385322c30014f431795b24",
+    "bytes": 3286256,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/National-framework-for-malaria-elimination-in-India-2016%E2%80%932030.pdf",
+    "file": "data\\raw\\malaria\\national-framework-malaria-elimination-2016-2030.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "f1c7d28831a5130c2cd5ce6057596be0fe288a8893b27ae8135e21f039b5fb72",
+    "bytes": 5679862,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Health_Workers-English.pdf",
+    "file": "data\\raw\\child-immunization\\faq-immunization-health-workers.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "c7e4cc3a29a4e43c522041aaef55aad8eea7d6549488d585c6983aec5e6a9811",
+    "bytes": 15833562,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Program_Manager-English.pdf",
+    "file": "data\\raw\\child-immunization\\faq-immunization-program-managers.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "b245480114b0668de2d757ec04ba02a136d34ea34c3366ea8cd085016606e873",
+    "bytes": 12947301,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/report/National_%20Immunization_Schedule.pdf",
+    "file": "data\\raw\\child-immunization\\national-immunization-schedule-2018.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "62e7bb43e3bdc672241d7f6c7f42a934abf2e06dcbeda8e149cef04b88ec3256",
+    "bytes": 162237,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/1394742221TOG-Chapter-3-Case-finding-diagnosis-strategy1.pdf",
+    "file": "data\\raw\\tuberculosis\\tog-2016-chapter-3-case-finding-diagnosis.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "2341908addeaeb3cbf6763966db2cac84bd18aee7113cc6deeb007945b9de9b4",
+    "bytes": 10070084,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/8337437943TOG-Chapter-4-Treatment-of-TB-Part-1.pdf",
+    "file": "data\\raw\\tuberculosis\\tog-2016-chapter-4-treatment-of-tb-part-1.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "900a4c004e6ddd9040109367cf20b72f5bc5a921ecaa244129443517333124cf",
+    "bytes": 3352228,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/934546848TOG-Chapter-4-Treatment-of-TB-Part-2.pdf",
+    "file": "data\\raw\\tuberculosis\\tog-2016-chapter-4-treatment-of-tb-part-2.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "c9b6dff983dfa05a43d20b1c02f5fffba929c1fbe499e792a10cbff056c944b1",
+    "bytes": 5071627,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://tbcindia.mohfw.gov.in/wp-content/uploads/2025/07/National-Guidance-on-Differential-TB-Care_Final_March-2025-3.pdf",
+    "file": "data\\raw\\tuberculosis\\national-guidance-differential-tb-care-2025.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "eb31ae73d5614ebaf0f47cdef3dfd4ec7784b9ea596479fe0738d98ff14643a7",
+    "bytes": 18085565,
+    "fallback": "Python urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.icmr.gov.in/icmrobject/uploads/STWs/1725964687_adult-extrapulmonary-tuberculosis-all.pdf",
+    "file": "data\\raw\\tuberculosis\\icmr-adult-extrapulmonary-tuberculosis-stw.pdf",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "a5ce736dbc59ea0ec4d02ef9527050f37ab37ecae243b0de7cff2db32c571e42",
+    "bytes": 3125759,
+    "fallback": "Python urllib (attempt 1)"
   },
   {
     "url": "https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf",
@@ -46,5 +154,13 @@
     "status": "skipped",
     "hash": "cf8bd1bb3d8c5a4a9b045f297df574813dda17a9a2ce109fac4700a92ee384b3",
     "bytes": 94522
+  },
+  {
+    "url": "https://www.who.int/india/health-topics",
+    "file": "data\\raw\\dengue\\who-india-health-topics.html",
+    "date": "2026-11-07",
+    "status": "skipped",
+    "hash": "8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6",
+    "bytes": 67874
   }
 ]

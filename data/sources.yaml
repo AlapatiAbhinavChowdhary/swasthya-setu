@@ -1,62 +1,290 @@
 sources:
-  - id: doc-dengue-guideline-7c8ffb
-    doc_id: 7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407
-    title: National Guidelines for Clinical Management of Dengue Fever 2023
-    publisher: NCVBDC, Ministry of Health and Family Welfare, Government of India
-    url: https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf
-    file: data/raw/dengue_guidelines_2023.pdf
-    status: local_file
-    disease_ids: [dengue]
-    coverage: disease-specific
-    language: en
-    doc_type: guideline
-    year: 2023
-  - id: doc-who-vector-0eacf9
-    doc_id: 0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c
-    title: "India BITE: Fact sheets on vector-borne diseases in India"
-    publisher: WHO Country Office for India and Government of India
-    url: https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content
-    file: data/raw/Fact_Sheet_WHD_2014_EN_1629.pdf
-    status: local_file
-    disease_ids: [dengue, malaria, chikungunya, japanese-encephalitis, kala-azar, lymphatic-filariasis]
-    coverage: general
-    language: en
-    doc_type: fact_sheet
-    year: 2014
-    license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source link.
-  - id: doc-immunization-cf8bd1
-    doc_id: cf8bd1bb3d8c5a4a9b045f297df574813dda17a9a2ce109fac4700a92ee384b3
-    title: National Immunization Schedule
-    publisher: National Health Mission, Ministry of Health and Family Welfare, Government of India
-    url: https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf
-    file: data/raw/child-immunization/national-immunization-schedule.pdf
-    status: local_file
-    disease_ids: [child-immunization, hepatitis-b, polio, measles, japanese-encephalitis, diphtheria-pertussis-tetanus]
-    coverage: general
-    language: en
-    doc_type: schedule
-    year: 2026
-  - id: doc-who-health-topics-8ddec6
-    doc_id: 8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6
-    title: WHO India health topics
-    publisher: World Health Organization
-    url: https://www.who.int/india/health-topics
-    file: data/raw/dengue/who-india-health-topics.html
-    status: downloaded
-    disease_ids: [dengue, malaria, tuberculosis, maternal-newborn-care]
-    coverage: general
-    language: en
-    doc_type: health_topics
-    license_note: WHO content; retain attribution and source link.
-  - id: doc-who-vector-image-a9298d
-    doc_id: a9298d153c7f5b90410118efdcc03a22ff53190cc90c274a8d93d6da5ee395b5
-    title: "India BITE: Fact sheets on vector-borne diseases in India (scanned copy)"
-    publisher: WHO Country Office for India and Government of India
-    url: https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf
-    file: data/raw/dengue/local-who-vector-borne-fact-sheets-2014.pdf
-    status: local_file
-    disease_ids: [dengue, malaria, chikungunya, japanese-encephalitis, kala-azar, lymphatic-filariasis]
-    coverage: general
-    language: en
-    doc_type: fact_sheet
-    license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source link.
+- id: doc-dengue-guideline-7c8ffb
+  title: National Guidelines for Clinical Management of Dengue Fever 2023
+  publisher: NCVBDC, Ministry of Health and Family Welfare, Government of India
+  url: https://ncvbdc.mohfw.gov.in/Doc/National%20Guidelines%20for%20Clinical%20Management%20of%20Dengue%20Fever%202023.pdf
+  file: data/raw/dengue_guidelines_2023.pdf
+  disease_ids:
+  - dengue
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2023
+  doc_id: 7c8ffbadaee6ebdb31c677e27c553915ea027aa168d0ca6ede890c44bbcb4407
+  status: local_file
+- id: doc-immunization-cf8bd1
+  doc_id: cf8bd1bb3d8c5a4a9b045f297df574813dda17a9a2ce109fac4700a92ee384b3
+  title: National Immunization Schedule
+  publisher: National Health Mission, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf
+  file: data/raw/child-immunization/national-immunization-schedule.pdf
+  status: local_file
+  disease_ids:
+  - child-immunization
+  - hepatitis-b
+  - polio
+  - measles
+  - japanese-encephalitis
+  - diphtheria-pertussis-tetanus
+  coverage: general
+  language: en
+  doc_type: schedule
+  year: 2026
+- id: doc-immunization-faq-hw
+  title: Frequently Asked Questions on Immunization for Health Workers
+  publisher: National Health Mission, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Health_Workers-English.pdf
+  file: data/raw/child-immunization/faq-immunization-health-workers.pdf
+  disease_ids:
+  - child-immunization
+  - hepatitis-b
+  - polio
+  - measles
+  - diphtheria-pertussis-tetanus
+  coverage: general
+  language: en
+  doc_type: iec
+  year: 2018
+  status: downloaded
+  doc_id: c7e4cc3a29a4e43c522041aaef55aad8eea7d6549488d585c6983aec5e6a9811
+- id: doc-immunization-faq-pm
+  title: Frequently Asked Questions on Immunization for Program Managers
+  publisher: National Health Mission, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/Guildelines_for_immunization/FAQ_on_Immunization_for_Program_Manager-English.pdf
+  file: data/raw/child-immunization/faq-immunization-program-managers.pdf
+  disease_ids:
+  - child-immunization
+  - hepatitis-b
+  - polio
+  - measles
+  - diphtheria-pertussis-tetanus
+  coverage: general
+  language: en
+  doc_type: iec
+  year: 2018
+  status: downloaded
+  doc_id: b245480114b0668de2d757ec04ba02a136d34ea34c3366ea8cd085016606e873
+- id: doc-immunization-nis-2018
+  title: National Immunization Schedule
+  publisher: National Health Mission, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/report/National_%20Immunization_Schedule.pdf
+  file: data/raw/child-immunization/national-immunization-schedule-2018.pdf
+  disease_ids:
+  - child-immunization
+  - hepatitis-b
+  - polio
+  - measles
+  - japanese-encephalitis
+  - diphtheria-pertussis-tetanus
+  coverage: general
+  language: en
+  doc_type: schedule
+  year: 2018
+  status: downloaded
+  doc_id: 62e7bb43e3bdc672241d7f6c7f42a934abf2e06dcbeda8e149cef04b88ec3256
+- id: doc-immunization-who-handbook-2008
+  title: Immunization Handbook for Medical Officers
+  publisher: WHO Country Office for India and Government of India
+  url: https://cdn.who.int/media/docs/default-source/searo/india/routine-immunization/immunization-handbook-for-medical-officers-2008.pdf
+  file: data/raw/child-immunization/who-immunization-handbook-medical-officers-2008.pdf
+  disease_ids:
+  - child-immunization
+  - hepatitis-b
+  - polio
+  - measles
+  - diphtheria-pertussis-tetanus
+  coverage: general
+  language: en
+  doc_type: guideline
+  year: 2008
+  license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
+    link.
+  status: downloaded
+  doc_id: 3e0d5e4a52c88c5f3e07a517e8a344fd7d4799749c4026bc6c8f336675c57b71
+- id: doc-malaria-framework-2016-30
+  title: National Framework for Malaria Elimination in India 2016-2030
+  publisher: National Center for Vector Borne Diseases Control (NCVBDC), MoHFW, Government
+    of India
+  url: https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/National-framework-for-malaria-elimination-in-India-2016%E2%80%932030.pdf
+  file: data/raw/malaria/national-framework-malaria-elimination-2016-2030.pdf
+  disease_ids:
+  - malaria
+  coverage: disease-specific
+  language: en
+  doc_type: strategy
+  year: 2016
+  status: downloaded
+  doc_id: f1c7d28831a5130c2cd5ce6057596be0fe288a8893b27ae8135e21f039b5fb72
+- id: doc-malaria-nsp-2023-27
+  title: National Strategic Plan for Malaria Elimination in India 2023-2027
+  publisher: National Center for Vector Borne Diseases Control (NCVBDC), MoHFW, Government
+    of India
+  url: https://ncvbdc.mohfw.gov.in/Doc/National-Strategic-Plan-Malaria-2023-27.pdf
+  file: data/raw/malaria/national-strategic-plan-malaria-2023-27.pdf
+  disease_ids:
+  - malaria
+  coverage: disease-specific
+  language: en
+  doc_type: strategy
+  year: 2023
+  status: downloaded
+  doc_id: aa0aaa1e18e8a8f0ba6508a2f87c6f06a6e209b42b3dcf62b1054f39a2e83ac0
+- id: doc-malaria-operational-manual-2016
+  title: Operational Manual for Malaria Elimination in India 2016
+  publisher: National Center for Vector Borne Diseases Control (NCVBDC), MoHFW, Government
+    of India
+  url: https://ncvbdc.mohfw.gov.in/WriteReadData/l892s/5232542721532941542.pdf
+  file: data/raw/malaria/operational-manual-malaria-elimination-2016.pdf
+  disease_ids:
+  - malaria
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2016
+  status: downloaded
+  doc_id: 7a96bec0038e74fff48ee324e8a6ce13808fcaa8bb385322c30014f431795b24
+- id: doc-malaria-stg-mohfw
+  title: 'Standard Treatment Guidelines: Malaria'
+  publisher: Clinical Establishments, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://clinicalestablishments.mohfw.gov.in/sites/default/files/standard-treatment-guidelines/892.pdf
+  file: data/raw/malaria/standard-treatment-guidelines-malaria.pdf
+  disease_ids:
+  - malaria
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2014
+  status: downloaded
+  doc_id: 3f6e8f9435cbe3671f70aa8ea8c47c18bcd8be23afdf180a8021edb1c914a766
+- id: doc-tb-guidance-differential-care-2025
+  title: National Guidance on Differential TB Care
+  publisher: Central TB Division, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://tbcindia.mohfw.gov.in/wp-content/uploads/2025/07/National-Guidance-on-Differential-TB-Care_Final_March-2025-3.pdf
+  file: data/raw/tuberculosis/national-guidance-differential-tb-care-2025.pdf
+  disease_ids:
+  - tuberculosis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2025
+  status: downloaded
+  doc_id: eb31ae73d5614ebaf0f47cdef3dfd4ec7784b9ea596479fe0738d98ff14643a7
+- id: doc-tb-icmr-stw-extrapulmonary
+  title: 'Standard Treatment Workflows: Adult Extrapulmonary Tuberculosis'
+  publisher: Indian Council of Medical Research (ICMR), Government of India
+  url: https://www.icmr.gov.in/icmrobject/uploads/STWs/1725964687_adult-extrapulmonary-tuberculosis-all.pdf
+  file: data/raw/tuberculosis/icmr-adult-extrapulmonary-tuberculosis-stw.pdf
+  disease_ids:
+  - tuberculosis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2022
+  status: downloaded
+  doc_id: a5ce736dbc59ea0ec4d02ef9527050f37ab37ecae243b0de7cff2db32c571e42
+- id: doc-tb-tog-ch3-case-finding-2016
+  title: 'Technical and Operational Guidelines for TB Control 2016 - Chapter 3: Case
+    Finding and Diagnosis Strategy'
+  publisher: Central TB Division, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/1394742221TOG-Chapter-3-Case-finding-diagnosis-strategy1.pdf
+  file: data/raw/tuberculosis/tog-2016-chapter-3-case-finding-diagnosis.pdf
+  disease_ids:
+  - tuberculosis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2016
+  status: downloaded
+  doc_id: 2341908addeaeb3cbf6763966db2cac84bd18aee7113cc6deeb007945b9de9b4
+- id: doc-tb-tog-ch4-treatment-p1-2016
+  title: 'Technical and Operational Guidelines for TB Control 2016 - Chapter 4: Treatment
+    of TB (Part 1)'
+  publisher: Central TB Division, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/8337437943TOG-Chapter-4-Treatment-of-TB-Part-1.pdf
+  file: data/raw/tuberculosis/tog-2016-chapter-4-treatment-of-tb-part-1.pdf
+  disease_ids:
+  - tuberculosis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2016
+  status: downloaded
+  doc_id: 900a4c004e6ddd9040109367cf20b72f5bc5a921ecaa244129443517333124cf
+- id: doc-tb-tog-ch4-treatment-p2-2016
+  title: 'Technical and Operational Guidelines for TB Control 2016 - Chapter 4: Treatment
+    of TB (Part 2)'
+  publisher: Central TB Division, Ministry of Health and Family Welfare, Government
+    of India
+  url: https://tbcindia.mohfw.gov.in/wp-content/uploads/2023/05/934546848TOG-Chapter-4-Treatment-of-TB-Part-2.pdf
+  file: data/raw/tuberculosis/tog-2016-chapter-4-treatment-of-tb-part-2.pdf
+  disease_ids:
+  - tuberculosis
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2016
+  status: downloaded
+  doc_id: c9b6dff983dfa05a43d20b1c02f5fffba929c1fbe499e792a10cbff056c944b1
+- id: doc-who-health-topics-8ddec6
+  doc_id: 8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6
+  title: WHO India health topics
+  publisher: World Health Organization
+  url: https://www.who.int/india/health-topics
+  file: data/raw/dengue/who-india-health-topics.html
+  status: downloaded
+  disease_ids:
+  - dengue
+  - malaria
+  - tuberculosis
+  - maternal-newborn-care
+  coverage: general
+  language: en
+  doc_type: health_topics
+  license_note: WHO content; retain attribution and source link.
+- id: doc-who-vector-0eacf9
+  doc_id: 0eacf93942c0ed745dbc919cceb3a83a613f5409d8b0fd7182fd68c79878093c
+  title: 'India BITE: Fact sheets on vector-borne diseases in India'
+  publisher: WHO Country Office for India and Government of India
+  url: https://iris.who.int/server/api/core/bitstreams/78d5acbc-21f4-4f1c-9787-41102602f4af/content
+  file: data/raw/Fact_Sheet_WHD_2014_EN_1629.pdf
+  status: local_file
+  disease_ids:
+  - dengue
+  - malaria
+  - chikungunya
+  - japanese-encephalitis
+  - kala-azar
+  - lymphatic-filariasis
+  coverage: general
+  language: en
+  doc_type: fact_sheet
+  year: 2014
+  license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
+    link.
+- id: doc-who-vector-image-a9298d
+  doc_id: a9298d153c7f5b90410118efdcc03a22ff53190cc90c274a8d93d6da5ee395b5
+  title: 'India BITE: Fact sheets on vector-borne diseases in India (scanned copy)'
+  publisher: WHO Country Office for India and Government of India
+  url: https://cdn.who.int/media/docs/default-source/searo/india/health-topic-pdf/vbd-fact-sheets.pdf
+  file: data/raw/dengue/local-who-vector-borne-fact-sheets-2014.pdf
+  status: local_file
+  disease_ids:
+  - dengue
+  - malaria
+  - chikungunya
+  - japanese-encephalitis
+  - kala-azar
+  - lymphatic-filariasis
+  coverage: general
+  language: en
+  doc_type: fact_sheet
+  license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
+    link.
