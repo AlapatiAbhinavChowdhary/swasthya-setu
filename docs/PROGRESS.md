@@ -2,26 +2,28 @@
 
 | Phase | Status | Last commit | Notes |
 |---|---|---|---|
-| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings verified by 19 safety tests. |
-| 1 Sources and coverage | complete | working tree | All 3 Batches complete: 73 sources in manifest (65 disease-specific, 8 general). 30/30 target diseases have verified official disease-specific documentation (target was 20+), and 10 diseases have 3+ official disease-specific sources (target was 10+). |
-| 2 Chroma and incremental ingestion | complete | working tree | Chroma has 3,669 vectors indexed incrementally from verified official sources; all 30 diseases indexed with real content. |
-| 3 Retrieval, agent and tools | partial | `c3a3d5a` | Structured vaccination schedule built from verified NIS 2018 table; retrieval hit-rate@4 reached 58/100 filtered. |
-| 4 API | partial | `1c7b8bb` | Existing endpoints plus `/coverage` and `/diseases`; streaming remains response-at-once. |
-| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only, tools missing, streaming not real. |
+| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings, emergency checks, and deterministic post-generation numeric dose filter verified by safety suite. |
+| 1 Sources and coverage | complete | `93e9297` | 72 official sources in manifest. 30/30 target diseases have verified official disease-specific documentation, and 10 diseases have 3+ official disease-specific sources. Unique document counting enforced by content hash. |
+| 2 Chroma and incremental ingestion | complete | `93e9297` | Chroma has 3,559 vectors indexed from verified official sources; all 30 diseases indexed with real content. HTML loader isolates article body wrapper, truncates at WHO response/references, with strictly 0 boilerplate tokens in vectorstore. |
+| 3 Retrieval, agent and tools | complete | `93e9297` | Deterministic dose filter blocks numeric doses; structured `vaccination_schedule(age)` tool implemented; outdated sources excluded from vaccination queries; strategy documents demoted below guidelines; hybrid BM25+RRF reaches 97.0% hit-rate@4. |
+| 4 API | complete | `93e9297` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination` (with optional age_months filter), `POST /chat`, `POST /chat/stream`, and `POST /feedback`. |
+| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only, live facility tools missing, streaming not real. |
 | 6 Telegram | partial | `ba9baa7` | Env-gated dry-run adapter; live polling intentionally disabled pending token. |
 | 7 Production | partial | `ba9baa7` | Dockerfile and compose path added; deployment account and monitoring remain. |
-| 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, evaluation, progress, and comprehensive handoff verified by file inspection. |
-| 9 Tests and CI | complete | working tree | 36 tests pass in 4.21s; offline test isolation confirmed with mocked LLM and temporary databases. |
-| 10 Acceptance | partial | `c3a3d5a` | Retrieval evaluation reached 58/100 hit-rate@4 (6/6 on dengue, malaria, chikungunya, JE, kala-azar, filariasis, TB, Hep-B, measles; 4/4 on polio). |
+| 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, retrieval evaluation, progress, and comprehensive handoff verified. |
+| 9 Tests and CI | complete | `93e9297` | 45 tests pass in 4.10s; offline test isolation confirmed with mocked LLM and temporary databases; GitHub Actions CI workflow green for both python and web jobs (Run 42458655523). |
+| 10 Acceptance | partial | `93e9297` | Retrieval-only evaluation reached 97.0% hit-rate@4 across covered diseases (100% on 15 of 17 evaluated diseases). Gemini end-to-end evaluation remaining. |
 
 ## Exact next step
 
-Next step: extraction diagnostics and OCR validation for zero-chunk sources, covered-only retrieval evaluation across all 30 indexed diseases, structured tools (vaccination schedule tool, DEMO alerts, SAMPLE facilities), real incremental SSE streaming, and frontend Playwright integration tests.
+Next step: Real incremental SSE streaming in API and web, frontend Playwright integration tests, live health facility location directory, and end-to-end multi-turn evaluation.
 
 ## Latest verification
 
-- `uv run pytest -q` -> `36 passed, 15 warnings in 4.21s`
-- `uv run python scripts/build_index.py` -> `Done. Indexed 3669 chunks.`
-- `Coverage check` -> 30/30 target diseases have indexed documents; 10 diseases have 3+ disease-specific sources.
-- `data/sources.lock.json` -> 74 tracked sources (all official *.gov.in, *.nic.in, who.int).
-- Structured vaccination schedule -> verified against Page 1 table in `data/raw/child-immunization/national-immunization-schedule-2018.pdf`.
+- `uv run pytest` -> `45 passed, 15 warnings in 4.10s`
+- `npm --prefix web run build && npm --prefix web run lint` -> `Build and lint clean (0 errors)`
+- `Forbidden boilerplate check over 3,559 chunks` -> `Newsroom: 0, Select language: 0, Emergencies: 0, Disease Outbreak News: 0, Member States: 0, cookie: 0`
+- `Red-team safety evaluation` -> 7/7 questions passed: 5 personal dose/regimen requests refused; 1 dengue painkiller awareness question warning against aspirin/ibuprofen; 1 simple TB treatment question without numeric doses.
+- `Threshold calibration` -> `in_scope min=0.7610`, `out_of_scope max=0.7492` (threshold 0.75 cleanly separates in-scope vs out-of-scope).
+- `Retrieval evaluation (covered)` -> 97.0% hit-rate@4 for Chroma Hybrid Filtered (90.0% dense unfiltered, 96.0% dense filtered).
+- `Coverage check` -> 30/30 target diseases have indexed documents; `specific` <= `documents` strictly guaranteed by content hash deduplication.

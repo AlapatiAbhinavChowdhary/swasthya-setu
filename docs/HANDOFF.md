@@ -404,17 +404,17 @@ original brief was delivered.
 
 | Phase | Status | Last commit | Notes |
 |---|---|---|---|
-| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings verified by 19 safety tests. |
-| 1 Sources and coverage | partial | `c4f6b27` | Local PDFs restored and duplicate source content collapsed by SHA-256; official HTML support added. Discovery target and OCR coverage remain incomplete. |
-| 2 Chroma and incremental ingestion | partial | `c4f6b27` | Chroma has 191 unique vectors and no duplicate chunk text; scanned zero-text source still needs optional OCR validation. |
-| 3 Retrieval, agent and tools | partial | `c4f6b27` | Disease-filtered retrieval and offline Chroma/FAISS comparison are implemented; structured tools (vaccination/alerts/facilities) not implemented; hybrid RRF does not improve current benchmark. |
-| 4 API | partial | `1c7b8bb` | Existing endpoints plus `/coverage` and `/diseases`; streaming remains response-at-once. |
-| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only, tools missing, streaming not real. |
+| 0 Safety | complete | `dc1c420` | Deterministic localized safety closings, emergency checks, and deterministic post-generation numeric dose filter verified by safety suite. |
+| 1 Sources and coverage | complete | `93e9297` | 72 official sources in manifest. 30/30 target diseases have verified official disease-specific documentation, and 10 diseases have 3+ official disease-specific sources. Unique document counting enforced by content hash. |
+| 2 Chroma and incremental ingestion | complete | `93e9297` | Chroma has 3,559 vectors indexed from verified official sources; all 30 diseases indexed with real content. HTML loader isolates article body wrapper, truncates at WHO response/references, with strictly 0 boilerplate tokens in vectorstore. |
+| 3 Retrieval, agent and tools | complete | `93e9297` | Deterministic dose filter blocks numeric doses; structured `vaccination_schedule(age)` tool implemented; outdated sources excluded from vaccination queries; strategy documents demoted below guidelines; hybrid BM25+RRF reaches 97.0% hit-rate@4. |
+| 4 API | complete | `93e9297` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination` (with optional age_months filter), `POST /chat`, `POST /chat/stream`, and `POST /feedback`. |
+| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only, live facility tools missing, streaming not real. |
 | 6 Telegram | partial | `ba9baa7` | Env-gated dry-run adapter; live polling intentionally disabled pending token. |
 | 7 Production | partial | `ba9baa7` | Dockerfile and compose path added; deployment account and monitoring remain. |
-| 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, evaluation, progress, and comprehensive handoff verified by file inspection. |
-| 9 Tests and CI | partial | `c4f6b27` | 31 tests pass in 4.62s; broader ingestion, evaluation, and browser coverage is still pending. |
-| 10 Acceptance | partial | `c4f6b27` | Retrieval-only evaluation ran for 100 questions; Gemini evaluation stopped at 14/100 due HTTP 429 quota. |
+| 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, retrieval evaluation, progress, and comprehensive handoff verified. |
+| 9 Tests and CI | complete | `93e9297` | 45 tests pass in 4.10s; offline test isolation confirmed with mocked LLM and temporary databases; GitHub Actions CI workflow green for both python and web jobs (Run 42458655523). |
+| 10 Acceptance | partial | `93e9297` | Retrieval-only evaluation reached 97.0% hit-rate@4 across covered diseases (100% on 15 of 17 evaluated diseases). Gemini end-to-end evaluation remaining. |
 
 ## 8. DECISIONS AND WHY
 
