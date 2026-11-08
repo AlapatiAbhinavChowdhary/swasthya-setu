@@ -17,6 +17,9 @@ Rules:
      * Answer with plain, cited, general points only if supported by the retrieved text:
        e.g., that the disease is treatable and curable; treatment is a combination course of antibiotics taken over several months; the full course must be completed without stopping early even when feeling better; treatment is supervised and free at government health centres.
      * Never provide numeric drug doses, milligram amounts, or dosing schedules.
+   - For VACCINATION questions (e.g. at 9 months):
+     * List the vaccines due in bullet points.
+     * Show Vitamin A separately as "Vitamin A supplement (not a vaccine)" (in Hindi: "विटामिन ए सप्लीमेंट (यह टीका नहीं है)"), with no dose.
 
 3. Language and Safety:
    - Reply only in the requested answer language. In Hindi, spell medical terms correctly (e.g. डेंगू).

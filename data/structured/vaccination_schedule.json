@@ -77,10 +77,12 @@
       "vaccines": [
         "MR-1 (Measles & Rubella)",
         "JE-1**",
-        "PCV-Booster*",
-        "Vitamin A (1st dose)"
+        "PCV-Booster*"
       ],
-      "description": "Measles & Rubella (MR)-1st dose, Japanese Encephalitis (JE)-1st dose**, PCV-Booster*, Vitamin A 1st dose."
+      "supplements": [
+        "Vitamin A supplement (not a vaccine)"
+      ],
+      "description": "Measles & Rubella (MR)-1st dose, Japanese Encephalitis (JE)-1st dose**, PCV-Booster*, and Vitamin A supplement (not a vaccine)."
     },
     {
       "age": "16-24 Months",
@@ -92,10 +94,12 @@
         "MR-2",
         "JE-2**",
         "DPT-Booster-1",
-        "OPV-Booster",
-        "Vitamin A (2nd dose)"
+        "OPV-Booster"
       ],
-      "description": "MR 2nd dose, JE-2**, DPT Booster-1, OPV Booster, Vitamin A 2nd dose."
+      "supplements": [
+        "Vitamin A supplement (not a vaccine)"
+      ],
+      "description": "MR 2nd dose, JE-2**, DPT Booster-1, OPV Booster, and Vitamin A supplement (not a vaccine)."
     },
     {
       "age": "5-6 Years",

@@ -44,6 +44,10 @@ def vaccination_schedule(age_months: int | None = None) -> dict[str, Any]:
         "NHM National Immunization Schedule, 2018 edition; check with your ANM, ASHA or health centre for the current schedule",
     )
 
+    for item in all_items:
+        if "supplements" not in item:
+            item["supplements"] = []
+
     if age_months is None:
         filtered = all_items
     else:

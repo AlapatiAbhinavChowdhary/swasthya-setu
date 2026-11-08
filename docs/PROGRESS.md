@@ -16,11 +16,19 @@
 
 ## Exact next step
 
-Next step: Website UI enhancement (connect live facility tools and streaming UI) and Telegram adapter live testing.
+Next step: Step 1: Backend Additions (GET /languages, optional static mounting of web/dist, GET /admin/feedback with ADMIN_TOKEN, CORS for Vite).
 
 ## Latest verification
 
-- `uv run pytest` -> `59 passed, 15 warnings in 4.56s`
+- `uv run pytest` -> `59 passed, 15 warnings in 7.82s`
+- Step 0 Missing Evidence verified (`scripts/verify_step0_all.py`):
+  - TB treatment English answer verified sentence-by-sentence; ungrounded RNTCP claim completely gone; curable and 4-6 month course cited to WHO; retrieved chunk text printed.
+  - Malaria symptoms English answer capped at 3 common symptoms (fever, headache, chills) with warning signs in separate list.
+  - OCR verified: `rapidocr-onnxruntime` installed; text-native official sources (diabetes 23 chunks, influenza 30 chunks, chikungunya 29 chunks, typhoid 7 chunks, hygiene 26 chunks) do not require OCR; depth tiers honest (`basic` <30, `good` 30-150, `deep` >150 with >=2 specific docs and >=50 chunks).
+  - Calibration: in-scope min=0.7179, p25=0.7849, median=0.8275, p75=0.8495, max=0.8928 vs out-of-scope min=0.7024, p25=0.7455, median=0.7739, p75=0.7892, max=0.8216. Ambiguous band (0.7179 - 0.8216) routed to LLM gate; top score >= 0.84 skips gate. Latency benchmark across 10 representative queries: min=0.00s, median=1.41s, max=27.00s (median 1 call, 1.41s).
+  - Missed queries identified across 5 diseases (cholera, diabetes, heat-illness, hygiene, leprosy); cause is cross-lingual terminology drift ("लू", "शुगर", handwashing overlap) addressed by query rewrite.
+  - Facilities and alerts verified: every row carries visible `SAMPLE` or `DEMO` label, contains no invented phone numbers (only 108 helpline), and names explicitly marked `(Demo Entry)`.
+  - Vaccination: Vitamin A supplement shown separately as `"Vitamin A supplement (not a vaccine)"` with no dose in both the tool and chat answers (verified in EN and HI).
 - Step 7 Safe Streaming verified:
   - Full pipeline (safety check, intent routing, retrieval, verification, dose filter, closing line) executes synchronously first. Nothing unverified is ever streamed.
   - Emergency responses streamed immediately with 108 emergency card and empty sources.
