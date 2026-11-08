@@ -23,6 +23,41 @@ Generated from `data/sources.lock.json` and official acquisition runs.
 | https://www.icmr.gov.in/icmrobject/uploads/STWs/1725964687_adult-extrapulmonary-tuberculosis-all.pdf | downloaded | 3125759 | Python urllib (attempt 1) | Verified official file |
 | https://www.nhm.gov.in/images/pdf/programmes/immunization/manual-formats/Current_UIP_Schedule.pdf | skipped | 94522 | - | Verified official file |
 | https://www.who.int/india/health-topics | skipped | 67874 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/anaemia | skipped | 113862 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/animal-bites | skipped | 115526 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/chikungunya | downloaded | 113837 | urllib (attempt 1) | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/cholera | skipped | 119898 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/climate-change-heat-and-health | skipped | 120193 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-(covid-19) | skipped | 116979 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue | downloaded | 129795 | urllib (attempt 1) | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/diabetes | skipped | 115831 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease | skipped | 112705 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/diphtheria | skipped | 107314 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/drinking-water | skipped | 114326 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/hepatitis-a | skipped | 115572 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/hepatitis-b | skipped | 120171 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/hepatitis-e | skipped | 112970 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/hiv-aids | skipped | 113508 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/hypertension | skipped | 116826 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/immunization-coverage | skipped | 109886 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/influenza-(seasonal) | skipped | 118187 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/japanese-encephalitis | skipped | 103876 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/leishmaniasis | skipped | 118125 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/leprosy | skipped | 108733 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/lymphatic-filariasis | skipped | 120055 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/malaria | downloaded | 125404 | urllib (attempt 1) | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/malnutrition | skipped | 112221 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/maternal-mortality | skipped | 111514 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/measles | skipped | 111498 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response | skipped | 110924 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/newborn-mortality | skipped | 113134 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/poliomyelitis | skipped | 107900 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/rabies | skipped | 118658 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/sanitation | skipped | 118738 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/snakebite-envenoming | skipped | 116327 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/tetanus | skipped | 101593 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/tuberculosis | skipped | 113127 | - | Verified official file |
+| https://www.who.int/news-room/fact-sheets/detail/typhoid | skipped | 97940 | - | Verified official file |
 
 ## Unreachable sources log
 - **https://main.mohfw.gov.in/sites/default/files/Unit2NationalImmunizationSchedule.pdf**: `urllib: <urlopen error [Errno 11001] getaddrinfo failed>; curl: curl: (6) Could not resolve host: main.mohfw.gov.in`

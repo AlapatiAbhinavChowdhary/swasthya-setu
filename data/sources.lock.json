@@ -162,5 +162,288 @@
     "status": "skipped",
     "hash": "8ddec6b57b016aa5082c9dcdfde884574c58b3e6b6d5e4c28d88e7eed27315f6",
     "bytes": 67874
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/anaemia",
+    "file": "data\\raw\\anaemia-nutrition\\who-anaemia.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "4e7ac60069937dc82b08d32fe2cdfcf5845f066c4cca4259379e33577d52c902",
+    "bytes": 113862
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/animal-bites",
+    "file": "data\\raw\\rabies-animal-bites\\who-animal-bites.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "0c1b932cc5184798a4c0e70351e230a915cb740e23996225a65ef3ff2cdd74df",
+    "bytes": 115526
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/chikungunya",
+    "file": "data\\raw\\chikungunya\\who-chikungunya.html",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "74b2df5da7f6d1325137151d63265943a55c42348d1155363388c9233aabcebb",
+    "bytes": 113837,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/cholera",
+    "file": "data\\raw\\cholera\\who-cholera.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "7115cda90432343a8e9c5a0e761bad03554d7588fe6e3dcc391494c0682224e8",
+    "bytes": 119898
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/climate-change-heat-and-health",
+    "file": "data\\raw\\heat-illness\\who-climate-change-heat-and-health.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "98eb0f625c8d32ca71ed178e82ea980c0c0c986c4aa0e4534e7e5c712ddfc7fe",
+    "bytes": 120193
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/coronavirus-disease-(covid-19)",
+    "file": "data\\raw\\covid-19\\who-coronavirus-disease-covid-19.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "36bd5719fb8adbd8fbaf3c36d0a37647493077077e71ec0ed185b2d389a7eabf",
+    "bytes": 116979
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
+    "file": "data\\raw\\dengue\\who-dengue-and-severe-dengue.html",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "8146efab8110fcfff3f8ba87559ff07e3d57712fc1bf20e76c8092e0f439ffa2",
+    "bytes": 129795,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/diabetes",
+    "file": "data\\raw\\diabetes\\who-diabetes.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "2e88b7cebe7325344c8ac75ca74d2ed1bd50fd408be95c6b86678ff47957ca47",
+    "bytes": 115831
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease",
+    "file": "data\\raw\\diarrhoeal-disease\\who-diarrhoeal-disease.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "ca39444c46a6efbabefacf908b2d7af4fcba27064b90cce3c5a0fb42ef6014bc",
+    "bytes": 112705
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/diphtheria",
+    "file": "data\\raw\\diphtheria-pertussis-tetanus\\who-diphtheria.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "e809a15b5d688debbca67163ec089a1b2b5b26bf9e71850a18861f166d3dac0d",
+    "bytes": 107314
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/drinking-water",
+    "file": "data\\raw\\hygiene-sanitation-safe-water\\who-drinking-water.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "0f18ae944dc236cf21980e8599199d39c3277b5cc900392bee999eebac699192",
+    "bytes": 114326
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/hepatitis-a",
+    "file": "data\\raw\\hepatitis-a\\who-hepatitis-a.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "892702548972c010be1a8922da8c33c0050c30b0f23ca089641442d22402e277",
+    "bytes": 115572
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/hepatitis-b",
+    "file": "data\\raw\\hepatitis-b\\who-hepatitis-b.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "5e03d400d9ca4db89493eaec18d9d1b1158fa894fc3709e2f95ef7975ef12662",
+    "bytes": 120171
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/hepatitis-e",
+    "file": "data\\raw\\hepatitis-e\\who-hepatitis-e.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "360c3b64ef818be06c7c8696d38cc21f7fee883c22b5db9034c1290a9404b7f5",
+    "bytes": 112970
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/hiv-aids",
+    "file": "data\\raw\\hiv-aids\\who-hiv-aids.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "ddee19241985a285c43e96a22a458ab8e1dbf3bada4f24d88e945636bb8571df",
+    "bytes": 113508
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/hypertension",
+    "file": "data\\raw\\hypertension\\who-hypertension.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "77704989356e109faffdd730d51f1c76de40a50b036da332e145e767bbb420c4",
+    "bytes": 116826
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/immunization-coverage",
+    "file": "data\\raw\\child-immunization\\who-immunization-coverage.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "5927b466cd2a82558f9f2fa8a927defffda8e9e0d4de9bdd4b5d9e0978ab3fe1",
+    "bytes": 109886
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/influenza-(seasonal)",
+    "file": "data\\raw\\seasonal-influenza\\who-influenza-seasonal.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "64523644d669c9b1996404da2c103fec547acd42a7abe6c5897a3c88c9a9d2ee",
+    "bytes": 118187
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/japanese-encephalitis",
+    "file": "data\\raw\\japanese-encephalitis\\who-japanese-encephalitis.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "04d6300ed32114b445ac7d10351dedd5eb12b7fb02c6b58e4cf30ea0e5a5157c",
+    "bytes": 103876
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/leishmaniasis",
+    "file": "data\\raw\\kala-azar\\who-leishmaniasis.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "0222d4a8c11e7974b02b129137a3ef03a63e5babac48475b6daa4d91ecabe6c1",
+    "bytes": 118125
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/leprosy",
+    "file": "data\\raw\\leprosy\\who-leprosy.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "43c2745e557d9aeee188d1e08ddfef82385b2ab93d466166dc033bd59598f45c",
+    "bytes": 108733
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/lymphatic-filariasis",
+    "file": "data\\raw\\lymphatic-filariasis\\who-lymphatic-filariasis.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "41f132f104ff5bb47e51864182b2ddce4c5a83f993fa3a582018f8fc0c6822b3",
+    "bytes": 120055
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/malaria",
+    "file": "data\\raw\\malaria\\who-malaria.html",
+    "date": "2026-11-08",
+    "status": "downloaded",
+    "hash": "b819632c80810394631a24657033edb726cfb3677803e5dde56e827bdfb74756",
+    "bytes": 125404,
+    "fallback": "urllib (attempt 1)"
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/malnutrition",
+    "file": "data\\raw\\anaemia-nutrition\\who-malnutrition.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "05a6c37520afd8a8fcfa9e770703a7e794c23700be57d57776902f8c26257e28",
+    "bytes": 112221
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/maternal-mortality",
+    "file": "data\\raw\\maternal-newborn-care\\who-maternal-mortality.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "9eb3740de1d30b5fc4c28ad6be01f45808344d095885e786c9328c4f6cfc3c3b",
+    "bytes": 111514
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/measles",
+    "file": "data\\raw\\measles\\who-measles.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "b8f5424934c816f1e973c755950afadbef56fda971816900d9f45e5d82080da9",
+    "bytes": 111498
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response",
+    "file": "data\\raw\\mental-health-basics\\who-mental-health-strengthening-our-response.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "3454b7ad375a7458caa4a92da9996f445f485bdeba99e7e94c70c1f2fd24f8f8",
+    "bytes": 110924
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/newborn-mortality",
+    "file": "data\\raw\\maternal-newborn-care\\who-newborn-mortality.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "8b1eea0611b4f0ebcd5e4618a8b391360254f912d75d79e673d67530f741e4b7",
+    "bytes": 113134
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/poliomyelitis",
+    "file": "data\\raw\\polio\\who-poliomyelitis.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "3f3b6aa98606be71b5968ef2293b7bdd66c9eeddae4d778e45dcdfac2b4f9b7f",
+    "bytes": 107900
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/rabies",
+    "file": "data\\raw\\rabies-animal-bites\\who-rabies.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "dbc92b30d52a2c7eef20c7915c3bb1ff97c05a3fcd882fd58df516e773dc0df5",
+    "bytes": 118658
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/sanitation",
+    "file": "data\\raw\\hygiene-sanitation-safe-water\\who-sanitation.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "2fa146a3d0c949c085338cc55913cc33e7afd8156058ecf8945273358a1b5a12",
+    "bytes": 118738
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/snakebite-envenoming",
+    "file": "data\\raw\\snakebite\\who-snakebite-envenoming.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "8a98a8aa8918a7b9c493ec6eb5e0f37165f5992d4eae073e6b98fdea967a86f1",
+    "bytes": 116327
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/tetanus",
+    "file": "data\\raw\\diphtheria-pertussis-tetanus\\who-tetanus.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "23bde82f54fe84e8116a086634a5d4e124f0e805f230b7083ccfa2f4c3219e94",
+    "bytes": 101593
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/tuberculosis",
+    "file": "data\\raw\\tuberculosis\\who-tuberculosis.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "5e63cfebab477e86b721ee16adbaeeca0f9506a931d04e14c176e194d71560f2",
+    "bytes": 113127
+  },
+  {
+    "url": "https://www.who.int/news-room/fact-sheets/detail/typhoid",
+    "file": "data\\raw\\typhoid\\who-typhoid.html",
+    "date": "2026-11-08",
+    "status": "skipped",
+    "hash": "507f888e180fa29bc1a4be470a1e5bf550d34fd4e74fb9f7b087796c9afac8de",
+    "bytes": 97940
   }
 ]
