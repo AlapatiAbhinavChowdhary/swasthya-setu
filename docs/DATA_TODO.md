@@ -9,3 +9,4 @@
 - Provide the national immunization schedule before any vaccination schedule
   answer is treated as verified.
 - Replace any future SAMPLE/DEMO structured data with reviewed official data.
+- Odia (or) and Punjabi (pa) frontend translations are best-effort machine-drafted strings; native human review by fluent speakers is required before production deployment.

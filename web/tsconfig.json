@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types": ["vite/client", "@testing-library/jest-dom/vitest"]
   },
   "include": ["src"]
 }
