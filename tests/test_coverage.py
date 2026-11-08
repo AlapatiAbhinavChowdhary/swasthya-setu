@@ -45,6 +45,8 @@ def test_tuberculosis_coverage_honest_count():
     coverage = get_coverage()
     tb = next(d for d in coverage["diseases"] if d["id"] == "tuberculosis")
     assert tb["specific_documents"] <= tb["documents"]
+    if tb["documents"] == 0:
+        pytest.skip("Local raw source files are git-ignored and not present in a clean checkout.")
     assert tb["documents"] >= 4
     assert tb["chunks"] > 50
     assert tb["newest_source_year"] >= 2025
