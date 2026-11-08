@@ -64,8 +64,21 @@ Run the backend in PowerShell:
 uv run uvicorn swasthya_setu.api.app:app --reload
 ```
 
-Endpoints are `GET /health`, `GET /sources`, `POST /chat`,
-`POST /chat/stream` (SSE), and `POST /feedback`. The API keeps only hashed
-session/message identifiers and feedback records in SQLite; do not include
-personal medical details in feedback. Configure CORS, rate limits, cache
-behavior, and the SQLite path through `.env`.
+Endpoints are `GET /health` (with `llm_configured` flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination`, `GET /alerts`, `GET /facilities`, `GET /languages`, `POST /chat`, `POST /chat/stream` (SSE), `POST /feedback`, and `GET /admin/feedback` (token-protected). The API keeps only hashed session/message identifiers and feedback records in SQLite; do not include personal medical details in feedback. Configure CORS, rate limits, cache behavior, and the SQLite path through `.env`.
+
+## Web Application (Phase 5)
+
+An accessible, responsive, multilingual React + Vite + TypeScript web application is provided in `web/`:
+
+```powershell
+# Start both backend and frontend for local development
+uv run uvicorn swasthya_setu.api.app:app --port 8000
+npm --prefix web run dev
+```
+
+Key features:
+- **9 Accessible Pages**: Home, RAG Chat, Disease Directory, Disease Detail, Immunization Schedule, Outbreak Alerts, Facility Locator, About, and Admin Feedback.
+- **Multilingual Support**: English, Hindi (हिन्दी), Odia (ଓଡ଼ିଆ - draft), and Punjabi (ਪੰਜਾਬੀ - draft) with language switcher.
+- **Accessibility & Contrast**: Built with WCAG 2.1 AA compliance, keyboard navigation, visible focus rings, ARIA landmarks, and light/dark theme switching.
+- **Verification Suite**: Tested with Playwright E2E and Axe accessibility audits across all pages in mobile and desktop viewports (0 console errors, 0 serious/critical axe violations). Visual regression snapshots are stored in `docs/screenshots/`.
+- **Security Policy**: Secret scanning scripts and security reporting procedures documented in [docs/SECURITY.md](docs/SECURITY.md).

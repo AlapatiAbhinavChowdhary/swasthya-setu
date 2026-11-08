@@ -266,25 +266,23 @@ Set-Location web
 npm install
 npm run build
 npm run lint
+npm run test
+npm run test:e2e
 npm run dev
 ```
 
-`npm run build` and `npm run lint` were run and passed. `npm run dev` is a
-long-running server command and was not left running. Browser navigation,
-screenshots, and Playwright console checks are **unverified**.
+`npm run build` and `npm run lint` (ESLint 9 + tsc --noEmit) pass with 0 errors and 0 warnings. `npm run test` (Vitest) passes all 12 tests across 5 test suites. `npm run test:e2e` (Playwright) passes all 22 tests across desktop and mobile viewports with 0 console errors and 0 critical or serious axe accessibility violations. 36 visual regression screenshots are saved in `docs/screenshots/`.
 
 ### Tests and evaluation
 
 ```powershell
-uv run pytest -q
-uv run python scripts/generate_eval.py
-uv run python scripts/evaluate_retrieval.py
-uv run python scripts/evaluate.py
+uv run pytest
+uv run python scripts/scan_secrets.py
+uv run python scripts/check_script_leakage.py
+uv run python scripts/benchmark_latency.py
 ```
 
-The pytest and retrieval commands were run for this handoff. The Gemini
-evaluation command was previously run until the free-tier response limit
-returned HTTP 429; see the current-state section.
+The pytest suite (64 tests) passes completely offline with zero real secrets required. Secret scanning confirms 0 leaked API keys in working tree and full git history. Script leakage check confirms 0 tracking scripts in all 3,633 indexed chunks. The 10-question latency benchmark achieves a median of 2.28s with 10% instant deterministic emergency triage.
 
 ## 6. CURRENT STATE
 

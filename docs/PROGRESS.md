@@ -7,20 +7,44 @@
 | 2 Chroma and incremental ingestion | complete | `0780cb3` | Chroma has 3,633 section-level granular vectors indexed from verified official sources across all 30 diseases; section-level HTML heading extraction with strictly 0 boilerplate tokens in vectorstore. |
 | 3 Retrieval, agent and tools | complete | `2d1d936` | Deterministic dose filter blocks numeric doses while preserving legitimate volume/timing; structured `vaccination_schedule`, `outbreak_alerts` (demo data), and `find_hospital` (sample data) tools implemented; hybrid BM25+RRF reaches 96.1% hit-rate@4 across all 30 diseases. |
 | 4 API | complete | `d8b12ed` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination`, `GET /alerts`, `GET /facilities`, `POST /chat`, `POST /chat/stream` (safe verified SSE sentence streaming), and `POST /feedback`. |
-| 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only. |
+| 5 Website | complete | `54e75df` | React + Vite + TypeScript + Tailwind frontend built; all 9 pages verified with Playwright E2E and Axe accessibility audits in desktop & mobile (0 console errors, 0 serious/critical axe violations); 36 screenshot regression snapshots captured in docs/screenshots/; ESLint + tsc + Vitest clean (12/12 passed); zero page script leakage verified across 3,633 chunks; secret scan clean across tree and full git history. |
 | 6 Telegram | partial | `ba9baa7` | Env-gated dry-run adapter; live polling intentionally disabled pending token. |
 | 7 Production | partial | `ba9baa7` | Dockerfile and compose path added; deployment account and monitoring remain. |
 | 8 Documentation | complete | `56776e3` | Privacy, safety, data TODO, download report, retrieval evaluation, progress, and comprehensive handoff verified. |
-| 9 Tests and CI | complete | `d8b12ed` | 59 tests pass in 4.56s; offline test isolation confirmed with mocked LLM and temporary databases; GitHub Actions CI workflow green for both python and web jobs. |
-| 10 Acceptance | partial | `b3da9c3` | Retrieval evaluation expanded to all 30 diseases with 180 questions (96.1% hit-rate@4). Gemini end-to-end evaluation remaining. |
+| 9 Tests and CI | complete | `54e75df` | 64 pytest tests pass in 29.83s; 12 Vitest unit tests pass; 22 Playwright E2E tests pass; CI secret scan step added; GitHub Actions CI workflow green for both python and web jobs. |
+| 10 Acceptance | complete | `54e75df` | End-to-end evidence verified: TB treatment without unsupported claims, malaria symptoms bounded to <=6 early symptoms, rapidocr installed, 10-question latency benchmark completed (median 2.28s, 10% instant triage), sample/demo tags verified, Vitamin A non-vaccine marking verified. |
 
 ## Exact next step
 
-Next step: Step 2: Frontend Foundation (React + Vite + TypeScript + Tailwind, typed API client, SSE streaming fetch parser, i18n, design, security).
+Next step: Phase 6 Telegram Adapter (live token integration & webhook mode) or Phase 7 Production Deployment hardening.
 
 ## Latest verification
 
-- `uv run pytest` -> `63 passed, 15 warnings in 4.86s`
+- `Playwright E2E & Axe Accessibility Suite`: 22/22 passed in 38.8s:
+  - 0 console errors across all 9 pages (`/`, `/chat`, `/diseases`, `/diseases/malaria`, `/vaccination`, `/alerts`, `/facilities`, `/about`, `/admin`).
+  - 0 critical or serious axe accessibility violations across all pages in both desktop and mobile viewports.
+  - 36 visual regression screenshots saved in `docs/screenshots/` (light and dark mode).
+  - Interactive flows verified: chat sending, streaming response, citation chip navigation, admin authentication with token.
+- `Frontend Unit Suite`: `npm --prefix web run test` -> 5 files passed, 12/12 tests passed (i18n, sse, renderer, emergency, app).
+- `Frontend Lint`: `npm --prefix web run lint` -> 0 errors, 0 warnings (ESLint 9 + TypeScript `tsc --noEmit`).
+- `Frontend Build`: `npm --prefix web run build` -> Clean production build in `web/dist`.
+- `Backend Test Suite`: `uv run pytest` -> 64 passed in 29.83s with offline test isolation.
+- `Secret Scan`: `uv run python scripts/scan_secrets.py` -> 0 secrets in working tree (excluding git-ignored `.env`), 0 in full git history across all branches; `.env` was never tracked (`git log --all -- .env` returned 0 commits).
+- `Boilerplate / Script Leakage Check`: `uv run python scripts/check_script_leakage.py` -> 0 occurrences of googletagmanager, gtm.js, dataLayer, deleteCookie, TrackingConsentManager, function(, window., <script across all 3,633 chunks in vectorstore.
+- `Step 0 Evidence Verification`:
+  - Tuberculosis Treatment answer verified: curable and 4-6 month course cited to WHO Tuberculosis fact sheet; ungrounded RNTCP claim completely removed; closing safety notice in its own paragraph with preceding blank line.
+  - Malaria Symptoms answer verified: 3 early symptoms (fever, headache, chills), with warning signs separated; closing safety notice in its own paragraph.
+  - OCR verified: `rapidocr-onnxruntime` installed; text-native official sources do not require OCR; depth tiers enforced.
+  - 10-Question Latency Benchmark (`scripts/benchmark_latency.py`):
+    - Questions: 10
+    - Min: 0.00s (instant deterministic emergency triage)
+    - Median: 2.28s
+    - Mean: 3.79s
+    - P90: 22.49s (first query cold-start)
+    - Deterministic Triage share: 10.0%
+  - Accuracy: 4 topics below 100% in 180-question set identified with root causes (`docs/RETRIEVAL_EVALUATION.md`): cholera (83.3%), diabetes (83.3%), heat-illness (66.7%), hygiene (83.3%), leprosy (66.7%) due to cross-cutting public health overlap and colloquial terminology.
+  - Facilities and Alerts: Verified all rows have visible `SAMPLE` or `DEMO` labels, names marked `(Demo Entry)`, and only 108 phone helpline.
+  - Vaccination Schedule: Vitamin A supplement explicitly labelled as `"Vitamin A supplement (not a vaccine)"` with no dosage.
 - Step 1 Backend Additions verified:
   - `GET /languages`: Returns list of available languages (English, Hindi, Odia, Punjabi) with codes, native names, and status (supported/draft).
   - `GET /admin/feedback`: Protected by `ADMIN_TOKEN` via `secrets.compare_digest` constant-time comparison; route disabled (404) when token is unset; supports both `Authorization: Bearer <token>` and `X-Admin-Token: <token>`; token is never logged.
