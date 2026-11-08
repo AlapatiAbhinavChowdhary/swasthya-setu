@@ -20,6 +20,8 @@ jobs:
           version: latest
       - name: Install dependencies
         run: uv sync --frozen
+      - name: Secret scan
+        run: uv run python scripts/scan_secrets.py
       - name: Run pytest
         run: uv run pytest -q
 
@@ -37,6 +39,9 @@ jobs:
       - name: Lint frontend
         working-directory: web
         run: npm run lint
+      - name: Test frontend
+        working-directory: web
+        run: npm run test
       - name: Build frontend
         working-directory: web
         run: npm run build
