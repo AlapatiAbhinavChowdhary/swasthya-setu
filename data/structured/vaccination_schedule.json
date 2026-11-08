@@ -1,0 +1,121 @@
+{
+  "source": {
+    "title": "National Immunization Schedule (NIS) for Infants, Children and Pregnant Women",
+    "publisher": "National Health Mission, Ministry of Health and Family Welfare, Government of India",
+    "url": "https://nhm.gov.in/New_Updates_2018/NHM_Components/Immunization/report/National_%20Immunization_Schedule.pdf",
+    "verified": true,
+    "year": 2018
+  },
+  "schedule": [
+    {
+      "age": "Birth",
+      "age_key": "birth",
+      "target_group": "Infants",
+      "vaccines": [
+        "BCG",
+        "OPV-0",
+        "Hepatitis B birth dose"
+      ],
+      "description": "Bacillus Calmette Guerin (BCG), Oral Polio Vaccine (OPV)-0 dose, Hepatitis B birth dose (within 24 hours)."
+    },
+    {
+      "age": "6 Weeks",
+      "age_key": "6_weeks",
+      "target_group": "Infants",
+      "vaccines": [
+        "OPV-1",
+        "Pentavalent-1",
+        "Rotavirus-1 (RVV-1)",
+        "fIPV-1",
+        "PCV-1*"
+      ],
+      "description": "OPV-1, Pentavalent-1 (Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib), Rotavirus Vaccine-1, Fractional dose Inactivated Polio Vaccine-1, Pneumococcal Conjugate Vaccine-1 (in selected states)."
+    },
+    {
+      "age": "10 Weeks",
+      "age_key": "10_weeks",
+      "target_group": "Infants",
+      "vaccines": [
+        "OPV-2",
+        "Pentavalent-2",
+        "Rotavirus-2 (RVV-2)"
+      ],
+      "description": "OPV-2, Pentavalent-2, Rotavirus Vaccine (RVV)-2."
+    },
+    {
+      "age": "14 Weeks",
+      "age_key": "14_weeks",
+      "target_group": "Infants",
+      "vaccines": [
+        "OPV-3",
+        "Pentavalent-3",
+        "fIPV-2",
+        "Rotavirus-3 (RVV-3)",
+        "PCV-2*"
+      ],
+      "description": "OPV-3, Pentavalent-3, fIPV-2, Rotavirus Vaccine-3, PCV-2 (in selected states)."
+    },
+    {
+      "age": "9-12 Months",
+      "age_key": "9_12_months",
+      "target_group": "Infants",
+      "vaccines": [
+        "MR-1 (Measles & Rubella)",
+        "JE-1**",
+        "PCV-Booster*",
+        "Vitamin A (1st dose)"
+      ],
+      "description": "Measles & Rubella (MR)-1st dose, Japanese Encephalitis (JE)-1st dose (in endemic districts), PCV-Booster, Vitamin A 1st dose (1 lakh IU)."
+    },
+    {
+      "age": "16-24 Months",
+      "age_key": "16_24_months",
+      "target_group": "Children",
+      "vaccines": [
+        "MR-2",
+        "JE-2**",
+        "DPT-Booster-1",
+        "OPV-Booster",
+        "Vitamin A (2nd dose)"
+      ],
+      "description": "MR 2nd dose, JE-2 (endemic districts), DPT Booster-1, OPV Booster, Vitamin A (doses 2-9 every 6 months up to 5 years)."
+    },
+    {
+      "age": "5-6 Years",
+      "age_key": "5_6_years",
+      "target_group": "Children",
+      "vaccines": [
+        "DPT-Booster-2"
+      ],
+      "description": "DPT Booster-2."
+    },
+    {
+      "age": "10 Years",
+      "age_key": "10_years",
+      "target_group": "Adolescents",
+      "vaccines": [
+        "Td (Tetanus & adult Diphtheria)"
+      ],
+      "description": "Tetanus & adult Diphtheria (Td)."
+    },
+    {
+      "age": "16 Years",
+      "age_key": "16_years",
+      "target_group": "Adolescents",
+      "vaccines": [
+        "Td (Tetanus & adult Diphtheria)"
+      ],
+      "description": "Tetanus & adult Diphtheria (Td)."
+    },
+    {
+      "age": "Pregnant Women",
+      "age_key": "pregnancy",
+      "target_group": "Pregnant Women",
+      "vaccines": [
+        "Td-1",
+        "Td-2 or Td-Booster"
+      ],
+      "description": "Td-1 early in pregnancy; Td-2 4 weeks after Td-1; Td-Booster if 2 TT/Td doses received in pregnancy within last 3 years."
+    }
+  ]
+}
