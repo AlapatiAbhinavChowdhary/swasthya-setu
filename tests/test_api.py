@@ -64,6 +64,25 @@ def test_diseases_alias_returns_coverage():
     assert len(response.json()["diseases"]) >= 20
 
 
+def test_vaccination_endpoint_with_and_without_age():
+    with TestClient(api_module.app) as client:
+        # Full schedule
+        res_all = client.get("/vaccination")
+        assert res_all.status_code == 200
+        data_all = res_all.json()
+        assert "schedule" in data_all
+        assert len(data_all["schedule"]) >= 5
+        assert data_all["reviewed"] is False
+
+        # Filtered by 9 months
+        res_9m = client.get("/vaccination?age_months=9")
+        assert res_9m.status_code == 200
+        data_9m = res_9m.json()
+        assert len(data_9m["schedule"]) == 1
+        assert data_9m["schedule"][0]["age"] == "9-12 Months"
+        assert any("MR-1" in v for v in data_9m["schedule"][0]["vaccines"])
+
+
 def test_api_emergency_response(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "feedback_database", str(tmp_path / "api.db"))
     monkeypatch.setattr(

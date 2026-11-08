@@ -185,6 +185,12 @@ def diseases() -> dict:
     return get_coverage()
 
 
+@app.get("/vaccination")
+def get_vaccination(age_months: int | None = None) -> dict[str, Any]:
+    from swasthya_setu.tools import vaccination_schedule
+    return vaccination_schedule(age_months=age_months)
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     return _run_chat(request, payload)
