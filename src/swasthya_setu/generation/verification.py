@@ -13,6 +13,10 @@ FIXED_MESSAGES = {
         "en": "I cannot diagnose you or recommend medicines or doses. Please ask a doctor, ASHA worker or health centre.",
         "hi": "मैं आपका निदान नहीं कर सकता और दवा या खुराक की सलाह नहीं दे सकता। कृपया डॉक्टर, आशा कार्यकर्ता या स्वास्थ्य केंद्र से पूछें।",
     },
+    "dose_refusal": {
+        "en": "I cannot provide specific drug doses, dosing intervals, or medication schedules. Dosing requires individualized medical evaluation. Please consult a doctor, ASHA worker, or your nearest health centre.",
+        "hi": "मैं दवा की विशिष्ट खुराक, समय या कार्यक्रम की सलाह नहीं दे सकता। खुराक के लिए डॉक्टर या स्वास्थ्यकर्मी द्वारा व्यक्तिगत जांच आवश्यक है। कृपया डॉक्टर, आशा कार्यकर्ता या स्वास्थ्य केंद्र से सलाह लें।",
+    },
     "disclaimer": {
         "en": "Do not self-medicate. Please check with a doctor or health worker.",
         "hi": "खुद से दवा न लें। कृपया डॉक्टर या स्वास्थ्यकर्मी से सलाह लें।",
@@ -39,6 +43,30 @@ _MIXED_SCRIPT_TOKEN = re.compile(r"\S*[\u0900-\u097f]\S*[A-Za-z]\S*|\S*[A-Za-z]\
 _MIXED_MEDICAL_TOKENS = {
     "सैलicylates": "salicylates",
 }
+
+_NUMERIC_DOSE_PATTERN = re.compile(
+    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|µg|ml|iu|tablets?|capsules?|drops?)(?:/(?:kg|day|dose))?\b|"
+    r"\b\d+\s*(?:to|-)\s*\d+\s*(?:mg|mcg|µg|ml|iu|tablets?|capsules?)\b|"
+    r"\b(?:once|twice|thrice|\d+\s*times)\s+(?:daily|a\s+day|per\s+day)\b|"
+    r"\bevery\s+\d+\s*(?:to\s*\d+\s*)?hours?\b|"
+    r"\d+\s*(?:मिग्रा|एमजी|मिली|गोलियां|गोली|बूंद)",
+    re.IGNORECASE,
+)
+
+
+def has_numeric_dose(text: str) -> bool:
+    """Detect numeric doses, dosing intervals, tablet counts, or schedules."""
+    return bool(_NUMERIC_DOSE_PATTERN.search(text))
+
+
+def filter_dose_patterns(text: str, language: str = "en") -> tuple[str, bool]:
+    """Deterministic post-generation safety filter blocking numeric doses.
+
+    If blocked, returns the safe refusal message and False; otherwise returns the original text and True.
+    """
+    if has_numeric_dose(text):
+        return localized_message("dose_refusal", language), False
+    return text, True
 
 
 def localized_message(message: str, language: str) -> str:

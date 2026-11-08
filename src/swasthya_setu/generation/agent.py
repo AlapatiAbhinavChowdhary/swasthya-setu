@@ -22,6 +22,7 @@ from swasthya_setu.config import settings
 from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
+    filter_dose_patterns,
     is_language_consistent,
     localized_message,
     normalize_mixed_script_tokens,
@@ -83,13 +84,16 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
     re.compile(
         r"\b("
         r"what medicine|which medicine|medicine should i|medication should i|"
-        r"what drug|which drug|give me the dose|what dose|dosage should i|"
+        r"what drug|which drug|give me the dose|what dose|exact (?:drug )?regimen and doses|"
+        r"dosage should i|how much (?:of\s+)?(?:\w+\s+)?(?:should|can) i (?:take|give|use)|"
+        r"how many (?:\w+\s+)?tablets|"
+        r"what antibiotic should i take|"
         r"prescribe|prescription|do i have|am i suffering from|"
         r"is this (?:dengue|malaria|diabetes|covid|typhoid)"
         r")\b",
         re.IGNORECASE,
     ),
-    re.compile(r"(कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|क्या मुझे .*है)"),
+    re.compile(r"(कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|कितनी (?:गोली|खुराक|दवा)|क्या मुझे .*है)"),
 )
 
 
@@ -194,15 +198,29 @@ def _retrieve(state: AgentState) -> AgentState:
     if history_text:
         query = f"Conversation:\n{history_text}\n\nCurrent question: {query}"
     search_query = state.get("search_query") or query
-    matches = _store().similarity_search_with_relevance_scores(search_query, k=8)
+    matches = _store().similarity_search_with_relevance_scores(search_query, k=10)
     seen_chunks: set[str] = set()
     unique_matches = []
+    is_vaccination = (
+        state.get("intent") == "vaccination_schedule"
+        or "vaccin" in search_query.lower()
+        or "immuniz" in search_query.lower()
+    )
     for document, relevance in matches:
+        # Exclude outdated sources from default retrieval for vaccination queries
+        if is_vaccination and document.metadata.get("outdated"):
+            continue
+        # Demote strategy documents below clinical guidelines and fact sheets for symptoms/treatment/vaccination
+        adjusted_score = float(relevance)
+        if document.metadata.get("doc_type") == "strategy":
+            adjusted_score -= 0.05
         digest = hashlib.sha256(document.page_content.strip().encode("utf-8")).hexdigest()
         if digest in seen_chunks:
             continue
         seen_chunks.add(digest)
-        unique_matches.append((document, relevance))
+        unique_matches.append((document, adjusted_score))
+
+    unique_matches.sort(key=lambda x: x[1], reverse=True)
     candidates = [
         (document, relevance)
         for document, relevance in unique_matches
@@ -297,6 +315,11 @@ def _verify_answer(state: AgentState) -> AgentState:
                 retry_answer
             ), retry_citations
     answer = strip_generated_closing(answer)
+    # Apply deterministic dose filter to block any numeric dose leakage
+    filtered_answer, is_clean = filter_dose_patterns(answer, language)
+    if not is_clean:
+        answer = filtered_answer
+        citations = []
     answer = _append_medicine_disclaimer(answer, language, context)
     if state.get("intent") in {"disease_info", "prevention_tips"}:
         closing = localized_message("awareness_closing", language)
