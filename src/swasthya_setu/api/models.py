@@ -16,6 +16,9 @@ class SourceResponse(BaseModel):
     source: str
     page: str
     snippet: str
+    publisher: str | None = None
+    year: int | None = None
+    url: str | None = None
 
 
 class ChatResponse(BaseModel):

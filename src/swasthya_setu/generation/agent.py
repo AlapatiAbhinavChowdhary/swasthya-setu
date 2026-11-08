@@ -324,7 +324,7 @@ def _verify_answer(state: AgentState) -> AgentState:
     if state.get("intent") in {"disease_info", "prevention_tips"}:
         closing = localized_message("awareness_closing", language)
         if closing not in answer:
-            answer = f"{answer.rstrip()} {closing}"
+            answer = f"{answer.rstrip()}\n\n{closing}"
     return {**state, "answer": answer, "citations": citations}
 
 
@@ -341,7 +341,7 @@ def _append_medicine_disclaimer(answer: str, language: str, context: str) -> str
             or "स्वयं दवा" in answer
         )
         if not existing_disclaimer:
-            return f"{answer.rstrip()} {disclaimer}"
+            return f"{answer.rstrip()}\n\n{disclaimer}"
     return answer
 
 
@@ -362,9 +362,13 @@ def _format_response(state: AgentState) -> AgentState:
         document = documents[number - 1]
         sources.append(
             {
+                "number": number,
                 "source": str(document.metadata.get("source", "unknown")),
                 "page": str(document.metadata.get("page_label", "?")),
                 "snippet": document.page_content[:240].strip(),
+                "publisher": document.metadata.get("publisher"),
+                "year": document.metadata.get("year"),
+                "url": document.metadata.get("source_url") or document.metadata.get("url"),
             }
         )
     language = state.get("language", _detect_language(state["question"]))

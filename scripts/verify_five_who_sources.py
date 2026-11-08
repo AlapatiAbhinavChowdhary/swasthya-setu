@@ -22,3 +22,4 @@ for name, sid, file_path in targets:
     print(f"Chunk count: {chunk_count}")
     print(f"First 600 characters:\n{text[:600]}")
     print("=" * 60 + "\n")
+

@@ -16,11 +16,16 @@
 
 ## Exact next step
 
-Next step: Real incremental SSE streaming in API and web, frontend Playwright integration tests, live health facility location directory, and end-to-end multi-turn evaluation.
+Next step: Step 2: Honest Depth and OCR (low-chunk audit table, OCR fallback behind config flag, and chunk count difference accounting).
 
 ## Latest verification
 
-- `uv run pytest` -> `45 passed, 15 warnings in 4.10s`
+- `uv run pytest` -> `46 passed, 15 warnings in 4.13s`
+- Step 1 Answer Quality verified:
+  - Closing safety line sits in its own paragraph (`\n\n`) preceding fixed message, never glued to bullets (verified by `test_closing_safety_line_sits_in_own_paragraph`).
+  - TB plain-words answer backed sentence-by-sentence by chunk lexical support check; ungrounded RNTCP claim dropped; curable and course duration cited.
+  - Malaria symptoms answer capped at ~3 common symptoms (Fever, Headache, Chills) with warning signs in separate list.
+  - WHO HTML sections segmented by `<h2>`/`<h3>` with informative `page_label` (e.g. `Malaria > Symptoms`, `Tuberculosis > Treatment`), and API returning `publisher`, `year`, `url`.
 - `npm --prefix web run build && npm --prefix web run lint` -> `Build and lint clean (0 errors)`
 - `Forbidden boilerplate check over 3,559 chunks` -> `Newsroom: 0, Select language: 0, Emergencies: 0, Disease Outbreak News: 0, Member States: 0, cookie: 0`
 - `Red-team safety evaluation` -> 7/7 questions passed: 5 personal dose/regimen requests refused; 1 dengue painkiller awareness question warning against aspirin/ibuprofen; 1 simple TB treatment question without numeric doses.

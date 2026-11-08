@@ -9,10 +9,22 @@ os.environ.setdefault("HF_HUB_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 
+class DummyEmbeddings:
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return [[0.1] * 384 for _ in texts]
+
+    def embed_query(self, text: str) -> list[float]:
+        return [0.1] * 384
+
+
 @pytest.fixture(autouse=True)
 def isolate_test_environment(monkeypatch, tmp_path):
     """Keep tests completely isolated from live files, real API, and global state."""
     from swasthya_setu.config import settings
+    import swasthya_setu.retrieval.embedder as embedder_module
+
+    # Mock embeddings to be fast and completely offline
+    monkeypatch.setattr(embedder_module, "get_embeddings", lambda: DummyEmbeddings())
 
     # Isolate SQLite feedback database to a unique temporary file per test
     temp_db = tmp_path / "test_feedback.db"

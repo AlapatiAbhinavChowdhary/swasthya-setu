@@ -122,10 +122,49 @@ def strip_generated_closing(text: str) -> str:
     return text
 
 
+_STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "are", "have", "been",
+    "will", "can", "also", "under", "treatment", "disease", "health", "used",
+    "which", "such", "than", "they", "were", "what", "when", "where", "who", "your",
+    "should", "take", "give", "people", "child", "more", "most", "about",
+    "का", "के", "की", "में", "से", "है", "हैं", "पर", "और", "को", "या", "भी", "किया", "जाता"
+}
+
+
+def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
+    """Check if document chunk provides lexical support for the sentence's key claims."""
+    if len(doc.page_content.strip()) < 30:
+        return True
+
+    doc_text = doc.page_content.lower()
+
+    # Acronyms (e.g. RNTCP, NTEP, DOTS) in the sentence must exist in the cited doc
+    acronyms = re.findall(r"\b[A-Z]{2,}\b", sentence)
+    for ac in acronyms:
+        if ac in {"WHO", "TB", "HIV", "ORS", "IV"}:
+            continue
+        if ac.lower() not in doc_text:
+            return False
+
+    # Check multi-word proper title (e.g. "Revised National Tuberculosis Control Program")
+    title_phrases = re.findall(r"\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){2,}\b", sentence)
+    for phrase in title_phrases:
+        if phrase.lower() not in doc_text:
+            return False
+
+    words = re.findall(r"\b[A-Za-z0-9\-\u0900-\u097f]{3,}\b", sentence.lower())
+    content_words = [w for w in words if w not in _STOPWORDS]
+    if len(content_words) >= 4:
+        matches = sum(1 for w in content_words if w in doc_text)
+        if matches / len(content_words) < 0.20:
+            return False
+    return True
+
+
 def verify_citations(
     text: str, documents: list[Document], language: str = "en"
 ) -> tuple[str, list[int]]:
-    """Keep only citations that refer to retrieved documents.
+    """Keep only citations that refer to and are supported by retrieved documents.
 
     An answer without a valid citation is replaced with the standard refusal so
     the model cannot turn a retrieval miss into an unsupported medical claim.
@@ -133,13 +172,56 @@ def verify_citations(
     valid_numbers = set(range(1, len(documents) + 1))
     cited_numbers: list[int] = []
 
-    def replace(match: re.Match[str]) -> str:
-        numbers = [int(value) for value in re.findall(r"\d+", match.group(1))]
-        valid = [number for number in numbers if number in valid_numbers]
-        cited_numbers.extend(valid)
-        return f"[{', '.join(str(number) for number in valid)}]" if valid else ""
+    lines = text.split("\n")
+    cleaned_lines: list[str] = []
 
-    cleaned = re.sub(r"\[((?:\d+\s*,\s*)*\d+)\]", replace, text).strip()
+    for line in lines:
+        if not line.strip():
+            cleaned_lines.append(line)
+            continue
+
+        had_citation = bool(re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", line))
+
+        def replace_cite(match: re.Match[str]) -> str:
+            raw_nums = [int(v) for v in re.findall(r"\d+", match.group(1))]
+            # Find surrounding sentence for support check
+            start = match.start()
+            prev_text = line[:start]
+            m_start = max(prev_text.rfind("."), prev_text.rfind("!"), prev_text.rfind("?"), prev_text.rfind(";"))
+            sent_start = m_start + 1 if m_start != -1 else 0
+
+            next_text = line[match.end():]
+            m_ends = [next_text.find("."), next_text.find("!"), next_text.find("?"), next_text.find(";")]
+            m_ends_valid = [e for e in m_ends if e != -1]
+            sent_end = match.end() + min(m_ends_valid) if m_ends_valid else len(line)
+
+            sentence = line[sent_start:sent_end]
+            clean_sentence = re.sub(r"\[(?:\d+\s*,\s*)*\d+\]", "", sentence).strip()
+
+            supported = []
+            for num in raw_nums:
+                if num in valid_numbers:
+                    if is_chunk_supporting_sentence(clean_sentence, documents[num - 1]):
+                        supported.append(num)
+                        cited_numbers.append(num)
+
+            return f"[{', '.join(str(n) for n in supported)}]" if supported else ""
+
+        new_line = re.sub(r"\[((?:\d+\s*,\s*)*\d+)\]", replace_cite, line)
+        # Clean up any orphan double spaces
+        new_line = re.sub(r"[ \t]{2,}", " ", new_line).strip()
+
+        # If a line had citations but ALL citations were dropped/unsupported,
+        # drop the bullet line to avoid keeping unsupported medical assertions
+        if had_citation and not re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", new_line):
+            if new_line.startswith(("-", "*", "•")) or len(new_line.split()) > 5:
+                # Unsupported claim line dropped
+                continue
+
+        if new_line:
+            cleaned_lines.append(new_line)
+
+    cleaned = "\n".join(cleaned_lines).strip()
     if not cited_numbers:
         return localized_message("safe_refusal", language), []
     return cleaned, sorted(set(cited_numbers))

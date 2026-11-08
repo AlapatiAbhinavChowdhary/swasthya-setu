@@ -120,13 +120,11 @@ def test_format_response_includes_only_cited_sources():
     }
     result = _format_response(state)
     assert result["response"]["language"] == "en"
-    assert result["response"]["sources"] == [
-        {
-            "source": "dengue.pdf",
-            "page": "12",
-            "snippet": "Warning signs include bleeding.",
-        }
-    ]
+    assert len(result["response"]["sources"]) == 1
+    src = result["response"]["sources"][0]
+    assert src["source"] == "dengue.pdf"
+    assert src["page"] == "12"
+    assert src["snippet"] == "Warning signs include bleeding."
 
 
 def test_hindi_format_response_detects_language():
@@ -358,4 +356,29 @@ def test_vaccination_schedule_tool_cleanliness():
             assert "IU" not in v
         assert "1 lakh IU" not in item["description"]
         assert "0.5 ml" not in item["description"]
+
+
+def test_closing_safety_line_sits_in_own_paragraph():
+    from swasthya_setu.generation.agent import _verify_answer
+    from swasthya_setu.generation.verification import FIXED_MESSAGES
+
+    state = {
+        "question": "What are malaria symptoms?",
+        "intent": "disease_info",
+        "language": "en",
+        "answer": "- Fever [1]\n- Chills [1]",
+        "citations": [1],
+        "documents": [
+            Document(page_content="Common symptoms of malaria include fever and chills.", metadata={"source": "malaria.pdf"})
+        ],
+    }
+    result = _verify_answer(state)
+    answer = result["answer"]
+    closing = FIXED_MESSAGES["awareness_closing"]["en"]
+    assert closing in answer
+    # Ensure there is a blank line (\n\n) before the closing safety line
+    assert f"\n\n{closing}" in answer
+    # Ensure it's not glued to the bullet line
+    assert not answer.endswith(f"- Chills [1] {closing}")
+
 

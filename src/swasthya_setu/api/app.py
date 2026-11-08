@@ -129,6 +129,9 @@ def _response_from_state(state: dict, request_id: str) -> ChatResponse:
             source=source["source"],
             page=source["page"],
             snippet=snippet,
+            publisher=source.get("publisher"),
+            year=source.get("year"),
+            url=source.get("url"),
         ))
     return ChatResponse(
         answer=response["answer"],

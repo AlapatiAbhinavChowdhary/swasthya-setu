@@ -13,7 +13,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def calculate_depth_tier(chunks: int, unique_docs_count: int, doc_types: list[str]) -> str:
+def calculate_depth_tier(chunks: int, unique_docs_count: int, doc_types: list[str], specific_docs_count: int | None = None) -> str:
     """Calculate depth tier with honesty constraints.
     
     Tiers:
@@ -22,12 +22,16 @@ def calculate_depth_tier(chunks: int, unique_docs_count: int, doc_types: list[st
       - deep: >150 chunks
     
     Constraint: Never present a single document or purely a fact sheet as deep coverage.
+    Constraint: A disease is deep ONLY when supported by disease-specific documents (specific_docs_count != 0).
+    A disease supported only by general handbooks must show "good" or "basic", never "deep".
     """
     if chunks < 30:
         return "basic"
     if chunks <= 150:
         return "good"
-    # Over 150 chunks: requires multiple documents and not purely a single fact sheet
+    # Over 150 chunks: requires disease-specific documents, multiple documents, and not purely fact sheets
+    if specific_docs_count is not None and specific_docs_count == 0:
+        return "good"
     if unique_docs_count <= 1 or all(dt == "fact_sheet" for dt in doc_types):
         return "good"
     return "deep"
@@ -118,7 +122,7 @@ def get_coverage() -> dict[str, Any]:
         newest_source_year = max(years) if years else None
         
         doc_types = [d.get("doc_type", "fact_sheet") for d in unique_docs]
-        depth_tier = calculate_depth_tier(total_chunks, total_unique_docs, doc_types)
+        depth_tier = calculate_depth_tier(total_chunks, total_unique_docs, doc_types, specific_docs_count)
 
         rows.append({
             "id": disease["id"],

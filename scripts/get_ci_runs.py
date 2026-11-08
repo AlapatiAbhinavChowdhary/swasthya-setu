@@ -28,3 +28,4 @@ try:
                         print(f"   -> Job '{job['name']}': status={job['status']}, conclusion={job['conclusion']}")
 except Exception as e:
     print("Failed to fetch CI runs:", e)
+

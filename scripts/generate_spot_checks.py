@@ -17,5 +17,8 @@ for q in queries:
     print(f"CITATIONS: {citations}")
     print("SOURCES:")
     for s in sources:
-        print(f"  - [{s.get('number', '?')}] {s.get('source')} (Page: {s.get('page')})")
+        print(f"  - [{s.get('number', '?')}] {s.get('source')} (Page/Section: {s.get('page')})")
+        if s.get("publisher"):
+            print(f"    Publisher: {s.get('publisher')} | Year: {s.get('year')} | URL: {s.get('url')}")
         print(f"    Snippet: {s.get('snippet')[:120]}...")
+
