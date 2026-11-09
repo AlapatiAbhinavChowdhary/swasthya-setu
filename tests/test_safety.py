@@ -420,3 +420,53 @@ def test_closing_safety_line_sits_in_own_paragraph():
     assert not answer.endswith(f"- Chills [1] {closing}")
 
 
+def test_tb_medicine_inquiry_is_strictly_refused_without_listing_drugs():
+    from swasthya_setu.generation.agent import _generate_answer
+    from swasthya_setu.generation.verification import FIXED_MESSAGES
+
+    q = "What medicine should I take for TB?"
+    assert is_prescription_or_diagnosis(q)
+
+    state = {
+        "question": q,
+        "intent": "out_of_scope",
+        "language": "en",
+        "documents": [],
+    }
+    result = _generate_answer(state)
+    answer = result["answer"]
+    assert FIXED_MESSAGES["prescription_refusal"]["en"] in answer
+    assert result["citations"] == []
+    # Must NOT mention specific prescription drugs
+    for drug in ["rifampicin", "isoniazid", "pyrazinamide", "ethambutol"]:
+        assert drug not in answer.lower()
+
+
+def test_general_awareness_allows_duration_and_continuity_when_grounded():
+    from swasthya_setu.generation.agent import _verify_answer
+
+    state = {
+        "question": "How is tuberculosis treated, in simple words?",
+        "intent": "disease_info",
+        "language": "en",
+        "answer": (
+            "TB is treated with special antibiotics [1]. "
+            "Medications need to be taken daily for 4 to 6 months [1]. "
+            "It is dangerous to stop medications early [1]."
+        ),
+        "citations": [1],
+        "documents": [
+            Document(
+                page_content="TB is treated with special antibiotics taken daily for 4 to 6 months. It is dangerous to stop medications early.",
+                metadata={"source": "tb.pdf"},
+            )
+        ],
+    }
+    result = _verify_answer(state)
+    assert "daily for 4 to 6 months" in result["answer"]
+    assert "stop medications early" in result["answer"]
+    assert result["citations"] == [1]
+    assert "cannot provide specific drug doses" not in result["answer"]
+
+
+

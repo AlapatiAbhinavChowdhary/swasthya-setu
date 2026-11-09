@@ -91,7 +91,8 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
     re.compile(
         r"\b("
         r"what medicine|which medicine|medicine should i|medication should i|"
-        r"what drug|which drug|give me the dose|what dose|exact (?:drug )?regimen and doses|"
+        r"what drug|which drug|what should i take|what can i take|which tablet should i take|"
+        r"what medicine to take|what drug to take|give me the dose|what dose|exact (?:drug )?regimen and doses|"
         r"dosage should i|how much (?:of\s+)?(?:\w+\s+)?(?:should|can) i (?:take|give|use)|"
         r"how many (?:\w+\s+)?tablets|"
         r"what antibiotic should i take|"
@@ -100,7 +101,7 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r")\b",
         re.IGNORECASE,
     ),
-    re.compile(r"(कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|कितनी (?:गोली|खुराक|दवा)|क्या मुझे .*है)"),
+    re.compile(r"(कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|कितनी (?:गोली|खुराक|दवा)|क्या मुझे .*है|क्या दवा लूँ|क्या दवा लूं|कौन सी दवा लेनी चाहिए)"),
 )
 
 
