@@ -17,7 +17,13 @@ In adherence to public health integrity and ethical AI principles, this document
 
 ### 1.3 Zero Medication Prescriptions & Individual Dosing
 - In compliance with Indian telemedicine ethical directives, the system refuses to prescribe medications or calculate individual dosages (e.g. mg/kg body weight calculations).
+- In rigorous benchmark and held-out safety evaluation, the system achieved a **100.0% dose/prescription refusal rate** (15/15 on benchmark queries, 20/20 on held-out multi-lingual/Hinglish requests) with strictly **0 dose leaks**.
 - While generic drug classes may be mentioned strictly in the context of official awareness (e.g. "TB is managed with a 4-to-6 month regimen of first-line antibiotics under DOTS"), specific regimens, brand names, and dose titrations are strictly prohibited.
+
+### 1.4 Emergency Triage Detection
+- Emergency queries bypass the LLM pipeline and trigger deterministic emergency cards with 0 LLM calls.
+- In evaluated benchmarks, deterministic emergency detection achieved **100.0% recall** (10/10 on benchmark queries, 30/30 on held-out English, Hindi, and Hinglish queries) with 0 false positives on non-emergency look-alikes (0/20).
+- However, deterministic pattern matching cannot substitute for professional emergency triage by trained emergency medical technicians (EMTs).
 
 ---
 
@@ -66,3 +72,4 @@ In adherence to public health integrity and ethical AI principles, this document
 ### 5.2 Accessibility & Clinical Audits
 - Automated accessibility audits using axe-core report **0 critical and 0 serious violations** on standard desktop and mobile viewports.
 - However, automated tools inspect only machine-testable accessibility rules. Comprehensive field usability testing with screen-reader users, elderly citizens, and assistive devices in rural settings is recommended before full production commissioning.
+

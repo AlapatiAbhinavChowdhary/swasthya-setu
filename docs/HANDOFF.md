@@ -649,7 +649,7 @@ The assistant targets awareness coverage across approximately 30 common diseases
 
 ### A.2 Website pages and design requirements
 
-The web frontend is a mobile-first, accessible (WCAG AA compliant), responsive single-page application supporting light and dark modes:
+The web frontend is a mobile-first, responsive single-page application supporting light and dark modes with 0 critical or serious automated accessibility violations (axe-core):
 
 1. **Home**: Project overview, quick awareness search, disclaimer, and high-level health guidance.
 2. **Chat**: Interactive multilingual awareness chat with incremental streaming responses, citation chips linked to source panel entries (`source.number`), language selector (English and Hindi), microphone speech input, read-aloud TTS, prominent deterministic emergency card, and helpful user feedback controls.

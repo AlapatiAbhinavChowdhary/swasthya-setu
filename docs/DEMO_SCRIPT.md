@@ -129,6 +129,8 @@ Instant (<0.06s) bright red **Emergency Triage Notice**:
 ### Presenter Speaks:
 > "Finally, beyond chat, Swasthya Setu provides structured public health utilities.
 > Here is our National Immunization Schedule portal, aligned with the MoHFW 2018 guidelines. Parents and ASHA workers can calculate exact due dates for their infants, with clear distinctions between vaccines and nutritional supplements like Vitamin A.
-> Our `/facilities` portal maps health infrastructure from rural Sub-centres to District Hospitals.
+> Our `/facilities` portal maps health infrastructure from rural Sub-centres to District Hospitals, and `/alerts` provides seasonal advisories.
+> Please note: the disease outbreak alerts on `/alerts` and the facility listings on `/facilities` are DEMO and SAMPLE data for presentation and prototype demonstration; in production, these connect directly to state GIS registries and IDSP feeds.
 >
 > In summary, Swasthya Setu delivers a robust, accessible, and strictly safe public health intelligence platform designed for the real needs of rural India. Thank you, and we welcome your questions!"
+

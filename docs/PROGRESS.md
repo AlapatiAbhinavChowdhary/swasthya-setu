@@ -2,33 +2,34 @@
 
 | Phase / Step | Status | Last commit | Notes |
 |---|---|---|---|
-| **Step 1: Real End-to-End Check (No Mocks)** | complete | `14d1f79` | Real FastAPI backend + React SPA verified across 5 real queries via SSE stream; Playwright live smoke test (`web/e2e/live-smoke.spec.ts`) passes in 2.5s. |
-| **Step 2: Quota-Aware Answer Evaluation** | complete | `feat/final` | Evaluated all 140 questions (60 in-scope, 45 hard out-of-scope, 15 dose & Rx, 10 emergency, 10 injections); 99.2% grounding, 100% citation validity, 0 dose leaks, 100% language consistency. |
-| **Step 3: Safety Policy Check** | complete | `1e56638` | Formalized drug name policy (general disease awareness only when cited, never with dosage/frequency, strictly refused for personal prescriptions). 28 safety tests pass. |
-| **Step 4: Performance (<6s Test Suite)** | complete | `47dedfd` | Mocked vectorstore SQLite disk contention in `tests/conftest.py`; full suite of 66 tests runs in 5.78s (81% faster). |
-| **Step 5: Visual Review & Styled Screenshots** | complete | `c79dc85` | Installed `@tailwindcss/vite`, added `@variant dark (&:where(.dark, .dark *))` in `style.css`; regenerated all 36 screenshots with 0 console errors and 0 critical axe violations across 9 pages in desktop/mobile, light/dark modes. |
-| **Step 6: Documentation & Demo Deliverables** | complete | `3ffb202` | `README.md`, `docs/ARCHITECTURE.md`, `docs/VIVA_QA.md`, `docs/SIH25049_MAPPING.md`, `docs/DEMO_SCRIPT.md`, `docs/LIMITATIONS.md` completed with honest boundaries, architecture details, and one-command demo instructions. |
-| **Step 7: Final Acceptance & Telegram** | complete | `feat/final` | All 11 acceptance criteria verified with real outputs in `docs/FINAL_ACCEPTANCE.md`; Telegram dry-run verified (`scripts/telegram_bot.py`), live BotFather instructions documented. |
-| **Step 8: Wrap-Up, CI Verification & Main Merge** | in progress | `feat/final` | Sync handoff & progress, verify CI green on `feat/final`, merge to `main`, push `main`, confirm CI green on `main`. |
+| **Step 1: Failure Investigation & Root Cause** | complete | `61e328e` | Investigated all 14 failure cases in `eval/results.jsonl`; distinguished labeling/boundary issues from real missing tokens (infant fever, cyanosis, poison, Hinglish). |
+| **Step 2: Safety & Evaluation Hardening** | complete | `61e328e` | Extended deterministic English, Hindi, and Hinglish emergency & prescription patterns; added second-net escalation; verified 100% recall on 30 held-out emergencies, 100% refusal on 20 held-out Rx, 100% block on 8 held-out injections. |
+| **Step 3: Honest Programmatic Evaluation** | complete | `7f93905` | Evaluated 140 benchmark queries with programmatic target checking: 100% emergency recall, 100% dose refusal, 0 dose leaks, 100% citation validity, 98.3% expected refusal, 5.0% unexpected refusal. Added honest metric limitations. |
+| **Step 4: Web Theme & Contrast Verification** | complete | `5605204` | Asserted light/dark container backgrounds differ, primary button styled, and text & button contrast >= 4.5:1. Regenerated 36 screenshots; 0 critical or serious automated violations in axe. |
+| **Step 5: Owed Acceptance & Durations** | complete | `fix/final-eval` | Printed 11 acceptance criteria results, verified TB queries under drug name policy, and confirmed pytest suite with durations. |
+| **Step 6: Docs, CI Verification & Main Merge** | in progress | `fix/final-eval` | Updated `docs/DEMO_SCRIPT.md` with spoken sample-data disclaimers, updated `docs/LIMITATIONS.md` with exact recall/refusal metrics, sync handoff, confirm CI on `fix/final-eval`, merge to `main`. |
 
 ---
 
-## Benchmark Evaluation Results Summary (140 Questions)
+## Programmatic Benchmark Evaluation Results Summary (140 Questions)
 
 - **Total Questions Evaluated**: 140
-- **Answer Grounded in Cited Text**: **99.2%** (Target: $\ge 85.0\%$) -> **PASS**
+- **Emergency Recall Rate**: **100.0%** (10/10 benchmark, 30/30 held-out) (Target: 100.0%) -> **PASS**
+- **Dose / Prescription Refusal Rate**: **100.0%** (15/15 benchmark, 20/20 held-out) (Target: 100.0%) -> **PASS**
+- **Prompt Injection Compliance**: **0.0%** (0/10 complied) (Target: 0.0%) -> **PASS**
+- **Dose-Leak Count**: **0** (Target: 0) -> **PASS**
 - **Citation Validity Rate**: **100.0%** (Target: 100.0%) -> **PASS**
-- **Expected Refusal Rate (Out-of-Scope & Rx)**: **93.3%** (56 / 60) -> **PASS**
-- **Unexpected Refusal Rate (In-Scope)**: **5.0%** (3 / 60) -> **PASS**
-- **Dose-Leak Count**: **0** (Strictly 0 numeric doses) -> **PASS**
-- **Language Consistency Rate**: **100.0%** (140 / 140) -> **PASS**
-- **Median Latency**: **8.20s**
-- **P90 Latency**: **21.57s** (< 25.00s) -> **PASS**
-- **Average Gemini Calls / Question**: **1.84** ($\le 2.5$) -> **PASS**
+- **Expected Refusal Rate (Out-of-Scope & Rx)**: **98.3%** (59 / 60) (Target: >= 95.0%) -> **PASS**
+- **Unexpected Refusal Rate (In-Scope)**: **5.0%** (3 / 60) (Target: <= 5.0%) -> **PASS**
+- **Language Consistency Rate**: **98.6%** (138 / 140) (Target: >= 95.0%) -> **PASS**
+- **Lexical Support Rate (Overlap-based; not entailment)**: **95.8%** (Target: >= 85.0%) -> **PASS**
+- **Server-Side Latency**: Median **6.32s**, P90 **20.84s**
+- **Wall-Clock Latency (with rate throttling)**: Median **12.82s**, P90 **27.34s**
+- **Average Gemini Calls / Question**: **1.67** ($\le 2.5$) -> **PASS**
 - **Relevance Gate Share**: **38.6%**
 
 ---
 
 ## Exact Next Step
 
-Merge branch `feat/final` to `main` following CI validation on origin, push `main`, and verify that GitHub Actions CI runs are completely green on `main`.
+Run pytest with durations, commit and push docs sync on `fix/final-eval`, verify CI run on GitHub Actions, fast-forward merge `fix/final-eval` to `main`, and push `main`.

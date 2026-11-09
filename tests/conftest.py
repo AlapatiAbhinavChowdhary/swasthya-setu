@@ -35,4 +35,12 @@ def isolate_test_environment(monkeypatch, tmp_path):
     class DummyStore:
         def similarity_search(self, *args, **kwargs):
             return []
-    monkeypatch.setattr(chain_module, "_store", lambda: DummyStore())
+        def similarity_search_with_relevance_scores(self, *args, **kwargs):
+            return []
+    dummy_store = DummyStore()
+    monkeypatch.setattr(chain_module, "_store", lambda: dummy_store)
+    try:
+        import swasthya_setu.api.app as api_app_module
+        monkeypatch.setattr(api_app_module, "_store", lambda: dummy_store)
+    except (ImportError, AttributeError):
+        pass
