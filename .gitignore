@@ -19,5 +19,7 @@ web/node_modules/
 web/dist/
 web/test-results/
 web/playwright-report/
+test-results/
+playwright-report/
 web/tsconfig.tsbuildinfo
 logs/

@@ -16,9 +16,19 @@
 
 ## Exact next step
 
-Next step: Phase 6 Telegram Adapter (live token integration & webhook mode) or Phase 7 Production Deployment hardening.
+Next step: Step 2: Quota-Aware Answer Evaluation (token-bucket limiter under free-tier RPM, checkpoint file eval/results.jsonl, 60 stratified questions + out-of-scope/dose/emergency/injection sets, docs/EVALUATION.md, fix retrieval report inconsistency).
 
 ## Latest verification
+
+- `Step 1 Real Stack End-to-End Verification (No Mocks)`:
+  - Started real FastAPI server with `ENABLE_FRONTEND=true` on port 8000 serving both API and React SPA.
+  - Ran `scripts/verify_real_e2e_stack.py` across 5 real queries:
+    1. "What are the symptoms of malaria?": Streamed 14 sentence chunks, final answer with [1], Chip [1] mapped to WHO Malaria Fact sheet (Section: Symptoms).
+    2. "डेंगू के गंभीर लक्षण क्या हैं?": Streamed 15 chunks in Hindi with [5], Chip [5] mapped to WHO Dengue Fact Sheet (Section: Symptoms), Hindi safety disclaimer.
+    3. "My child is vomiting blood": 0 LLM calls, latency 0.06s, immediate 108 emergency triage response.
+    4. "Which vaccines are due at 9 months?": MR-1 [1], JE-1 [1], PCV-Booster [1], Vitamin A marked as non-vaccine supplement, Chip [1] mapped to National Immunization Schedule 2018.
+    5. "How is diabetes treated?": Streamed 11 chunks with [1, 2, 9], Chips mapped to WHO Diabetes Fact sheet and ICMR STW Type 2 Diabetes, 0 drug doses.
+  - Added live Playwright smoke test (`web/e2e/live-smoke.spec.ts`) that runs against the real live stack on port 8000, enters chat query, verifies streamed answer, clicks citation chip [1], and verifies the source details drawer opens. Skips cleanly when LLM is unconfigured. Passed in 2.5s.
 
 - `Playwright E2E & Axe Accessibility Suite`: 22/22 passed in 38.8s:
   - 0 console errors across all 9 pages (`/`, `/chat`, `/diseases`, `/diseases/malaria`, `/vaccination`, `/alerts`, `/facilities`, `/about`, `/admin`).
