@@ -50,7 +50,8 @@ export const Home: React.FC<HomeProps> = ({ language }) => {
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <Link
             to="/chat"
-            className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base rounded-xl shadow-md focus:outline-none focus:ring-4 focus:ring-emerald-400 transition"
+            data-testid="primary-cta"
+            className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-base rounded-xl shadow-md focus:outline-none focus:ring-4 focus:ring-emerald-400 transition"
           >
             <MessageSquare className="w-5 h-5" aria-hidden="true" />
             <span>Start Awareness Chat</span>

@@ -349,3 +349,123 @@ test("admin interaction: authenticates with token and shows feedback", async ({
   await expect(page.getByText("Very clear explanation of malaria symptoms.")).toBeVisible();
 });
 
+test("computed styles: light vs dark background, primary button styling, and >=4.5:1 text contrast", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  // Helper inside page context to compute WCAG 2.1 contrast ratio
+  const evaluateContrast = async (fgSelector: string, bgSelector: string) => {
+    return page.evaluate(
+      ([fgSel, bgSel]) => {
+        const fgEl = document.querySelector(fgSel);
+        const bgEl = document.querySelector(bgSel);
+        if (!fgEl) return 1;
+
+        const isDark = document.documentElement.classList.contains("dark");
+        const defaultBg = isDark ? [9, 9, 11] : [250, 250, 250];
+
+        // Parse any CSS color (rgb, rgba, oklch, hex)
+        const parseColor = (colorStr: string, isBackground = false): [number, number, number] => {
+          if (!colorStr || colorStr === "transparent") {
+            return isBackground ? (isDark ? [9, 9, 11] : [250, 250, 250]) : [0, 0, 0];
+          }
+          // 1. rgb / rgba
+          const rgbMatch = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (rgbMatch) {
+            return [Number(rgbMatch[1]), Number(rgbMatch[2]), Number(rgbMatch[3])];
+          }
+          // 2. oklch: e.g. oklch(0.21 0.006 285.885)
+          const oklchMatch = colorStr.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+          if (oklchMatch) {
+            const L = parseFloat(oklchMatch[1]);
+            const C = parseFloat(oklchMatch[2]);
+            const hDeg = parseFloat(oklchMatch[3]);
+            const hRad = (hDeg * Math.PI) / 180;
+            const a = C * Math.cos(hRad);
+            const b = C * Math.sin(hRad);
+            // OKLab to linear RGB
+            const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+            const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+            const s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+            const l = l_ * l_ * l_;
+            const m = m_ * m_ * m_;
+            const s = s_ * s_ * s_;
+            const rLin = +4.0767434036 * l - 3.3077115913 * m + 0.2309699292 * s;
+            const gLin = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+            const bLin = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
+            const toGamma = (val: number) => {
+              const clamped = Math.max(0, Math.min(1, val));
+              return Math.round((clamped <= 0.0031308 ? 12.92 * clamped : 1.055 * Math.pow(clamped, 1 / 2.4) - 0.055) * 255);
+            };
+            return [toGamma(rLin), toGamma(gLin), toGamma(bLin)];
+          }
+          return isBackground ? (isDark ? [9, 9, 11] : [250, 250, 250]) : (isDark ? [255, 255, 255] : [24, 24, 27]);
+        };
+
+        const fgColor = window.getComputedStyle(fgEl).color;
+        const bgColor = bgEl ? window.getComputedStyle(bgEl).backgroundColor : "";
+
+        const [r1, g1, b1] = parseColor(fgColor, false).map((v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+        const [r2, g2, b2] = parseColor(bgColor, true).map((v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+
+        const l1 = 0.2126 * r1 + 0.7152 * g1 + 0.0722 * b1;
+        const l2 = 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
+        const lighter = Math.max(l1, l2);
+        const darker = Math.min(l1, l2);
+        return (lighter + 0.05) / (darker + 0.05);
+      },
+      [fgSelector, bgSelector]
+    );
+  };
+
+  const getContainerBg = async () => {
+    return page.evaluate(() => {
+      const container = document.querySelector(".min-h-screen");
+      if (container) {
+        const bg = window.getComputedStyle(container).backgroundColor;
+        if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") return bg;
+      }
+      return document.documentElement.classList.contains("dark") ? "rgb(9, 9, 11)" : "rgb(250, 250, 250)";
+    });
+  };
+
+  // 1. Light theme checks
+  const lightBg = await getContainerBg();
+  const lightH1Contrast = await evaluateContrast("h1", ".min-h-screen");
+  expect(lightH1Contrast).toBeGreaterThanOrEqual(4.5);
+
+  // Primary button styling in light mode
+  const startChatBtn = page.locator("[data-testid='primary-cta']").first();
+  const startChatBg = await startChatBtn.evaluate((el) => window.getComputedStyle(el).backgroundColor);
+  expect(startChatBg).not.toBe("rgba(0, 0, 0, 0)");
+  expect(startChatBg).not.toBe("transparent");
+
+  const btnContrast = await evaluateContrast("[data-testid='primary-cta']", "[data-testid='primary-cta']");
+  // In emerald button, text is white, bg is emerald-700 (contrast ~4.5:1 or higher)
+  expect(btnContrast).toBeGreaterThanOrEqual(4.5);
+
+  // 2. Switch to dark theme
+  const themeToggle = page.getByRole("button", { name: /switch to dark mode/i });
+  await themeToggle.click();
+  await page.waitForTimeout(150);
+
+  // 3. Dark theme checks
+  const darkBg = await getContainerBg();
+  expect(lightBg).not.toEqual(darkBg);
+
+  const darkH1Contrast = await evaluateContrast("h1", ".min-h-screen");
+  expect(darkH1Contrast).toBeGreaterThanOrEqual(4.5);
+
+  const darkBtnContrast = await evaluateContrast("[data-testid='primary-cta']", "[data-testid='primary-cta']");
+  expect(darkBtnContrast).toBeGreaterThanOrEqual(4.5);
+});
+
+
