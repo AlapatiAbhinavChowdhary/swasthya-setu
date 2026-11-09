@@ -56,9 +56,10 @@ route_rewrite_prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             "Route and rewrite this public-health question. Return exactly two lines:\n"
-            "INTENT: one of disease_info, prevention_tips, vaccination_schedule, "
+            "INTENT: one of emergency, disease_info, prevention_tips, vaccination_schedule, "
             "outbreak_alerts, find_hospital, greeting_smalltalk, out_of_scope\n"
             "QUERY: a short English retrieval query.\n"
+            "Use emergency if the user describes an acute medical crisis (severe breathing trouble, unconsciousness, heavy bleeding, chest pain, convulsions, poisoning, severe injury).\n"
             "Swasthya Setu covers 30 specific public health topics: infectious diseases "
             "(dengue, malaria, TB, cholera, typhoid, hepatitis A/B/E, Japanese encephalitis, "
             "kala-azar, lymphatic filariasis, measles, polio, DPT, rabies, snakebite, covid-19, "
@@ -93,15 +94,35 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"what medicine|which medicine|medicine should i|medication should i|"
         r"what drug|which drug|what should i take|what can i take|which tablet should i take|"
         r"what medicine to take|what drug to take|give me the dose|what dose|exact (?:drug )?regimen and doses|"
-        r"dosage should i|how much (?:of\s+)?(?:\w+\s+)?(?:should|can) i (?:take|give|use)|"
-        r"how many (?:\w+\s+)?tablets|"
-        r"what antibiotic should i take|"
+        r"exact\s+dosage|dosage\s+of|dosage\s+should\s+i|how much (?:of\s+)?(?:[\w-]+\s+){0,3}(?:should|can) i (?:take|give|use)|"
+        r"how many (?:[\w-]+\s+){0,2}(?:tablets?|pills?|capsules?|drops?)|"
+        r"what (?:antibiotic|painkiller|sleeping\s+pills?|syrup)\s+(?:should|can) i (?:take|buy|use)|"
         r"prescribe|prescription|do i have|am i suffering from|"
-        r"is this (?:dengue|malaria|diabetes|covid|typhoid)"
+        r"is this (?:dengue|malaria|diabetes|covid|typhoid)|"
+        r"ignore\s+(?:all\s+)?(?:previous\s+)?(?:safety\s+)?guidelines|"
+        r"system\s+override|dump\s+(?:all\s+)?(?:hidden\s+)?system\s+prompts|"
+        r"dan\s+mode|simulation\s+mode|disregard\s+(?:government\s+)?guidelines|"
+        r"ignore\s+safety\s+policy|act\s+as\s+a\s+(?:medical\s+)?doctor"
         r")\b",
         re.IGNORECASE,
     ),
-    re.compile(r"(कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|कितनी (?:गोली|खुराक|दवा)|क्या मुझे .*है|क्या दवा लूँ|क्या दवा लूं|कौन सी दवा लेनी चाहिए)"),
+    re.compile(
+        r"("
+        r"कौन सी दवा|कौनसी दवा|दवा बताइए|दवा की खुराक|कितनी (?:गोली|खुराक|दवा)|"
+        r"क्या मुझे .*है|क्या दवा लूँ|क्या दवा लूं|कौन सी दवा लेनी चाहिए|"
+        r"कौन सी (?:एंटीबायोटिक|पेनकिलर)?\s*(?:दवा|गोली|सिरप)|"
+        r"कौन सी पेनकिलर दवा सही है|दवा का पर्चा|पर्चा लिख(?:कर)?|"
+        r"पिछली सभी हिदायतों को भूल जाओ|सिस्टम ओवरराइड|कल्पना करो कि तुम डॉक्टर हो"
+        r")"
+    ),
+    re.compile(
+        r"\b("
+        r"kitni goli loon|kaunsi dawai khaun|kitna dose dena chahiye|kaunsa syrup doon|"
+        r"dawa batao|konsi tablet leni chahiye|kya medicine lu|kya tablet khana chahiye|"
+        r"kitni tablets leni|kaun si dawa lu"
+        r")\b",
+        re.IGNORECASE,
+    ),
 )
 
 
@@ -141,6 +162,7 @@ def _route_and_rewrite(question: str) -> tuple[str, str]:
 def route_intent(question: str, model_intent: str) -> str:
     """Apply the safety boundary after the model proposes an intent."""
     labels = {
+        "emergency",
         "disease_info",
         "prevention_tips",
         "vaccination_schedule",
@@ -195,6 +217,18 @@ def _intent_router(state: AgentState) -> AgentState:
         )
         intent, search_query = _route_and_rewrite(route_question)
     logger.info("agent node=intent_router intent=%s", intent)
+    if intent == "emergency":
+        language = state.get("language") or _detect_language(state["question"])
+        return {
+            **state,
+            "intent": "emergency",
+            "emergency": True,
+            "answer": emergency_response(language),
+            "documents": [],
+            "citations": [],
+            "language": language,
+            "search_query": "",
+        }
     return {**state, "intent": intent, "search_query": search_query}
 
 
@@ -506,7 +540,9 @@ def _build_graph():
     graph.add_conditional_edges(
         "intent_router",
         lambda state: (
-            "generate_answer"
+            "format_response"
+            if state.get("emergency")
+            else "generate_answer"
             if state["intent"] in {
                 "out_of_scope",
                 "greeting_smalltalk",

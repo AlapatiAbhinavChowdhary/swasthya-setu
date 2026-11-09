@@ -469,4 +469,83 @@ def test_general_awareness_allows_duration_and_continuity_when_grounded():
     assert "cannot provide specific drug doses" not in result["answer"]
 
 
+def test_emergency_detection_expanded_coverage_and_hinglish():
+    # English variations
+    assert is_emergency("Severe crushing chest pain radiating to left arm and sweating")
+    assert is_emergency("Patient has sudden face drooping and cannot speak or move arm")
+    assert is_emergency("Baby has stopped breathing and lips are turning blue")
+    assert is_emergency("Continuous seizures and convulsions lasting more than 5 minutes")
+    assert is_emergency("Adult swallowed poison pesticide and is foaming at the mouth")
+    # Hindi variations
+    assert is_emergency("छाती में बहुत तेज दर्द और सांस फूल रही है")
+    assert is_emergency("मुंह से बहुत ज्यादा खून की उल्टी हो रही है")
+    assert is_emergency("बच्चा सांस नहीं ले पा रहा है और होंठ नीले पड़ रहे हैं")
+    assert is_emergency("पेट में असहनीय भयंकर दर्द है और पेट सख्त हो गया है")
+    # Hinglish variations
+    assert is_emergency("saans nahi aa rahi bahut ghutan ho rahi hai")
+    assert is_emergency("mareez achanak behosh ho gaya aur hosh nahi aa raha")
+    assert is_emergency("khoon ki ulti ho rahi hai lagatar")
+    assert is_emergency("dourey pad rahe hain pichhle 5 minute se")
+    assert is_emergency("chhati mein bahut tej dard aur pasina aa raha hai")
+
+
+def test_emergency_negation_and_educational_distinction():
+    # Negations should NOT trigger emergency
+    assert not is_emergency("Patient has mild cough for two days, no bleeding and no chest pain")
+    assert not is_emergency("मरीज को हल्का सिरदर्द है, कोई उल्टी या बेहोशी नहीं है")
+    assert not is_emergency("Patient had a seizure five years ago as a child but is fine now")
+    # Educational look-alikes should NOT trigger emergency
+    assert not is_emergency("What are the warning signs of severe dengue fever?")
+    assert not is_emergency("How do doctors diagnose unconsciousness or fainting?")
+    assert not is_emergency("सांस फूलने के आम कारण क्या हो सकते हैं?")
+    assert not is_emergency("Dengue ke severe warning signs kya hote hain?")
+
+
+def test_dose_prescription_hinglish_and_hindi_detection():
+    # Hinglish
+    assert is_prescription_or_diagnosis("Bukhar ke liye kitni goli loon paracetamol ki?")
+    assert is_prescription_or_diagnosis("Kaunsi dawai khaun gale ke dard ke liye?")
+    assert is_prescription_or_diagnosis("Kitna dose dena chahiye 2 saal ke bachhe ko?")
+    assert is_prescription_or_diagnosis("Dawa batao pet dard theek karne ke liye")
+    # Hindi
+    assert is_prescription_or_diagnosis("मुझे बुखार उतारने के लिए कौन सी एंटीबायोटिक गोली खानी चाहिए?")
+    assert is_prescription_or_diagnosis("दर्द कम करने के लिए कौन सी पेनकिलर दवा सही है?")
+    assert is_prescription_or_diagnosis("क्या आप मुझे मलेरिया की दवा का पर्चा लिखकर दे सकते हैं?")
+    # English
+    assert is_prescription_or_diagnosis("How much cough syrup should I give my 2 year old?")
+    assert is_prescription_or_diagnosis("Tell me the exact dosage of amoxicillin for an adult")
+
+
+def test_second_net_intent_escalation_to_emergency():
+    from unittest.mock import patch
+    from swasthya_setu.generation.agent import _intent_router
+
+    state = {
+        "question": "Acute clinical respiratory distress syndrome with collapse",
+        "session_id": "test_second_net",
+        "history": [],
+    }
+    with patch("swasthya_setu.generation.agent._route_and_rewrite", return_value=("emergency", "acute respiratory distress")):
+        result = _intent_router(state)
+        assert result["intent"] == "emergency"
+        assert result["emergency"] is True
+        assert "108" in result["answer"]
+
+
+def test_ors_preparation_volume_is_not_falsely_refused():
+    from swasthya_setu.generation.verification import filter_dose_patterns
+
+    # Dilution volume (1000 ml water / 1 liter) should not be flagged as a drug dose
+    en_answer = "Mix 1 packet of ORS in 1000 ml of clean drinking water and stir well."
+    filtered, is_clean = filter_dose_patterns(en_answer, "en")
+    assert is_clean
+    assert "1000 ml" in filtered
+
+    hi_answer = "ओआरएस का एक पैकेट 1000 मिली साफ पीने के पानी में मिलाकर अच्छी तरह घोल लें।"
+    hi_filtered, hi_clean = filter_dose_patterns(hi_answer, "hi")
+    assert hi_clean
+    assert "1000 मिली" in hi_filtered
+
+
+
 

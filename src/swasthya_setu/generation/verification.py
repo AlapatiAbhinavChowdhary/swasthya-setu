@@ -45,11 +45,15 @@ _MIXED_MEDICAL_TOKENS = {
 }
 
 _NUMERIC_DOSE_PATTERN = re.compile(
-    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|µg|ml|iu|tablets?|capsules?|drops?)(?:/(?:kg|day|dose))?\b|"
-    r"\b\d+\s*(?:to|-)\s*\d+\s*(?:mg|mcg|µg|ml|iu|tablets?|capsules?)\b|"
+    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|µg|iu|tablets?|capsules?)(?:/(?:kg|day|dose))?\b|"
+    r"\b\d+\s*(?:to|-)\s*\d+\s*(?:mg|mcg|µg|iu|tablets?|capsules?)\b|"
     r"\b(?:once|twice|thrice|\d+\s*times)\s+(?:daily|a\s+day|per\s+day)\b|"
     r"\bevery\s+\d+\s*(?:to\s*\d+\s*)?hours?\b|"
-    r"\d+\s*(?:मिग्रा|एमजी|मिली|गोलियां|गोली|बूंद)",
+    r"\d+\s*(?:मिग्रा|एमजी|गोलियां|गोली)|"
+    r"\b\d+(?:\.\d+)?\s*(?:drops?)\b|"
+    r"\b\d+(?:\.\d+)?\s*(?:to|-)\s*\d+\s*(?:drops?)\b|"
+    r"\b\d+(?:\.\d+)?\s*ml\b(?!\s+(?:of\s+)?(?:clean\s+)?(?:drinking\s+)?(?:water|ors|solution|liquid|fluid))\b|"
+    r"\d+\s*मिली(?![\s\w\u0900-\u097f]*(?:पानी|ओआरएस|घोल))",
     re.IGNORECASE,
 )
 
