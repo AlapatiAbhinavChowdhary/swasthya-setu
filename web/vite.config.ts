@@ -1,5 +1,6 @@
 import { defineConfig, type HttpProxy } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import type { IncomingMessage } from "http";
 
 const createApiProxy = () => ({
@@ -14,7 +15,7 @@ const createApiProxy = () => ({
 });
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   appType: "spa",
   server: {
     port: 5173,
