@@ -29,3 +29,10 @@ def isolate_test_environment(monkeypatch, tmp_path):
     # Isolate SQLite feedback database to a unique temporary file per test
     temp_db = tmp_path / "test_feedback.db"
     monkeypatch.setattr(settings, "feedback_database", str(temp_db))
+
+    # Mock chain store to avoid reading Chroma SQLite on disk during unit tests
+    import swasthya_setu.generation.chain as chain_module
+    class DummyStore:
+        def similarity_search(self, *args, **kwargs):
+            return []
+    monkeypatch.setattr(chain_module, "_store", lambda: DummyStore())
