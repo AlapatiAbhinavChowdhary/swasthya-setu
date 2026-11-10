@@ -109,6 +109,10 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"how\s+much\s+(?:of\s+)?(?:[\w-]+\s+){0,3}(?:should|can)\s+i\s+(?:take|give|use)|"
         r"how\s+many\s+(?:[\w-]+\s+){0,2}(?:tablets?|pills?|capsules?|drops?)|"
         r"how\s+many\s+(?:mg|ml)|how\s+much\s+(?:mg|ml)|"
+        r"how\s+to\s+take\s+[\w-]+\s+(?:with|along\s+with|together\s+with)\s+[\w-]+\b|"
+        r"(?:timing\s+of|when\s+(?:should|to|can)\s+i\s+take)\s+(?:my\s+|the\s+)?(?:tablet|pill|capsule|medicine|syrup|dose|iron|calcium|antibiotic|medication)\b|"
+        r"(?:should|can)\s+i\s+take\s+(?:my\s+|the\s+)?(?:tablet|pill|capsule|medicine|iron|calcium|paracetamol)\s+before\s+or\s+after\s+(?:food|meals?|eating)\b|"
+        r"can\s+i\s+take\s+[\w-]+\s+and\s+[\w-]+\s+together\b|"
         r"(?:which|what)\s+(?:medicine|tablet|drug|antibiotic|syrup)\s+(?:should|can)\s+i\s+(?:take|give)|"
         r"what\s+(?:should|can)\s+i\s+(?:give|take\s+for)|give\s+me\s+a\s+prescription|"
         r"suggest\s+a\s+(?:good\s+)?(?:cough\s+syrup|medicine|tablet|antibiotic)|"
@@ -127,6 +131,9 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"कौन\s*सी\s*दवा|कौनसी\s*दवा|दवा\s*बताइए|दवा\s*की\s*खुराक|कितनी\s*(?:गोली|खुराक|दवा|एमजी|बार|देनी\s*चाहिए)|"
         r"गोली\s*(?:रोज\s*)?कितनी\s*(?:खानी|लेनी)|"
         r"एंटीवेनम\s*(?:कितना|की\s*खुराक|कितनी\s*शीशी)|जिंक\s*कितनी|कितने\s*एमएल\s*ओआरएस|"
+        r"(?:दवा|गोली|टैबलेट).*(?:खाने\s*से\s*पहले|खाने\s*के\s*बाद|कब\s*लेनी|कब\s*खानी)|(?:खाने\s*से\s*पहले|खाने\s*के\s*बाद|कब\s*लेनी|कब\s*खानी).*(?:दवा|गोली|टैबलेट)|"
+        r"(?:आयरन|कैल्शियम)\s+की\s+गोली\s+के\s+साथ|"
+        r"(?:के\s+साथ\s+.*(?:दवा|गोली|कैल्शियम|आयरन)\s+(?:ले\s*सकते|खानी|लेनी|कैसे\s*लें))|"
         r"क्या\s*मुझे\s*.*है|क्या\s*दवा\s*लूँ|क्या\s*दवा\s*लूं|दवा\s*लेनी\s*चाहिए|गोली\s*(?:खानी|ले\s*सकते)|"
         r"कौन\s*सी\s*(?:एंटीबायोटिक|पेनकिलर)?\s*(?:दवा|गोली|सिरप)|"
         r"कौन\s*सी\s*पेनकिलर\s*दवा\s*सही\s*है|दवा\s*का\s*पर्चा|पर्चा\s*लिख(?:कर)?|लिख\s*कर\s*दो|लिखकर\s*दो|लिख\s*दो|पर्ची\s*की\s*तरह|"
@@ -140,6 +147,11 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"kitn[aei]\s+dose|dose\s+batao|dawa\s+batao|dawai\s+ka\s+dose|dose\s+kya\s+h|"
         r"syrup\s+kitn[aei]\s+ml|kitn[aei]\s+ml|kitn[aei]\s+baar\s+(?:khana|lena|leni|peena)|kitn[aei]\s+din\s+tak\s+(?:khana|lena|leni|peena)|"
         r"kitn[aei]\s+(?:der|time)\s+baad|dobara\s+le\s+sakte|kitne\s+mg|kitna\s+mg|"
+        r"iron\s+(?:ki\s+)?goli\s+k[eai]\s+sath\s+calcium|calcium\s+k[eai]\s+sath\s+iron|"
+        r"\b(?:tablet|goli|medicine|dawai|paracetamol|syrup|capsule)\b.*?\b(?:kab\s+(?:leni|khani|le)|khane\s+(?:k[eai]\s+baad|s[eai]\s+pehle))\b|"
+        r"\b(?:kab\s+(?:leni|khani|le)|khane\s+(?:k[eai]\s+baad|s[eai]\s+pehle))\b.*?\b(?:tablet|goli|medicine|dawai|paracetamol|syrup|capsule)\b|"
+        r"(?:k[eai]\s+sath\s+(?:tablet|goli|dawai)\s+(?:le\s+sakte|khayein|leni\s+h|leni\s+hai))|"
+        r"subah\s+lu\s+ya\s+sham\s+ko\s+tablet|"
         r"konsi\s+dawai\s+du|prescribe\s+kr\s+do|tablet\s+prescribe|"
         r"kaunsa\s+syrup|konsi\s+tablet\s+khani|kitni\s+tablets\s+leni|kaun\s*si\s+(?:dawa|tablet|medicine|painkiller)\s+lu|painkiller\s+tablet"
         r")\b",
@@ -187,9 +199,14 @@ def _intent(question: str) -> str:
 
 
 def _route_and_rewrite(question: str) -> tuple[str, str, str, bool]:
-    result = (route_rewrite_prompt | _llm() | StrOutputParser()).invoke(
-        {"question": question}
-    ).strip()
+    try:
+        result = (route_rewrite_prompt | _llm() | StrOutputParser()).invoke(
+            {"question": question}
+        ).strip()
+    except Exception as exc:
+        logger.warning("route_rewrite failed with upstream error: %s", exc)
+        return "service_error", question, "routine", False
+
     intent_match = re.search(r"INTENT:\s*([a-z_]+)", result, re.IGNORECASE)
     urgency_match = re.search(r"URGENCY:\s*([a-z_]+)", result, re.IGNORECASE)
     dose_match = re.search(r"ASKS_MEDICINE_OR_DOSE:\s*(true|false)", result, re.IGNORECASE)
@@ -279,6 +296,19 @@ def _intent_router(state: AgentState) -> AgentState:
 
     logger.info("agent node=intent_router intent=%s urgency=%s asks_dose=%s", intent, urgency, asks_dose)
     language = state.get("language") or _detect_language(state["question"])
+
+    if intent == "service_error":
+        return {
+            **state,
+            "intent": "service_error",
+            "emergency": False,
+            "urgency": "routine",
+            "answer": localized_message("service_error", language),
+            "documents": [],
+            "citations": [],
+            "language": language,
+            "search_query": "",
+        }
 
     if intent == "emergency" or urgency == "emergency":
         return {
@@ -513,13 +543,23 @@ def _generate_answer(state: AgentState) -> AgentState:
             lines.append(f"\n{closing}")
             return {**state, "answer": "\n".join(lines), "citations": []}
 
-    text = (answer_prompt | _llm() | StrOutputParser()).invoke(
-        {
-            "context": format_context(state.get("documents", [])),
-            "question": state["question"],
-            "language": state.get("language", "en"),
+    try:
+        text = (answer_prompt | _llm() | StrOutputParser()).invoke(
+            {
+                "context": format_context(state.get("documents", [])),
+                "question": state["question"],
+                "language": state.get("language", "en"),
+            }
+        )
+    except Exception as exc:
+        logger.warning("generation failed with upstream error: %s", exc)
+        lang = state.get("language", "en")
+        return {
+            **state,
+            "answer": localized_message("service_error", lang),
+            "citations": [],
+            "intent": "service_error",
         }
-    )
     answer, citations = verify_citations(
         text,
         state.get("documents", []),
@@ -531,6 +571,7 @@ def _generate_answer(state: AgentState) -> AgentState:
 
 def _verify_answer(state: AgentState) -> AgentState:
     if state.get("emergency") or state.get("intent") in {
+        "service_error",
         "out_of_scope",
         "greeting_smalltalk",
         "outbreak_alerts",
@@ -694,7 +735,7 @@ def _build_graph():
         "intent_router",
         lambda state: (
             "format_response"
-            if state.get("emergency")
+            if state.get("emergency") or state.get("intent") == "service_error"
             else "generate_answer"
             if state["intent"] in {
                 "out_of_scope",
@@ -720,14 +761,64 @@ def run_agent(
     question: str, session_id: str = "default", language: str | None = None
 ) -> AgentState:
     """Run the graph and retain only the last six user/assistant turns."""
-    state = AGENT.invoke(
-        {
+    lang = language or _detect_language(question)
+    # 1. Deterministic emergency check runs before any LLM call
+    if is_emergency(question):
+        resp = emergency_response(lang)
+        state: AgentState = {
             "question": question,
             "session_id": session_id,
-            "history": _sessions.get(session_id, []),
-            **({"language": language} if language else {}),
+            "intent": "emergency",
+            "emergency": True,
+            "answer": resp,
+            "language": lang,
+            "citations": [],
+            "sources": [],
+            "response": {
+                "answer": resp,
+                "language": lang,
+                "intent": "emergency",
+                "emergency": True,
+                "language_consistent": True,
+                "sources": [],
+            },
         }
-    )
+        history = _sessions.setdefault(session_id, [])
+        history.extend([("user", question), ("assistant", resp)])
+        del history[:-MAX_HISTORY_TURNS * 2]
+        return state
+
+    try:
+        state = AGENT.invoke(
+            {
+                "question": question,
+                "session_id": session_id,
+                "history": _sessions.get(session_id, []),
+                **({"language": language} if language else {}),
+            }
+        )
+    except Exception as exc:
+        logger.warning("agent invoke failed: %s", exc)
+        err_ans = localized_message("service_error", lang)
+        state = {
+            "question": question,
+            "session_id": session_id,
+            "intent": "service_error",
+            "emergency": False,
+            "answer": err_ans,
+            "language": lang,
+            "citations": [],
+            "sources": [],
+            "response": {
+                "answer": err_ans,
+                "language": lang,
+                "intent": "service_error",
+                "emergency": False,
+                "language_consistent": True,
+                "sources": [],
+            },
+        }
+
     history = _sessions.setdefault(session_id, [])
     history.extend([("user", question), ("assistant", state["answer"])])
     del history[:-MAX_HISTORY_TURNS * 2]

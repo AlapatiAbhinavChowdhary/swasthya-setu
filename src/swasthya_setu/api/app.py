@@ -155,9 +155,32 @@ def _run_chat(request: Request, payload: ChatRequest) -> ChatResponse:
         return cached[1].model_copy(update={"request_id": request.state.request_id})
     try:
         state = run_agent(payload.message, session_id, payload.language)
-    except (TimeoutError, ConnectionError, ChatGoogleGenerativeAIError) as exc:
+    except Exception as exc:
         logger.warning("request_id=%s upstream_error=%s", request.state.request_id, type(exc).__name__)
-        raise HTTPException(status_code=503, detail="The health assistant is temporarily unavailable.") from exc
+        lang = payload.language or ("hi" if any("\u0900" <= c <= "\u097f" for c in payload.message) else "en")
+        from swasthya_setu.generation.safety import is_emergency, emergency_response
+        from swasthya_setu.generation.verification import localized_message
+        if is_emergency(payload.message):
+            emerg_resp = emergency_response(lang)
+            return ChatResponse(
+                answer=emerg_resp,
+                language=lang,
+                intent="emergency",
+                emergency=True,
+                language_consistent=True,
+                sources=[],
+                request_id=request.state.request_id,
+            )
+        err_ans = localized_message("service_error", lang)
+        return ChatResponse(
+            answer=err_ans,
+            language=lang,
+            intent="service_error",
+            emergency=False,
+            language_consistent=True,
+            sources=[],
+            request_id=request.state.request_id,
+        )
     response = _response_from_state(state, request.state.request_id)
     app.state.database.record_message(session_id, "user", payload.message)
     app.state.database.record_message(session_id, "assistant", response.answer)

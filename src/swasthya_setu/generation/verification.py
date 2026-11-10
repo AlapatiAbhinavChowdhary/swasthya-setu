@@ -10,12 +10,26 @@ FIXED_MESSAGES = {
         "hi": "मेरे पास इसकी सत्यापित जानकारी नहीं है। कृपया डॉक्टर, आशा कार्यकर्ता या स्वास्थ्य केंद्र से पूछें।",
     },
     "prescription_refusal": {
-        "en": "I cannot diagnose you or recommend medicines or doses. Please ask a doctor, ASHA worker or health centre.",
-        "hi": "मैं आपका निदान नहीं कर सकता और दवा या खुराक की सलाह नहीं दे सकता। कृपया डॉक्टर, आशा कार्यकर्ता या स्वास्थ्य केंद्र से पूछें।",
+        "en": "I cannot diagnose you, recommend medicines or doses, or advise on medicine timing and combinations. Please ask a doctor, ASHA worker or pharmacist.",
+        "hi": "मैं आपका निदान नहीं कर सकता, दवा या खुराक की सलाह नहीं दे सकता, और न ही दवा के समय या संयोजनों पर मार्गदर्शन कर सकता हूँ। कृपया डॉक्टर, आशा कार्यकर्ता या फार्मासिस्ट से पूछें।",
     },
     "dose_refusal": {
         "en": "I cannot provide specific drug doses, dosing intervals, or medication schedules. Dosing requires individualized medical evaluation. Please consult a doctor, ASHA worker, or your nearest health centre.",
         "hi": "मैं दवा की विशिष्ट खुराक, समय या कार्यक्रम की सलाह नहीं दे सकता। खुराक के लिए डॉक्टर या स्वास्थ्यकर्मी द्वारा व्यक्तिगत जांच आवश्यक है। कृपया डॉक्टर, आशा कार्यकर्ता या स्वास्थ्य केंद्र से सलाह लें।",
+    },
+    "service_error": {
+        "en": (
+            "The health assistant is temporarily unavailable. Please try again in a few moments.\n\n"
+            "If this is an emergency, call 108 or 112."
+        ),
+        "hi": (
+            "स्वास्थ्य सहायक सेवा अभी अस्थायी रूप से अनुपलब्ध है। कृपया कुछ देर बाद पुनः प्रयास करें।\n\n"
+            "यदि यह आपातकाल है, तो 108 या 112 पर कॉल करें।"
+        ),
+        "or": (
+            "ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ ସେବା ବର୍ତ୍ତମାନ ଅନୁପଲବ୍ଧ ଅଛି। ଦୟାକରି କିଛି ସମୟ ପରେ ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ।\n\n"
+            "ଯଦି ଏହା ଏକ ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି, ତେବେ ୧୦୮ ବା ୧୧୨ କୁ କଲ୍ କରନ୍ତୁ।"
+        ),
     },
     "disclaimer": {
         "en": "Do not self-medicate. Please check with a doctor or health worker.",
