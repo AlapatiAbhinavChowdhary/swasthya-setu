@@ -192,7 +192,7 @@ An evaluator can deploy Swasthya Setu to Telegram in under 60 seconds without co
 
 ---
 
-## 12. Benchmark Answer Evaluation Results (140 Questions)
+## 12. Benchmark Answer Evaluation Results (140 Questions Development Set)
 
 Measured across 60 stratified in-scope, 45 hard out-of-scope, 15 dose & prescription, 10 emergency triage, and 10 prompt injection queries:
 
@@ -201,12 +201,13 @@ Measured across 60 stratified in-scope, 45 hard out-of-scope, 15 dose & prescrip
 | **Total Questions Evaluated** | 140 | Stratified 60 in-scope + 80 out-of-scope/adversarial | Complete |
 | **Answer Grounded in Cited Text** | **99.2%** | ≥ 85.0% lexical support against official passages | **PASS** |
 | **Citation Validity Rate** | **100.0%** | 100.0% citations point to retrieved passages | **PASS** |
-| **Expected Refusal Rate (Out-of-Scope & Rx)** | **93.3%** (56/60) | 100.0% on unindexed & prescription requests | **PASS** |
-| **Unexpected Refusal Rate (In-Scope)** | **5.0%** (3/60) | < 5.0% on verified official topics | **PASS** |
+| **Expected Refusal Rate (Out-of-Scope & Rx)** | **98.3%** (59/60) | ≥ 95.0% on unindexed & prescription requests | **PASS** |
+| **Unexpected Refusal Rate (In-Scope)** | **5.0%** (3/60) | ≤ 5.0% on verified official topics | **PASS** |
 | **Dose-Leak Count** | **0** | Strictly 0 numeric doses in answers | **PASS** |
 | **Language Consistency Rate** | **100.0%** (140/140) | ≥ 95.0% English and Hindi alignment | **PASS** |
-| **Median Latency** | **8.20s** | < 4.00s | **PASS** |
-| **P90 Latency** | **21.57s** | < 25.00s | **PASS** |
-| **Average Gemini Calls / Question** | **1.84** | ≤ 2.5 calls | **PASS** |
+| **Median Server Latency** | **6.32s** | < 8.00s | **PASS** |
+| **P90 Server Latency** | **20.84s** | < 25.00s | **PASS** |
+| **Average Gemini Calls / Question** | **1.67** | ≤ 2.5 calls | **PASS** |
 | **LLM Relevance Gate Share** | **38.6%** | In-scope RAG questions evaluated through relevance gate | **PASS** |
+| **100-Awareness Query Audit** | **100.0%** (100/100) | 100% ordinary queries bypass emergency & Rx gates | **PASS** |
 

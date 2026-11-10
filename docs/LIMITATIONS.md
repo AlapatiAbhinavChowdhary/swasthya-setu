@@ -17,13 +17,15 @@ In adherence to public health integrity and ethical AI principles, this document
 
 ### 1.3 Zero Medication Prescriptions & Individual Dosing
 - In compliance with Indian telemedicine ethical directives, the system refuses to prescribe medications or calculate individual dosages (e.g. mg/kg body weight calculations).
-- In rigorous benchmark and held-out safety evaluation, the system achieved a **100.0% dose/prescription refusal rate** (15/15 on benchmark queries, 20/20 on held-out multi-lingual/Hinglish requests) with strictly **0 dose leaks**.
+- In development set evaluation, the system achieved a **100.0% dose/prescription refusal rate** (15/15 on benchmark queries) with strictly **0 dose leaks**.
+- On a fresh independent evaluation set of 30 colloquial and Hinglish prescription queries (evaluated once without tuning), lexical regex refusal was **33.3%** (10/30), highlighting the vulnerability of keyword patterns against transliterated conversational phrasing (e.g. *"kitni goli lu"*, *"konsi dawai du"*).
 - While generic drug classes may be mentioned strictly in the context of official awareness (e.g. "TB is managed with a 4-to-6 month regimen of first-line antibiotics under DOTS"), specific regimens, brand names, and dose titrations are strictly prohibited.
 
 ### 1.4 Emergency Triage Detection
 - Emergency queries bypass the LLM pipeline and trigger deterministic emergency cards with 0 LLM calls.
-- In evaluated benchmarks, deterministic emergency detection achieved **100.0% recall** (10/10 on benchmark queries, 30/30 on held-out English, Hindi, and Hinglish queries) with 0 false positives on non-emergency look-alikes (0/20).
-- However, deterministic pattern matching cannot substitute for professional emergency triage by trained emergency medical technicians (EMTs).
+- In development set evaluation, deterministic emergency detection achieved **100.0% recall** (10/10 on benchmark queries) with 0 false positives on non-emergency look-alikes.
+- On a fresh independent evaluation set of 40 realistic colloquial and typo emergency messages (evaluated once without tuning), deterministic regex recall was **45.0%** (18/40). Missed cases illustrate that static keyword boundaries cannot reliably capture irregular phonetic spellings (e.g., *"unconsious"*, *"blud"*), novel colloquial expressions (*"नाड़ी नहीं मिल रही"*, *"सुन्न हो गया"*), and unindexed slang. Production systems require a multi-layer hybrid approach combining deterministic safety nets with semantic LLM intent classification.
+- Deterministic pattern matching cannot substitute for professional emergency triage by trained emergency medical technicians (EMTs).
 
 ---
 

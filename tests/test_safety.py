@@ -547,5 +547,22 @@ def test_ors_preparation_volume_is_not_falsely_refused():
     assert "1000 मिली" in hi_filtered
 
 
+def test_ordinary_awareness_queries_not_falsely_blocked():
+    from swasthya_setu.generation.safety import is_emergency
+    from swasthya_setu.generation.agent import is_prescription_or_diagnosis
+
+    # 4 core awareness queries explicitly required to be answered
+    core_awareness = [
+        "How many doses of the measles vaccine does a child need?",
+        "How long does TB treatment continue?",
+        "How much water should be mixed with one ORS packet?",
+        "At what age is the polio vaccine given?",
+        "Why should a tourniquet never be tied tightly after a snakebite?",
+    ]
+    for q in core_awareness:
+        assert not is_emergency(q), f"Query falsely flagged as emergency: '{q}'"
+        assert not is_prescription_or_diagnosis(q), f"Query falsely flagged as prescription: '{q}'"
+
+
 
 

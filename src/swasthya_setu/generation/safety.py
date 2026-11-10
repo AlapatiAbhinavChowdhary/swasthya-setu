@@ -26,8 +26,8 @@ def emergency_response(language: str) -> str:
 
 
 _EDUCATIONAL_QUERY_PREFIX = re.compile(
-    r"^(?:what\s+(?:are|is|causes|does)|how\s+(?:to\s+prevent|do\s+doctors|is|are|do)|can\s+|why\s+does|is\s+it\s+normal|"
-    r"overview\s+of|tell\s+me\s+about|information\s+on\s+how|signs\s+and\s+symptoms\s+of|definition\s+of)\b|"
+    r"^(?:what\s+(?:are|is|causes|does)|how\s+(?:to\s+prevent|do\s+doctors|is|are|do|much|many|long)|can\s+|why\s+(?:should|does|is|are|do|would|not)?\s+|is\s+it\s+normal|"
+    r"educational\s+(?:info|information)\s+on|overview\s+of|tell\s+me\s+about|information\s+on\s+how|signs\s+and\s+symptoms\s+of|definition\s+of)\b|"
     r"^(?:क्या\s+होता\s+है|लक्षण\s+क्या\s+हैं|कारण\s+क्या\s+हैं|बचाव\s+कैसे\s+करें|जानकारी\s+दें|सांस फूलने के आम कारण)\b|"
     r".*(?:के क्या कारण|क्या लक्षण|क्या दिशा-निर्देश|क्या होते हैं|kya hote hain|kya lakshan hain)\??$",
     re.IGNORECASE,
