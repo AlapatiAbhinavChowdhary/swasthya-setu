@@ -8,9 +8,10 @@
 | **Step 5: Unseen Independent Evaluation Set** | complete | `fix/triage` | Created independent 110-query unseen set (40 emergencies, 40 look-alikes, 30 prescriptions with typos, Hinglish, acute crises). Evaluated once: Emergency Recall 100.0% (40/40, target >= 90%), Look-alike FP Rate 0.0% (0/40, target <= 5%), Prescription Refusal 100.0% (30/30, target >= 95%), Leaks 0 (target 0). |
 | **Step 6: Safe Fallbacks & Persistent Notice** | complete | `fix/triage` | Added persistent visible 108 emergency notice banner with click-to-call link on Chat page (`web/src/pages/Chat.tsx`). Added Playwright e2e assertion in `web/e2e/app.spec.ts`. Updated `docs/LIMITATIONS.md` explaining best-effort colloquial triage and persistent banner fallback. |
 | **Step 7: Verification, Offline Tests & CI** | complete | `fix/triage` | All 78 pytest unit/integration tests pass in 5.3s offline. Web frontend builds cleanly (`tsc -b && vite build`). Playwright e2e suite passes all 24 specs (2 skipped for live LLM key). Merge `fix/triage` to `main`. |
+| **Verification Pass (fix/verify-triage)** | complete | `fix/verify-triage` | 1) CI status on main (1fe5926: 42771049266 success, 4431520: 42769452375 success). 2) Live Gemini holdout: 95.0% recall (38/40: 17 both, 1 rule-only, 20 LLM-only, 2 missed), 0.0% FP (0/40), 96.7% Rx refusal (29/30), 0 leaks. 3) Regression suite: 100/100 awareness audit pass, 5/5 fuzzy look-alikes pass, 5/5 malformed router safe fallback. 4) Printed answers for ORS child diarrhoea, heat stroke, snakebite, child not breathing; red-team dose queries refused; ORS policy enforced. 5) 112 added alongside 108 in banner, card, translations, and docs; 2005 WHO diarrhoea manual demoted. 82 Python tests, 12 Vitest tests, 24 Playwright e2e tests passing. |
 
 ---
 
 ## Exact Resume Point
 
-All 7 triage hardening steps verified and complete. Ready to commit on `fix/triage`, push branch, merge fast-forward to `main`, and push `main`.
+All verification pass checks complete and documented in docs/EVALUATION.md. Branch fix/verify-triage ready for commit, push, CI check, and fast-forward merge to main.
