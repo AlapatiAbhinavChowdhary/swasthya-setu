@@ -323,7 +323,9 @@ test("chat interaction: sends message, streams response, displays source chip", 
   const emergencyNotice = page.getByTestId("persistent-emergency-notice");
   await expect(emergencyNotice).toBeVisible();
   await expect(emergencyNotice).toContainText("108");
+  await expect(emergencyNotice).toContainText("112");
   await expect(emergencyNotice.locator('a[href="tel:108"]')).toBeVisible();
+  await expect(emergencyNotice.locator('a[href="tel:112"]')).toBeVisible();
   await page.waitForLoadState("networkidle");
 
   const input = page.getByPlaceholder(/Ask about symptoms/i);

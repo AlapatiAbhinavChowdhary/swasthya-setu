@@ -1079,8 +1079,7 @@ sources:
   doc_id: 6743bfcbf6ed27612bf2e81b1e7829b3755e0b3af6bdcc17c34827f557b14373
   status: downloaded
 - id: doc-diarrhoea-treatment-manual-who
-  title: 'The Treatment of Diarrhoea: A manual for physicians and other senior health
-    workers'
+  title: 'The Treatment of Diarrhoea: A manual for physicians and other senior health workers (2005)'
   publisher: World Health Organization
   url: https://iris.who.int/handle/10665/43209
   file: data/raw/diarrhoeal-disease/who-treatment-of-diarrhoea-manual.pdf

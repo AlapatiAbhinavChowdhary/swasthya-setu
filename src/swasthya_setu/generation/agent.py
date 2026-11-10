@@ -104,6 +104,8 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"what\s+drug|which\s+drug|what\s+should\s+i\s+take|what\s+can\s+i\s+take|which\s+tablet\s+should\s+i\s+take|"
         r"what\s+medicine\s+to\s+take|what\s+drug\s+to\s+take|give\s+me\s+the\s+dose|what\s+dose|exact\s+(?:drug\s+)?regimen\s+and\s+doses|"
         r"exact\s+(?:dosage|dose)|(?:pediatric\s+)?dose\s+of|dosage\s+of|dosage\s+should\s+i|daily\s+dosage|"
+        r"how\s+much\s+(?:of\s+)?(?:[\w-]+\s+){0,2}(?:antivenom|asv|medicine|paracetamol|syrup|zinc|antibiotic)\b|"
+        r"\b\d+(?:\.\d+)?\s*(?:ml|mg)\s+(?:of\s+)?(?:[\w-]+\s+){0,2}(?:syrup|tablet|paracetamol|crocin|calpol|medicine|antibiotic|dose)\b|"
         r"how\s+much\s+(?:of\s+)?(?:[\w-]+\s+){0,3}(?:should|can)\s+i\s+(?:take|give|use)|"
         r"how\s+many\s+(?:[\w-]+\s+){0,2}(?:tablets?|pills?|capsules?|drops?)|"
         r"how\s+many\s+(?:mg|ml)|how\s+much\s+(?:mg|ml)|"
@@ -124,6 +126,7 @@ _PRESCRIPTION_OR_DIAGNOSIS_PATTERNS = (
         r"("
         r"कौन\s*सी\s*दवा|कौनसी\s*दवा|दवा\s*बताइए|दवा\s*की\s*खुराक|कितनी\s*(?:गोली|खुराक|दवा|एमजी|बार|देनी\s*चाहिए)|"
         r"गोली\s*(?:रोज\s*)?कितनी\s*(?:खानी|लेनी)|"
+        r"एंटीवेनम\s*(?:कितना|की\s*खुराक|कितनी\s*शीशी)|जिंक\s*कितनी|कितने\s*एमएल\s*ओआरएस|"
         r"क्या\s*मुझे\s*.*है|क्या\s*दवा\s*लूँ|क्या\s*दवा\s*लूं|दवा\s*लेनी\s*चाहिए|गोली\s*(?:खानी|ले\s*सकते)|"
         r"कौन\s*सी\s*(?:एंटीबायोटिक|पेनकिलर)?\s*(?:दवा|गोली|सिरप)|"
         r"कौन\s*सी\s*पेनकिलर\s*दवा\s*सही\s*है|दवा\s*का\s*पर्चा|पर्चा\s*लिख(?:कर)?|लिख\s*कर\s*दो|लिखकर\s*दो|लिख\s*दो|पर्ची\s*की\s*तरह|"
@@ -345,6 +348,13 @@ def _retrieve(state: AgentState) -> AgentState:
         adjusted_score = float(relevance)
         if document.metadata.get("doc_type") == "strategy":
             adjusted_score -= 0.05
+        # Demote older baseline reference manuals (e.g. 2005 WHO diarrhoea manual) below newer national and WHO sources
+        if (
+            document.metadata.get("source_id") == "doc-diarrhoea-treatment-manual-who"
+            or document.metadata.get("year") == 2005
+            or str(document.metadata.get("year")) == "2005"
+        ):
+            adjusted_score -= 0.08
         digest = hashlib.sha256(document.page_content.strip().encode("utf-8")).hexdigest()
         if digest in seen_chunks:
             continue
@@ -585,10 +595,10 @@ def _verify_answer(state: AgentState) -> AgentState:
     # If urgency was marked urgent, prepend the urgent warning
     if state.get("urgent_warning") or state.get("urgency") == "urgent":
         urgent_prefix = {
-            "en": "If this is serious or getting worse, go to the nearest hospital or call 108.\n\n",
-            "hi": "यदि यह गंभीर है या स्थिति बिगड़ रही है, तो नजदीकी अस्पताल जाएँ या 108 पर कॉल करें।\n\n",
-            "or": "ଯଦି ଏହା ଗୁରୁତର ଅଟେ କିମ୍ବା ଅଧିକ ଖରାପ ହେଉଛି, ତେବେ ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ କିମ୍ବା ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ।\n\n",
-        }.get(language, "If this is serious or getting worse, go to the nearest hospital or call 108.\n\n")
+            "en": "If this is serious or getting worse, go to the nearest hospital or call 108 or 112.\n\n",
+            "hi": "यदि यह गंभीर है या स्थिति बिगड़ रही है, तो नजदीकी अस्पताल जाएँ या 108 या 112 पर कॉल करें।\n\n",
+            "or": "ଯଦି ଏହା ଗୁରୁତର ଅଟେ କିମ୍ବା ଅଧିକ ଖରାପ ହେଉଛି, ତେବେ ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ କିମ୍ବା ୧୦୮ ବା ୧୧୨ କୁ କଲ୍ କରନ୍ତୁ।\n\n",
+        }.get(language, "If this is serious or getting worse, go to the nearest hospital or call 108 or 112.\n\n")
         if urgent_prefix.strip() not in answer:
             answer = f"{urgent_prefix}{answer.lstrip()}"
 
@@ -632,10 +642,17 @@ def _format_response(state: AgentState) -> AgentState:
     sources = []
     for number in state.get("citations", []):
         document = documents[number - 1]
+        src_name = str(document.metadata.get("source", "unknown"))
+        if (
+            document.metadata.get("year") == 2005
+            or str(document.metadata.get("year")) == "2005"
+            or "treatment of diarrhoea" in src_name.lower()
+        ) and "(2005)" not in src_name:
+            src_name = f"{src_name} (2005)"
         sources.append(
             {
                 "number": number,
-                "source": str(document.metadata.get("source", "unknown")),
+                "source": src_name,
                 "page": str(document.metadata.get("page_label", "?")),
                 "snippet": document.page_content[:240].strip(),
                 "publisher": document.metadata.get("publisher"),

@@ -305,18 +305,27 @@ export const Chat: React.FC<ChatProps> = ({ language, onLanguageChange: _onLangu
           <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" aria-hidden="true" />
           <span>
             {language === "hi"
-              ? "आपातकाल में तुरंत 108 पर कॉल करें या नजदीकी अस्पताल जाएँ।"
+              ? "आपातकाल में तुरंत 108 या 112 पर कॉल करें या नजदीकी अस्पताल जाएँ।"
               : language === "or"
-              ? "ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତିରେ ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ କିମ୍ବା ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ।"
-              : "In a medical emergency, immediately call 108 or visit the nearest hospital."}
+              ? "ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତିରେ ତୁରନ୍ତ ୧୦୮ ବା ୧୧୨ କୁ କଲ୍ କରନ୍ତୁ କିମ୍ବା ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ।"
+              : "In a medical emergency, immediately call 108 or 112 or visit the nearest hospital."}
           </span>
         </div>
-        <a
-          href="tel:108"
-          className="ml-2 font-bold underline shrink-0 hover:text-red-950 dark:hover:text-red-200"
-        >
-          {language === "hi" ? "कॉल 108" : language === "or" ? "କଲ୍ ୧୦୮" : "Call 108"}
-        </a>
+        <div className="flex items-center gap-2 shrink-0 ml-2">
+          <a
+            href="tel:108"
+            className="font-bold underline hover:text-red-950 dark:hover:text-red-200"
+          >
+            {language === "hi" ? "कॉल 108" : language === "or" ? "କଲ୍ ୧୦୮" : "Call 108"}
+          </a>
+          <span className="text-red-400 dark:text-red-600">|</span>
+          <a
+            href="tel:112"
+            className="font-bold underline hover:text-red-950 dark:hover:text-red-200"
+          >
+            {language === "hi" ? "कॉल 112" : language === "or" ? "କଲ୍ ୧୧୨" : "Call 112"}
+          </a>
+        </div>
       </div>
 
       {/* Messages Scroll Area */}

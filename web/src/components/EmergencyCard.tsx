@@ -7,7 +7,7 @@ interface EmergencyCardProps {
 }
 
 export const EmergencyCard: React.FC<EmergencyCardProps> = ({
-  message = "This may be a medical emergency. Go to the nearest hospital immediately or call 108. Do not wait for an online answer.",
+  message = "This may be a medical emergency. Go to the nearest hospital immediately or call 108 or 112. Do not wait for an online answer.",
   callLabel = "Call 108 Emergency Helpline",
 }) => {
   return (
@@ -21,7 +21,7 @@ export const EmergencyCard: React.FC<EmergencyCardProps> = ({
         <div className="space-y-3">
           <h2 className="text-xl font-bold tracking-tight">URGENT MEDICAL NOTICE</h2>
           <p className="text-base leading-relaxed font-medium text-red-50">{message}</p>
-          <div>
+          <div className="flex flex-wrap items-center gap-3">
             <a
               href="tel:108"
               className="inline-flex items-center gap-2 px-5 py-3 bg-white text-red-700 font-bold text-lg rounded-lg shadow hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-white transition"
@@ -29,6 +29,14 @@ export const EmergencyCard: React.FC<EmergencyCardProps> = ({
             >
               <PhoneCall className="w-6 h-6 text-red-600" aria-hidden="true" />
               <span>{callLabel}</span>
+            </a>
+            <a
+              href="tel:112"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-red-100 text-red-900 font-bold text-lg rounded-lg shadow hover:bg-white focus:outline-none focus:ring-4 focus:ring-white transition"
+              aria-label="Call 112 National Helpline"
+            >
+              <PhoneCall className="w-6 h-6 text-red-700" aria-hidden="true" />
+              <span>Call 112</span>
             </a>
           </div>
         </div>

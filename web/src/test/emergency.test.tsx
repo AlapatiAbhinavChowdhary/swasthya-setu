@@ -10,6 +10,9 @@ describe("EmergencyCard", () => {
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "tel:108");
     expect(screen.getByText("Call 108 Emergency Helpline")).toBeInTheDocument();
+    const link112 = screen.getByRole("link", { name: /Call 112/i });
+    expect(link112).toBeInTheDocument();
+    expect(link112).toHaveAttribute("href", "tel:112");
   });
 
   it("renders emergency banner with custom message when provided", () => {

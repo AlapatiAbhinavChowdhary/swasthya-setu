@@ -24,11 +24,11 @@ FIXED_MESSAGES = {
     "awareness_closing": {
         "en": (
             "This is health awareness information, not medical advice. "
-            "In an emergency, go to the nearest hospital or call 108."
+            "In an emergency, go to the nearest hospital or call 108 or 112."
         ),
         "hi": (
             "यह स्वास्थ्य जागरूकता की जानकारी है, चिकित्सा सलाह नहीं। "
-            "आपातकाल में नजदीकी अस्पताल जाएँ या 108 पर कॉल करें।"
+            "आपातकाल में नजदीकी अस्पताल जाएँ या 108 या 112 पर कॉल करें।"
         ),
     },
 }
@@ -45,11 +45,16 @@ _MIXED_MEDICAL_TOKENS = {
 }
 
 _NUMERIC_DOSE_PATTERN = re.compile(
-    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|µg|iu|tablets?|capsules?)(?:/(?:kg|day|dose))?\b|"
-    r"\b\d+\s*(?:to|-)\s*\d+\s*(?:mg|mcg|µg|iu|tablets?|capsules?)\b|"
+    r"\b\d+(?:\.\d+)?(?:\s*(?:to|-)\s*\d+(?:\.\d+)?)?\s*(?:ml|milliliters?|millilitres?)\s*(?:/|per)\s*kg\b|"
+    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|µg|iu|tablets?|capsules?|vials?|ampoules?)(?:/(?:kg|day|dose))?\b|"
+    r"\b\d+\s*(?:to|-)\s*\d+\s*(?:mg|mcg|µg|iu|tablets?|capsules?|vials?|ampoules?)\b|"
+    r"\b\d+(?:\.\d+)?\s*(?:vials?|ampoules?|bottles?|units?)\s*(?:of\s+)?(?:antivenom|asv|anti-snake\s*venom)\b|"
+    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|tablets?|ml)\s*(?:of\s+)?zinc\b|"
     r"\b(?:once|twice|thrice|\d+\s*times)\s+(?:daily|a\s+day|per\s+day)\b|"
     r"\bevery\s+\d+\s*(?:to\s*\d+\s*)?hours?\b|"
-    r"\d+\s*(?:मिग्रा|एमजी|गोलियां|गोली)|"
+    r"\d+\s*(?:मिली|एमएल|मिलीलीटर)\s*(?:/|प्रति)\s*(?:किग्रा|किलो|kg)|"
+    r"\d+\s*(?:शीशी|शीशियां|वायल|वायल्स|vials?)\s*(?:एंटीवेनम|एएसवी)|"
+    r"\d+\s*(?:मिग्रा|एमजी|गोलियां|गोली)\s*(?:जिंक)?|"
     r"\b\d+(?:\.\d+)?\s*(?:drops?)\b|"
     r"\b\d+(?:\.\d+)?\s*(?:to|-)\s*\d+\s*(?:drops?)\b|"
     r"\b\d+(?:\.\d+)?\s*(?:ml|milliliters?|millilitres?)\b(?!\s*(?:\([^)]*\)\s*)?(?:of\s+)?(?:clean\s+|drinking\s+|safe\s+|boiled\s+|potable\s+|fresh\s+|prepared\s+|cool(?:ed)?\s+|lukewarm\s+)*(?:water|ors|solution|liquid|fluid|fluids|drink))\b|"
@@ -189,8 +194,8 @@ def normalize_mixed_script_tokens(text: str) -> str:
 def strip_generated_closing(text: str) -> str:
     """Remove model-written safety closings before adding the fixed version."""
     patterns = (
-        r"(?is)\s*(?:this is health awareness information.*?call\s*108\.?)\s*$",
-        r"(?is)\s*(?:यह स्वास्थ्य जागरूकता की जानकारी.*?108 पर कॉल करें।?)\s*$",
+        r"(?is)\s*(?:this is health awareness information.*?(?:call\s*(?:108|112)(?:\s*(?:or|and)\s*(?:108|112))?)\.?)\s*$",
+        r"(?is)\s*(?:यह स्वास्थ्य जागरूकता की जानकारी.*?(?:108|112)(?:\s*(?:या|और)\s*(?:108|112))?\s*पर कॉल करें।?)\s*$",
         r"(?is)\s*(?:do not self-medicate.*?(?:health worker|स्वास्थ्यकर्मी)।?)\s*$",
     )
     for pattern in patterns:

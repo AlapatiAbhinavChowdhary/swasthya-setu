@@ -5,15 +5,15 @@ from swasthya_setu.generation.triage_normalizer import normalize_triage_text, ha
 
 EMERGENCY_RESPONSES = {
     "en": (
-        "This may be an emergency. Go to the nearest hospital immediately or call 108. "
+        "This may be an emergency. Go to the nearest hospital immediately or call 108 or 112. "
         "Do not wait for an online answer."
     ),
     "hi": (
-        "यह आपातकाल हो सकता है। तुरंत नजदीकी अस्पताल जाएँ या 108 पर कॉल करें। "
+        "यह आपातकाल हो सकता है। तुरंत नजदीकी अस्पताल जाएँ या 108 या 112 पर कॉल करें। "
         "ऑनलाइन जवाब के लिए इंतजार न करें।"
     ),
     "or": (
-        "ଏହା ଏକ ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି ହୋଇପାରେ। ତୁରନ୍ତ ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ କିମ୍ବା ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ। "
+        "ଏହା ଏକ ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତି ହୋଇପାରେ। ତୁରନ୍ତ ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ କିମ୍ବା ୧୦୮ ବା ୧୧୨ କୁ କଲ୍ କରନ୍ତୁ। "
         "ଅନଲାଇନ୍ ଉତ୍ତର ପାଇଁ ଅପେକ୍ଷା କରନ୍ତୁ ନାହିଁ।"
     ),
 }
@@ -28,6 +28,7 @@ def emergency_response(language: str) -> str:
 
 _EDUCATIONAL_QUERY_PREFIX = re.compile(
     r"^(?:what\s+(?:are|is|causes|does)|how\s+(?:to\s+prevent|do\s+doctors|is|are|do|much|many|long)|can\s+|why\s+(?:should|does|is|are|do|would|not)?\s+|is\s+it\s+normal|"
+    r"does\s+|do\s+|will\s+|would\s+|"
     r"educational\s+(?:info|information)\s+on|overview\s+of|tell\s+me\s+about|information\s+on\s+how|signs\s+and\s+symptoms\s+of|definition\s+of)\b|"
     r"^(?:क्या\s+होता\s+है|लक्षण\s+क्या\s+हैं|कारण\s+क्या\s+हैं|बचाव\s+कैसे\s+करें|जानकारी\s+दें|सांस फूलने के आम कारण)\b|"
     r".*(?:के क्या कारण|क्या लक्षण|क्या दिशा-निर्देश|क्या होते हैं|kya hote hain|kya lakshan hain)\??$",
@@ -160,6 +161,24 @@ def is_emergency(message: str) -> bool:
 
     if not has_unnegated_match:
         return False
+
+    # Guard for educational questions mentioning paralysis in polio/vaccines without acute stroke signals
+    if re.search(r"\b(?:polio|vaccin|immuniz)\b", norm, re.IGNORECASE) and not has_acute_override:
+        acute_stroke_signal = re.compile(
+            r"\b(?:sudden|slurred|droop|stroke|right\s+now|attack|tedha|suun|sunn|paralysis\s+right\s+now)\b",
+            re.IGNORECASE,
+        )
+        if not acute_stroke_signal.search(norm):
+            return False
+
+    # Guard for non-emergency sentences asking about definition or causes of behoshi/fainting
+    if re.search(r"\b(?:causes?|meaning|definition|what\s+is|reason|karan|arth|kya\s+hai)\b", norm, re.IGNORECASE) and not has_acute_override:
+        first_person_signals = re.compile(
+            r"\b(?:my|i am|he is|she is|patient|baby|child|father|mother|mera|meri|mere|bache|bacha|papa|maa|मेरा|मेरी|मेरे|मरीज|मरीज़|बच्चा)\b",
+            re.IGNORECASE,
+        )
+        if not first_person_signals.search(norm) and not re.search(r"\b(?:right\s+now|turant|immediately|abhi)\b", norm, re.IGNORECASE):
+            return False
 
     # If it is framed as a purely educational question without acute symptoms:
     # e.g. "What are the warning signs of dengue?" -> educational
