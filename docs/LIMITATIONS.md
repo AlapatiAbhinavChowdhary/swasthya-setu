@@ -33,6 +33,17 @@ In adherence to public health integrity and ethical AI principles, this document
 - **Unverified Real-World Recall on Informal Phrasing:** Software pattern matching and LLM routing cannot guarantee detection of extreme dialectal slang, unprecedented transliterations, phonetic corruptions, or deeply fragmented phrases. It does not replace clinical evaluation or trained emergency dispatchers.
 - Any acute signal bypasses educational intent guardrails to prevent fatal undertriage.
 
+### 1.5 Degraded-Mode Recall (LLM Router Disabled / Upstream Outage)
+- When the upstream LLM router is disabled or unavailable (e.g. total API outage, connection drops), the system operates in degraded mode, relying entirely on the deterministic rule layer (`is_emergency`).
+- Across both independent Gemini hold-out emergency sets evaluated with the LLM disabled and without tuning:
+  * **Hold-Out 1 (40 emergencies)**: **52.5%** (21 / 40)
+  * **Hold-Out 2 (60 emergencies)**: **43.3%** (26 / 60)
+  * **Combined Degraded-Mode Recall**: **47.0%** (47 / 100)
+- This honest accounting confirms that keyword/regex rules alone miss 53% of realistic colloquial crisis descriptions (e.g. fragmented SMS typos, third-person narratives). The system compensates by:
+  1. Retrying once with a timeout of $\le 8\text{s}$ before giving up on network glitches.
+  2. Guaranteeing that any failure fallback message includes the fixed guidance: *"If this is an emergency, call 108 or 112"*.
+  3. Maintaining a permanent, prominent click-to-call **108 / 112** banner on the user interface.
+
 ---
 
 ## 2. Linguistic & Vernacular Coverage

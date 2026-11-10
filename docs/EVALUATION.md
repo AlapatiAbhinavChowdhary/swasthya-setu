@@ -275,3 +275,22 @@ A fresh 90-query set (60 emergencies across poisoning, heart, pregnancy, animal 
   * Grounded on clean water dilution, frequent small sips, spoon/dropper usage (no bottles), continued breastfeeding, and danger signs for urgent care.
 - **Heat Stroke Warning Signs**:
   * Grounded on NCDC National Action Plan on Heat Illness (severe headache, confusion/delirium, dry flushed skin, high core temperature $\ge 40^\circ\text{C}$ / $\ge 104^\circ\text{F}$, immediate ambulance call).
+
+#### 6. Degraded-Mode (Rule-Layer Only) Recall Audit
+Both unseen Gemini hold-out emergency sets (Hold-out 1: 40 emergencies; Hold-out 2: 60 emergencies; total 100 emergencies) were evaluated with the LLM router completely disabled, relying purely on the deterministic regex and fuzzy normalizer layer without any tuning:
+
+| Dataset | Total Emergencies | Caught by Rule Layer Only | Degraded-Mode Recall |
+|---|:---:|:---:|:---:|
+| **Gemini Hold-Out 1** | 40 | 21 | **52.5%** |
+| **Gemini Hold-Out 2** | 60 | 26 | **43.3%** |
+| **Combined Emergency Test** | 100 | 47 | **47.0%** |
+
+*Key Clinical Insight*: In total upstream LLM outages, keyword/regex matching catches only ~47% of realistic colloquial emergencies. This confirms that static rules cannot replace semantic comprehension for informal phrasing, reinforcing why the permanent visible 108/112 banner and the fail-safe error message (*"If this is an emergency, call 108 or 112"*) are indispensable.
+
+#### 7. Network Retry & Empty Section Bug Fix (`fix/snake-and-retry`)
+- **Single Retry on Upstream Flakes**: On any network timeout, 429 quota exhaustion, or socket disconnect (e.g. `WinError 10054`), the agent now retries once with a fast timeout $\le 8.0\text{s}$ before returning the localized service error with the fixed 108/112 notice.
+- **Empty Section Bug Root Cause & Prevention**:
+  * *Root Cause*: Previous prompt instruction told the model to list DO NOTs (cutting, sucking, tourniquets). When cited passages did not contain "cutting" or "sucking", citation verification dropped those bullet points as unsupported, leaving the header *"Critical DO NOTs:"* orphaned without a body.
+  * *Generic Post-Processing Rule*: Added `drop_empty_headings(text)` which traverses sections and automatically strips any heading or label line (`#`, `**Header:**`, `Header:`) that lacks content or bullet points under it before the next heading or disclaimer.
+  * *Supported Guidance*: Prompt updated to instruct inclusion of DO NOT guidance strictly supported by retrieved text (e.g. traditional/herbal methods cause more harm than good), mentioning specific methods (cutting, sucking, tourniquets) only if present in the chunk text.
+  * *Answer Style*: Streamlined ORS and Heat Stroke answers, removed redundant "or ... or" phrasing, and presented a single cited temperature threshold ($\ge 40^\circ\text{C}$ / $\ge 104^\circ\text{F}$).
