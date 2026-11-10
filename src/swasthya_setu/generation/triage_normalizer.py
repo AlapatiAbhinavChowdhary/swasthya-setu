@@ -49,6 +49,9 @@ _TYPO_MAP: dict[str, str] = {
     "sholder": "shoulder",
     "crushng": "crushing",
     "plz": "please",
+    "bht": "bahut",
+    "bohot": "bahut",
+    "kri": "kari",
     # Hinglish & Hindi transliteration typos and SMS shorthand
     "nhi": "nahi",
     "ni": "nahi",

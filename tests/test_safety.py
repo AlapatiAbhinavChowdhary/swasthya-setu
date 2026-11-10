@@ -715,6 +715,104 @@ def test_malformed_router_output_fails_safely():
             agent_mod._llm = original_llm
 
 
+def test_llm_failure_fallbacks_simulation_429_timeout_invalid_key():
+    import swasthya_setu.generation.agent as agent_mod
+    from langchain_core.runnables import RunnableLambda
+    from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
+
+    simulated_errors = [
+        RuntimeError("429 ResourceExhausted: rate limit exceeded"),
+        TimeoutError("Connection timed out after 30 seconds"),
+        ChatGoogleGenerativeAIError("401 Unauthorized: Invalid API key provided"),
+    ]
+
+    for err in simulated_errors:
+        original_llm = agent_mod._llm
+        agent_mod._llm = lambda: RunnableLambda(lambda _input: (_ for _ in ()).throw(err))
+        try:
+            # 1. Rule-caught emergency: MUST still show emergency card even if LLM raises 429/timeout/invalid key
+            emerg_query = "My child is vomiting blood"
+            emerg_state = agent_mod.run_agent(emerg_query, session_id="err-test-emerg")
+            assert emerg_state["emergency"] is True
+            assert "108" in emerg_state["answer"]
+            assert "112" in emerg_state["answer"]
+
+            # 2. Non-emergency in English: returns friendly error PLUS fixed emergency line
+            normal_query = "What is dengue?"
+            norm_state = agent_mod.run_agent(normal_query, session_id="err-test-norm", language="en")
+            assert norm_state["emergency"] is False
+            assert norm_state["intent"] == "service_error"
+            assert "temporarily unavailable" in norm_state["answer"].lower()
+            assert "If this is an emergency, call 108 or 112" in norm_state["answer"]
+
+            # 3. Non-emergency in Hindi: returns friendly error PLUS Hindi fixed emergency line
+            hindi_query = "डेंगू के लक्षण क्या हैं?"
+            hindi_state = agent_mod.run_agent(hindi_query, session_id="err-test-hi", language="hi")
+            assert hindi_state["emergency"] is False
+            assert hindi_state["intent"] == "service_error"
+            assert "अस्थायी रूप से अनुपलब्ध" in hindi_state["answer"]
+            assert "यदि यह आपातकाल है, तो 108 या 112 पर कॉल करें।" in hindi_state["answer"]
+        finally:
+            agent_mod._llm = original_llm
+
+
+def test_expanded_emergencies_heart_collapse_kerosene_ingestion():
+    from swasthya_setu.generation.safety import is_emergency
+
+    # The 2 dev set misses:
+    # 1. Heart attack and collapse
+    assert is_emergency("uncle ko achanak se dil ka daura pada, zameen pe gir gye, pulse check kri toh bht dheemi h")
+    assert is_emergency("Dada ji ko achanak dil ka daura pada aur zameen pe gir gaye")
+    assert is_emergency("He had a severe heart attack and collapsed on the floor, no pulse found")
+    assert is_emergency("Patient collapsed to the ground, cannot feel a pulse")
+    assert is_emergency("दादा जी जमीन पर गिर पड़े और नाड़ी बहुत धीमी चल रही है")
+
+    # 2. Child or adult swallowing kerosene, petrol, chemicals, poison with breathing trouble or blood
+    assert is_emergency("bache ko kaccha tel nigal liya, ab saans me awaz aa rhi h aur khansi me khoon h")
+    assert is_emergency("Chhote bache ne galti se kaccha tel pi liya ab saans phool rahi h")
+    assert is_emergency("Baby drank kerosene from a bottle and is struggling to breathe")
+    assert is_emergency("Child swallowed petrol by mistake and is coughing up blood")
+    assert is_emergency("बच्चे ने मिट्टी का तेल पी लिया है और सांस नहीं ले पा रहा")
+
+
+def test_medicine_timing_and_combination_deflection():
+    from swasthya_setu.generation.agent import is_prescription_or_diagnosis
+
+    # Medicine timing and combinations must be intercepted and deflected
+    timing_combos = [
+        "how to take iron with calcium",
+        "when should I take my tablet",
+        "can I take iron and calcium together",
+        "should I take my medicine before or after meals",
+        "weakness ke liye iron ki goli ke sath calcium kaise leni h",
+        "paracetamol tablet khane ke baad kab leni chahiye",
+        "dawai khane se pehle ya baad me",
+        "goli kab leni chahiye",
+        "क्या आयरन की गोली के साथ कैल्शियम ले सकते हैं",
+        "दवा खाने से पहले लेनी है या बाद में",
+    ]
+    for q in timing_combos:
+        assert is_prescription_or_diagnosis(q), f"Timing/combination query not intercepted: '{q}'"
+
+
+def test_general_diet_questions_not_flagged_as_prescription():
+    from swasthya_setu.generation.agent import is_prescription_or_diagnosis
+
+    # General diet questions must NOT be flagged as prescription requests
+    diet_queries = [
+        "What foods are good for anemia?",
+        "Can I eat bananas during diarrhea?",
+        "What is a healthy diet for diabetes?",
+        "Which fruits should be given in dengue?",
+        "What should a child with loose motions eat?",
+        "दस्त में बच्चे को क्या खिलाना चाहिए?",
+        "एनीमिया में कौन से फल खाने चाहिए?",
+    ]
+    for q in diet_queries:
+        assert not is_prescription_or_diagnosis(q), f"General diet query falsely blocked: '{q}'"
+
+
+
 
 
 

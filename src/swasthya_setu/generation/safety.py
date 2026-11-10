@@ -40,12 +40,20 @@ _ACUTE_EMERGENCY_OVERRIDE = re.compile(
     r"not\s+breathing|cannot\s+breathe|can't\s+breathe|stopped\s+breathing|"
     r"unconscious|unresponsive|convulsing|seizure|fits|"
     r"cyanosis|turning\s+blue|neela\s+pad|"
-    r"drank\s+(?:phenyl|poison|cleaner|chemical|acid|pesticide)|swallowed\s+(?:poison|phenyl|cleaner|acid)|"
+    r"drank\s+(?:phenyl|poison|cleaner|chemical|acid|pesticide|kerosene|petrol|diesel)|swallowed\s+(?:poison|phenyl|cleaner|acid|kerosene|petrol|diesel|chemical)|"
     r"(?:bitten|bit)\s+by\s+(?:a\s+)?snake|snake\s*bite\s+on|"
-    r"vomiting\s+blood|coughing\s+(?:up\s+)?(?:\w+\s+){0,4}blood|khoon\s+ki\s+ulti|"
-    r"behosh|saans\s+nahi\s+aa\s+rahi|keetnashak|zehar"
+    r"vomiting\s+blood|coughing\s+(?:up\s+)?(?:\w+\s+){0,4}blood|khoon\s+ki\s+ulti|khansi\s+me(?:in)?\s+khoon|"
+    r"behosh|saans\s+nahi\s+aa\s+rahi|keetnashak|zehar|"
+    r"dil\s+ka\s+daura|heart\s+attack|cardiac\s+arrest|"
+    r"(?:kaccha\s+tel|kerosene|petrol|diesel|chemical|zehar|jahar|keetnashak|phenyl|acid)\s+(?:nigal|pee?|kha)\s*(?:liya|lia|gya|gaya|gye)|"
+    r"(?:nigal|pee?|kha)\s*(?:liya|lia|gya|gaya|gye)\s+(?:[\w-]+\s+){0,2}(?:kaccha\s+tel|kerosene|petrol|diesel|chemical|zehar|jahar|keetnashak|phenyl|acid)|"
+    r"(?:pulse|nabz|naadi)\s+(?:nahi|dheemi|kam|bohot\s+kam|bahut\s+dheemi|mil\s+nahi)|"
+    r"(?:gir\s+g(?:ye|aye|ya|aye))\s+.*(?:pulse|hosh|behosh|dard|dil|heart)"
     r")\b|"
-    r"(?:सांस\s+नहीं\s+ले\s+रहा|नीला\s+पड़\s+गया|नीला\s+पड़\s+रहा|बेहोश|दौरा\s+पड़|खून\s+की\s+उल्टी|कीटनाशक|जहर\s+पी|सांप\s+ने\s+काट)",
+    r"(?:सांस\s+नहीं\s+ले\s+रहा|नीला\s+पड़\s+गया|नीला\s+पड़\s+रहा|बेहोश|दौरा\s+पड़|खून\s+की\s+उल्टी|खांसी\s+में\s+खून|कीटनाशक|जहर\s+पी|सांप\s+ने\s+काट|"
+    r"दिल\s+का\s+दौरा|जमीन\s+पर\s+गिर|नाड़ी\s+(?:धीमी|नहीं|कम)|पल्स\s+(?:धीमी|नहीं|कम)|"
+    r"(?:मिट्टी\s+का\s+तेल|केरोसिन|पेट्रोल|डीजल|रसायन|केमिकल|फिनाइल|एसिड)\s+(?:पी|निगल|खा)\s*लिया|"
+    r"(?:निगल|पी|खा)\s*लिया\s+(?:[\w\u0900-\u097f]+\s+){0,2}(?:मिट्टी\s+का\s+तेल|केरोसिन|पेट्रोल|डीजल|रसायन|केमिकल|फिनाइल|एसिड))",
     re.IGNORECASE,
 )
 
@@ -73,8 +81,9 @@ _EMERGENCY_PATTERNS_EN = re.compile(
     r"(?:baby|infant|newborn|child)\s+(?:has\s+stopped\s+breathing|is\s+(?:unresponsive|unconscious|very\s+lethargic|cold\s+to\s+touch)|lips\s+are\s+turning\s+blue|turning\s+blue|cyanosis|not\s+breathing\s+properly|convulsing)|"
     r"lips\s+turning\s+blue|"
     r"(?:severe|unbearable|excruciating)\s+(?:\w+\s+)?(?:abdominal|belly|stomach)\s+pain|"
-    r"(?:swallowed|drank|ingested|consumed)\s+(?:\w+\s+){0,4}(?:poison|cleaner|chemical|acid|phenyl|toilet\s+cleaner|pesticide)|"
+    r"(?:swallowed|drank|ingested|consumed)\s+(?:\w+\s+){0,4}(?:poison|cleaner|chemical|acid|phenyl|toilet\s+cleaner|pesticide|kerosene|petrol|diesel)|"
     r"poison\s+pesticide|foaming\s+at\s+(?:the\s+)?mouth|(?:venomous\s+|poisonous\s+)?(?:snake|cobra|krait|viper)\s*(?:bite|bit|bitten)(?!\s+(?:antivenom|first\s+aid|management|prevention|guideline))|"
+    r"(?:heart\s+attack|cardiac\s+arrest|collapsed\s+(?:to|on)\s+(?:the\s+)?(?:floor|ground)|(?:no|weak|absent|faint)\s+pulse|cannot\s+feel\s+(?:a\s+)?pulse)|"
     r"(?:heavy\s+bleeding|severe\s+bleeding|hemorrhage|haemorrhage)\s+after\s+delivery"
     r")\b",
     re.IGNORECASE,
@@ -84,27 +93,33 @@ _EMERGENCY_PATTERNS_HI = re.compile(
     r"("
     r"खून की उल्टी|खून की उल्टियां|उल्टी में खून|बहुत ज्यादा खून|खून (?:का\s+)?बहना (?:बिल्कुल\s+)?(?:बंद नहीं|रुक नहीं)|खून बह रहा है रुक नहीं|रक्तस्राव नहीं रुक रहा|अधिक रक्तस्राव|भारी रक्तस्राव|"
     r"सांस लेने में (?:बहुत\s+)?(?:दिक्कत|तकलीफ|परेशानी|तड़प)|सांस फूल रही|सांस रुक गई|सांस नहीं (?:आ रही|ले रहा)|दम घुट रहा|नीला पड़ रहा|"
-    r"बेहोशी|बेहोश|होश खो दिया|चेतना नहीं है|जाग नहीं रहा|मूर्छित|नाड़ी नहीं मिल रही|पल्स नहीं|"
+    r"बेहोशी|बेहोश|होश खो दिया|चेतना नहीं है|जाग नहीं रहा|मूर्छित|नाड़ी नहीं मिल रही|पल्स नहीं|नाड़ी (?:बहुत\s+)?धीमी|पल्स (?:बहुत\s+)?धीमी|"
+    r"दिल का दौरा|दिल का दौरा पड़|हार्ट अटैक|जमीन पर गिर (?:गए|गया|पड़े)|"
     r"दौरे(?: पड़ रहे)?|दौरा पड़ गया|मिर्गी का दौरा|झटके (?:आ रहे|आने लगे|पड़ रहे)|जबड़ा भिंच गया|आंखें उलट|"
     r"(?:सीने|छाती) में (?:बहुत\s+)?(?:तेज दर्द|असहनीय दर्द|दबाव|तेज चुभन)|सीने में .* पसीना|"
     r"चेहरा टेढ़ा हो गया|बोल नहीं पा रहा|अंग काम नहीं कर रहा|लकवा का दौरा|आधा शरीर सुन्न|आवाज बंद हो गई|"
     r"गर्दन अकड़|गर्दन में अकड़न|"
     r"(?:बच्चा|शिशु|नवजात)\s+(?:सांस नहीं ले (?:रहा|पा रहा)|नीला पड़ (?:गया|रहा)|होश में नहीं है|बहुत गंभीर बीमार)|"
     r"पेट में (?:[\w\u0900-\u097f]+\s+)*(?:असहनीय|भयंकर|तेज)\s*दर्द|पेट में (?:बहुत|असहनीय|भयंकर)\s+(?:तेज\s+)?दर्द|"
-    r"जहर पी लिया|कीटनाशक (?:दवा\s+)?(?:निगल|पी|खा)\s*(?:ली|लिया|गया|है)|मुंह से झाग निकल|सांप ने (?:[\w\u0900-\u097f]+\s+){0,3}(?:काट|डस)\s*लिया|डस लिया|डस गया|प्रसव के (?:तुरंत\s+)?बाद .* (?:रक्तस्राव|खून)"
+    r"जहर पी लिया|कीटनाशक (?:दवा\s+)?(?:निगल|पी|खा)\s*(?:ली|लिया|गया|है)|(?:मिट्टी का तेल|केरोसिन|पेट्रोल|डीजल|रसायन|फिनाइल|एसिड)\s+(?:पी|निगल|खा)\s*लिया|"
+    r"खांसी में खून|मुंह से झाग निकल|सांप ने (?:[\w\u0900-\u097f]+\s+){0,3}(?:काट|डस)\s*लिया|डस लिया|डस गया|प्रसव के (?:तुरंत\s+)?बाद .* (?:रक्तस्राव|खून)"
     r")",
 )
 
 _EMERGENCY_PATTERNS_HINGLISH = re.compile(
     r"\b("
-    r"khoon ki ulti|ulti me(?:in)? khoon|khoon nikal raha|bleeding (?:nahi|ruk nahi|ruk)\s*rahi|bahut zyada khoon|khoon behna ruk nahi rha|heavy bleeding|"
+    r"khoon ki ulti|ulti me(?:in)? khoon|khansi me(?:in)? khoon|khoon nikal raha|bleeding (?:nahi|ruk nahi|ruk)\s*rahi|bahut zyada khoon|khoon behna ruk nahi rha|heavy bleeding|"
     r"saans (?:nahi|nhi) (?:aa|le) (?:raha|rha|rahi|rhi)|saans lene me(?:in)? (?:bhut\s+|bahut\s+)?dikkat|saans phool rahi|dam ghut raha|saans ruk gayi|saans band|saans bilkul atak|bol (?:b\s+|bhi\s+)?ni pa rhe|blue ho gya|neela pd gya|"
-    r"behosh ho gaya|behoshi|behosh pde|behosh|hosh nahi hai|uth (?:hi\s+)?nahi raha|collapse ho gaya|body cold ho gyi|naadi nahi|nadi nahi|"
+    r"behosh ho gaya|behoshi|behosh pde|behosh|hosh nahi hai|uth (?:hi\s+)?nahi raha|collapse ho gaya|body cold ho gyi|naadi nahi|nadi nahi|pulse (?:bht|bahut)?\s*(?:dheemi|kam|nahi|ruk\s*gyi|mil\s*nahi)|nabz (?:dheemi|kam|nahi|band)|"
+    r"dil ka daura|heart attack|cardiac arrest|dil ka daura pada|"
+    r"(?:zameen|farsh)\s+pe\s+gir\s*(?:gye|gaye|gya|pda|pada)|gir\s*(?:gye|gaye|gya|pda|pada)\s+.*(?:pulse|dheemi|dard|behosh|dil|heart)|"
     r"dourey? pad rahe|daura pad gaya|daure aa rahe|jhatke aa rahe|fits (?:padne|aa|pad) rahe|fits padne lge|"
     r"(?:seene|chhati|chest)\s*me(?:in)?\s+(?:bahut\s+|severe\s+)?(?:tej\s+|tez\s+|severe\s+)?dard|chest me severe dard|chest pain ho raha hai|"
     r"face (?:ek taraf )?tedha|hath kaam ni kr|haath kaam nahi|"
     r"bachha saans nahi le raha|bachha behosh ho gaya|baby saans nahi le raha|bachha bahut bimar hai|"
     r"pet me(?:in)? (?:bahut\s+)?tez dard|zehar pee liya|poison pee liya|cleaner phenyl|floor cleaner|phenyl pee liya|saanp ne kaat liya|keetnashak pee liya|jahar fail rha|heavy bleeding ho rhi|"
+    r"(?:kaccha\s+tel|kerosene|petrol|diesel|chemical|zehar|jahar|keetnashak|acid|phenyl)\s+(?:nigal|pi|pee|kha)\s*(?:liya|lia|gya|gaya|gye)|"
+    r"(?:nigal|pi|pee|kha)\s*(?:liya|lia|gya|gaya|gye)\s+(?:[\w-]+\s+){0,3}(?:kaccha\s+tel|kerosene|petrol|diesel|chemical|zehar|jahar|keetnashak|acid|phenyl)|"
     r"delivery k baad .* (?:blood|khoon)|doob gya"
     r")\b",
     re.IGNORECASE,
