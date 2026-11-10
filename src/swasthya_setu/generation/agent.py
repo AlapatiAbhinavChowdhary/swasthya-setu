@@ -19,6 +19,11 @@ from swasthya_setu.generation.chain import (
     format_context,
 )
 from swasthya_setu.config import settings
+from swasthya_setu.generation.disease_filter import (
+    clean_unexplained_abbreviations,
+    detect_asked_diseases,
+    filter_cross_disease_documents,
+)
 from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
@@ -138,6 +143,7 @@ class AgentState(TypedDict, total=False):
     citations: list[int]
     language: str
     sources: list[dict[str, str]]
+    asked_diseases: list[str]
     response: dict[str, object]
 
 
@@ -240,7 +246,15 @@ def _retrieve(state: AgentState) -> AgentState:
     if history_text:
         query = f"Conversation:\n{history_text}\n\nCurrent question: {query}"
     search_query = state.get("search_query") or query
-    matches = _store().similarity_search_with_relevance_scores(search_query, k=10)
+
+    asked_diseases = detect_asked_diseases(state["question"])
+    if not asked_diseases and search_query != state["question"]:
+        asked_diseases = detect_asked_diseases(search_query)
+
+    matches = _store().similarity_search_with_relevance_scores(search_query, k=15)
+    if asked_diseases:
+        matches = filter_cross_disease_documents(matches, asked_diseases)
+
     seen_chunks: set[str] = set()
     unique_matches = []
     is_vaccination = (
@@ -277,7 +291,12 @@ def _retrieve(state: AgentState) -> AgentState:
     else:
         documents = _relevance_filter(state["question"], candidates)
     logger.info("agent node=retrieve documents=%d", len(documents))
-    return {**state, "search_query": search_query, "documents": documents}
+    return {
+        **state,
+        "search_query": search_query,
+        "documents": documents,
+        "asked_diseases": asked_diseases,
+    }
 
 
 def _relevance_filter(
@@ -417,7 +436,10 @@ def _generate_answer(state: AgentState) -> AgentState:
         }
     )
     answer, citations = verify_citations(
-        text, state.get("documents", []), state.get("language", "en")
+        text,
+        state.get("documents", []),
+        state.get("language", "en"),
+        asked_diseases=state.get("asked_diseases"),
     )
     return {**state, "answer": answer, "citations": citations}
 
@@ -434,7 +456,10 @@ def _verify_answer(state: AgentState) -> AgentState:
     context = "\n".join(document.page_content for document in documents)
     language = state.get("language", "en")
     answer, citations = verify_citations(
-        state.get("answer", ""), documents, language
+        state.get("answer", ""),
+        documents,
+        language,
+        asked_diseases=state.get("asked_diseases"),
     )
     answer = normalize_mixed_script_tokens(answer)
     if not is_language_consistent(answer, language, context):
@@ -444,13 +469,30 @@ def _verify_answer(state: AgentState) -> AgentState:
         )
         retry = _generate_answer({**state, "answer": answer, "citations": citations})
         retry_answer, retry_citations = verify_citations(
-            retry.get("answer", ""), retry.get("documents", []), language
+            retry.get("answer", ""),
+            retry.get("documents", []),
+            language,
+            asked_diseases=state.get("asked_diseases"),
         )
         if retry_citations:
             answer, citations = normalize_mixed_script_tokens(
                 retry_answer
             ), retry_citations
     answer = strip_generated_closing(answer)
+    q_lower = state.get("question", "").lower()
+    if any(
+        p in q_lower
+        for p in [
+            "simple words",
+            "simple explanation",
+            "explain simply",
+            "in simple terms",
+            "आसान भाषा",
+            "सरल भाषा",
+            "आसान शब्दों",
+        ]
+    ):
+        answer = clean_unexplained_abbreviations(answer)
     # Apply deterministic dose filter to block any numeric dose leakage
     filtered_answer, is_clean = filter_dose_patterns(answer, language)
     if not is_clean:

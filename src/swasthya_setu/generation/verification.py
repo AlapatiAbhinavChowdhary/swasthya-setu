@@ -177,14 +177,28 @@ def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
 
 
 def verify_citations(
-    text: str, documents: list[Document], language: str = "en"
+    text: str,
+    documents: list[Document],
+    language: str = "en",
+    asked_diseases: list[str] | None = None,
 ) -> tuple[str, list[int]]:
     """Keep only citations that refer to and are supported by retrieved documents.
 
     An answer without a valid citation is replaced with the standard refusal so
     the model cannot turn a retrieval miss into an unsupported medical claim.
+    If asked_diseases is specified, cross-disease documents from other diseases
+    are strictly rejected.
     """
     valid_numbers = set(range(1, len(documents) + 1))
+    if asked_diseases:
+        asked_set = set(asked_diseases)
+        disease_allowed_numbers = set()
+        for idx, doc in enumerate(documents, start=1):
+            raw_ids = doc.metadata.get("disease_ids", "")
+            doc_diseases = {d.strip() for d in raw_ids.split(",") if d.strip()}
+            if not doc_diseases or doc_diseases.intersection(asked_set):
+                disease_allowed_numbers.add(idx)
+        valid_numbers = valid_numbers.intersection(disease_allowed_numbers)
     cited_numbers: list[int] = []
 
     lines = text.split("\n")
@@ -195,46 +209,51 @@ def verify_citations(
             cleaned_lines.append(line)
             continue
 
-        had_citation = bool(re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", line))
+        # Split line into sentences preserving bullet prefixes
+        prefix = ""
+        bullet_match = re.match(r"^(\s*[-*•]\s+)", line)
+        content_line = line
+        if bullet_match:
+            prefix = bullet_match.group(1)
+            content_line = line[len(prefix):]
 
-        def replace_cite(match: re.Match[str]) -> str:
-            raw_nums = [int(v) for v in re.findall(r"\d+", match.group(1))]
-            # Find surrounding sentence for support check
-            start = match.start()
-            prev_text = line[:start]
-            m_start = max(prev_text.rfind("."), prev_text.rfind("!"), prev_text.rfind("?"), prev_text.rfind(";"))
-            sent_start = m_start + 1 if m_start != -1 else 0
+        sentences = re.split(r"(?<=[.!?।])\s+", content_line)
+        kept_sentences: list[str] = []
 
-            next_text = line[match.end():]
-            m_ends = [next_text.find("."), next_text.find("!"), next_text.find("?"), next_text.find(";")]
-            m_ends_valid = [e for e in m_ends if e != -1]
-            sent_end = match.end() + min(m_ends_valid) if m_ends_valid else len(line)
+        for sent in sentences:
+            if not sent.strip():
+                continue
+            had_citation = bool(re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", sent))
 
-            sentence = line[sent_start:sent_end]
-            clean_sentence = re.sub(r"\[(?:\d+\s*,\s*)*\d+\]", "", sentence).strip()
+            def replace_cite(match: re.Match[str]) -> str:
+                raw_nums = [int(v) for v in re.findall(r"\d+", match.group(1))]
+                clean_sentence = re.sub(r"\[(?:\d+\s*,\s*)*\d+\]", "", sent).strip()
 
-            supported = []
-            for num in raw_nums:
-                if num in valid_numbers:
-                    if is_chunk_supporting_sentence(clean_sentence, documents[num - 1]):
-                        supported.append(num)
-                        cited_numbers.append(num)
+                supported = []
+                for num in raw_nums:
+                    if num in valid_numbers:
+                        if is_chunk_supporting_sentence(clean_sentence, documents[num - 1]):
+                            supported.append(num)
+                            cited_numbers.append(num)
 
-            return f"[{', '.join(str(n) for n in supported)}]" if supported else ""
+                return f"[{', '.join(str(n) for n in supported)}]" if supported else ""
 
-        new_line = re.sub(r"\[((?:\d+\s*,\s*)*\d+)\]", replace_cite, line)
-        # Clean up any orphan double spaces
-        new_line = re.sub(r"[ \t]{2,}", " ", new_line).strip()
+            new_sent = re.sub(r"\[((?:\d+\s*,\s*)*\d+)\]", replace_cite, sent)
+            has_cite_now = bool(re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", new_sent))
 
-        # If a line had citations but ALL citations were dropped/unsupported,
-        # drop the bullet line to avoid keeping unsupported medical assertions
-        if had_citation and not re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", new_line):
-            if new_line.startswith(("-", "*", "•")) or len(new_line.split()) > 5:
-                # Unsupported claim line dropped
+            # If the sentence had a citation but ALL citations were dropped/unsupported,
+            # drop this unsupported sentence
+            if had_citation and not has_cite_now:
                 continue
 
-        if new_line:
-            cleaned_lines.append(new_line)
+            new_sent = re.sub(r"[ \t]{2,}", " ", new_sent).strip()
+            if new_sent:
+                kept_sentences.append(new_sent)
+
+        if kept_sentences:
+            full_line = (prefix + " ".join(kept_sentences)).strip()
+            if full_line and full_line != prefix.strip():
+                cleaned_lines.append(full_line)
 
     cleaned = "\n".join(cleaned_lines).strip()
     if not cited_numbers:
