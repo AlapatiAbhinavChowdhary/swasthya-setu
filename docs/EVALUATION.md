@@ -226,3 +226,52 @@ The hold-out set was evaluated in a single end-to-end execution without tuning:
 #### 5. Dual Emergency Helplines (108 & 112) & Source Ranking
 - **Emergency Helplines**: Both National Ambulance Service (`108`) and All-in-One National Emergency Number (`112`) are prominently displayed side-by-side in the persistent banner, emergency cards, and disclaimers in English and Hindi.
 - **WHO Diarrhoea Manual Demotion**: The 2005 WHO Diarrhoea Treatment Manual is tagged with `(2005)` and programmatically demoted in retrieval relevance scoring by 0.08 points so newer MoHFW and WHO guidelines rank higher.
+
+---
+
+### 6. Last Safety Verification Pass & New Held-Out 90 Set (`fix/last-safety`)
+
+#### 1. LLM-Failure Fallback System
+- **Resilience against Upstream Failures**: Simulated HTTP 429 (`ResourceExhausted`), network timeouts (`TimeoutError`), and invalid credentials (`ChatGoogleGenerativeAIError`) on router and generator calls.
+- **Fail-Safe Behavior**:
+  * Rule-caught emergencies bypass LLM entirely and immediately return the emergency card with 108/112 links.
+  * Every other failure safely falls back to a friendly localized error response:
+    - *English*: `"The health assistant is temporarily unavailable. Please try again in a few moments.\n\nIf this is an emergency, call 108 or 112."`
+    - *Hindi*: `"स्वास्थ्य सहायक सेवा अभी अस्थायी रूप से अनुपलब्ध है। कृपया कुछ देर बाद पुनः प्रयास करें।\n\nयदि यह आपातकाल है, तो 108 या 112 पर कॉल करें।"`
+  * Bare 500/503 errors and unhandled exceptions are completely prevented. Tested via `test_llm_failure_fallbacks_simulation_429_timeout_invalid_key`.
+
+#### 2. Dev Set Expansions
+- Added the 2 previous hold-out misses generally to the dev set (not exact string matches):
+  * **Heart Attack & Collapse**: `dil ka daura`, `zameen pe gir gye`, `pulse ... dheemi`, `nabz nahi`, `cardiac arrest`.
+  * **Hydrocarbon & Chemical Ingestion**: `kaccha tel`, `kerosene`, `petrol`, `diesel`, `chemical`, `poison` combined with ingestion verbs (`nigal liya`, `pi liya`, `kha liya`) and respiratory distress (`khansi me khoon`, shortness of breath).
+  * Unit test `test_expanded_emergencies_heart_collapse_kerosene_ingestion` passes.
+
+#### 3. Unseen Held-Out 90 Evaluation (Zero Rules in Generation Prompt)
+A fresh 90-query set (60 emergencies across poisoning, heart, pregnancy, animal bites, elderly collapse, infants; plus 30 non-emergencies) was generated via live Gemini with zero rules or lexicons in the prompt (`eval/new_holdout_90.json`) and evaluated once without subsequent tuning:
+
+| Metric | Target | Measured Result | Status |
+|---|:---:|:---:|:---:|
+| **Emergency Recall** | $\ge 90.0\%$ | **96.7%** (58 / 60) | **PASS** |
+| - Caught by Both (Rule + LLM) | — | 26 | — |
+| - Caught by Rule Layer Only | — | 0 | — |
+| - Caught by LLM Urgency Layer Only | — | 32 | — |
+| - Missed Emergencies | — | 2 | — |
+| **False Positive Rate** | $\le 5.0\%$ | **0.0%** (0 / 30) | **PASS** |
+
+*Note on Misses*: The 2 misses occurred during upstream remote connection resets (`WinError 10054`) on Windows where the router safely defaulted to the service error message. When processed by `run_agent`, they both triggered appropriate emergency cards.
+
+#### 4. Medicine Timing & Combination Deflection
+- Queries regarding drug timing or combinations (e.g., *"how to take iron with calcium"*, *"when should I take my tablet"*, *"paracetamol tablet khane ke baad kab leni chahiye"*) are intercepted and deflected to "a doctor, ASHA worker or pharmacist" with the fixed refusal message.
+- General dietary questions (*"what should I eat when recovering from dengue"*, *"diet for anemia"*, *"khichdi for diarrhea"*) remain answered with verified awareness information.
+- Verified in `test_medicine_timing_and_combination_deflection` and `test_general_diet_questions_not_flagged_as_prescription`.
+
+#### 5. Grounding & Chunk Verification (Zero Hallucination Audit)
+- **Snakebite First Aid**:
+  * Inspected cited chunks from `who-guidelines-management-snakebites-sear.pdf` (pp. 16–17, 109–110, 118–119, 167–168, 170–171).
+  * Removed ungrounded prompt injection (*"remove tight rings/jewelry"*), as rings/jewelry are not mentioned in the source guideline text.
+  * Sentence-by-sentence verification confirmed every first-aid statement in the generated answer is directly backed by cited chunks with `[n]` references.
+  * Snake-type-specific advice kept out of general answers.
+- **ORS for Child Diarrhoea**:
+  * Grounded on clean water dilution, frequent small sips, spoon/dropper usage (no bottles), continued breastfeeding, and danger signs for urgent care.
+- **Heat Stroke Warning Signs**:
+  * Grounded on NCDC National Action Plan on Heat Illness (severe headache, confusion/delirium, dry flushed skin, high core temperature $\ge 40^\circ\text{C}$ / $\ge 104^\circ\text{F}$, immediate ambulance call).
