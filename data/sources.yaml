@@ -1037,3 +1037,58 @@ sources:
   license_note: WHO publication, CC BY-NC-SA 3.0 IGO; retain attribution and source
     link.
   year: 2014
+- id: doc-heat-naphri-ncdc
+  title: National Action Plan on Heat-Related Illnesses
+  publisher: National Centre for Disease Control (NCDC), Ministry of Health and Family
+    Welfare, Government of India
+  url: https://ncdc.mohfw.gov.in/uploads/pdf/heat12.pdf
+  file: data/raw/heat-illness/ncdc-national-action-plan-heat-illness.pdf
+  disease_ids:
+  - heat-illness
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2021
+  doc_id: 7ac5dd1421d41d050ca8743e8eebfbed859658897cb5b6c9235a1ef108b47b50
+  status: downloaded
+- id: doc-heat-guidelines-ndma
+  title: National Guidelines for Preparation of Action Plan - Prevention and Management
+    of Heat Wave
+  publisher: National Disaster Management Authority (NDMA), Government of India
+  url: https://ndma.gov.in/sites/default/files/PDF/Heat-Wave.pdf
+  file: data/raw/heat-illness/ndma-heat-wave-guidelines.pdf
+  disease_ids:
+  - heat-illness
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2019
+  doc_id: a4138fd9d5e7925f8a874742e823d62b482d67464fd6e7190b5306baa9bb2aa6
+  status: downloaded
+- id: doc-snakebite-guidelines-who-sear
+  title: Guidelines for the Management of Snakebites in the South-East Asia Region
+  publisher: World Health Organization Regional Office for South-East Asia
+  url: https://iris.who.int/handle/10665/249547
+  file: data/raw/snakebite/who-guidelines-management-snakebites-sear.pdf
+  disease_ids:
+  - snakebite
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2016
+  doc_id: 6743bfcbf6ed27612bf2e81b1e7829b3755e0b3af6bdcc17c34827f557b14373
+  status: downloaded
+- id: doc-diarrhoea-treatment-manual-who
+  title: 'The Treatment of Diarrhoea: A manual for physicians and other senior health
+    workers'
+  publisher: World Health Organization
+  url: https://iris.who.int/handle/10665/43209
+  file: data/raw/diarrhoeal-disease/who-treatment-of-diarrhoea-manual.pdf
+  disease_ids:
+  - diarrhoeal-disease
+  coverage: disease-specific
+  language: en
+  doc_type: guideline
+  year: 2005
+  doc_id: 433c62fbdbe2a33c95f9b813de62675ca610e185e97f679875266bb1a5f87b3b
+  status: downloaded

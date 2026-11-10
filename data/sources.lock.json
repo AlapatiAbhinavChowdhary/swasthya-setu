@@ -625,5 +625,41 @@
     "status": "skipped",
     "hash": "507f888e180fa29bc1a4be470a1e5bf550d34fd4e74fb9f7b087796c9afac8de",
     "bytes": 97940
+  },
+  {
+    "url": "https://ncdc.mohfw.gov.in/uploads/pdf/heat12.pdf",
+    "file": "data\\raw\\heat-illness\\ncdc-national-action-plan-heat-illness.pdf",
+    "date": "2026-11-10",
+    "status": "downloaded",
+    "hash": "7ac5dd1421d41d050ca8743e8eebfbed859658897cb5b6c9235a1ef108b47b50",
+    "bytes": 8285716,
+    "fallback": "urllib/requests (verified official)"
+  },
+  {
+    "url": "https://ndma.gov.in/sites/default/files/PDF/Heat-Wave.pdf",
+    "file": "data\\raw\\heat-illness\\ndma-heat-wave-guidelines.pdf",
+    "date": "2026-11-10",
+    "status": "downloaded",
+    "hash": "a4138fd9d5e7925f8a874742e823d62b482d67464fd6e7190b5306baa9bb2aa6",
+    "bytes": 7560081,
+    "fallback": "urllib/requests (verified official)"
+  },
+  {
+    "url": "https://iris.who.int/handle/10665/249547",
+    "file": "data\\raw\\snakebite\\who-guidelines-management-snakebites-sear.pdf",
+    "date": "2026-11-10",
+    "status": "downloaded",
+    "hash": "6743bfcbf6ed27612bf2e81b1e7829b3755e0b3af6bdcc17c34827f557b14373",
+    "bytes": 26004840,
+    "fallback": "urllib/requests (verified official)"
+  },
+  {
+    "url": "https://iris.who.int/handle/10665/43209",
+    "file": "data\\raw\\diarrhoeal-disease\\who-treatment-of-diarrhoea-manual.pdf",
+    "date": "2026-11-10",
+    "status": "downloaded",
+    "hash": "433c62fbdbe2a33c95f9b813de62675ca610e185e97f679875266bb1a5f87b3b",
+    "bytes": 1090785,
+    "fallback": "urllib/requests (verified official)"
   }
 ]
