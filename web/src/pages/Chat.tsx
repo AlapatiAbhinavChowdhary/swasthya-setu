@@ -295,6 +295,30 @@ export const Chat: React.FC<ChatProps> = ({ language, onLanguageChange: _onLangu
         </div>
       </div>
 
+      {/* Persistent Visible Emergency Notice */}
+      <div
+        data-testid="persistent-emergency-notice"
+        className="mt-2 mb-1 px-3 py-1.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-lg flex items-center justify-between text-xs text-red-800 dark:text-red-300"
+        role="note"
+      >
+        <div className="flex items-center gap-1.5 font-medium">
+          <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" aria-hidden="true" />
+          <span>
+            {language === "hi"
+              ? "आपातकाल में तुरंत 108 पर कॉल करें या नजदीकी अस्पताल जाएँ।"
+              : language === "or"
+              ? "ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତିରେ ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ କିମ୍ବା ନିକଟତମ ଡାକ୍ତରଖାନାକୁ ଯାଆନ୍ତୁ।"
+              : "In a medical emergency, immediately call 108 or visit the nearest hospital."}
+          </span>
+        </div>
+        <a
+          href="tel:108"
+          className="ml-2 font-bold underline shrink-0 hover:text-red-950 dark:hover:text-red-200"
+        >
+          {language === "hi" ? "कॉल 108" : language === "or" ? "କଲ୍ ୧୦୮" : "Call 108"}
+        </a>
+      </div>
+
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
         {messages.length === 0 ? (

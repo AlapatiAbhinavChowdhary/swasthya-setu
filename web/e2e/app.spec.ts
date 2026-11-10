@@ -318,6 +318,12 @@ test("chat interaction: sends message, streams response, displays source chip", 
   page,
 }) => {
   await page.goto("/chat");
+
+  // Verify persistent visible emergency notice is present on chat page
+  const emergencyNotice = page.getByTestId("persistent-emergency-notice");
+  await expect(emergencyNotice).toBeVisible();
+  await expect(emergencyNotice).toContainText("108");
+  await expect(emergencyNotice.locator('a[href="tel:108"]')).toBeVisible();
   await page.waitForLoadState("networkidle");
 
   const input = page.getByPlaceholder(/Ask about symptoms/i);
