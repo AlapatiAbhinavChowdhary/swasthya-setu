@@ -282,26 +282,29 @@ uv run python scripts/check_script_leakage.py
 uv run python scripts/benchmark_latency.py
 ```
 
-The pytest suite (78 tests) passes completely offline with zero real secrets required. Secret scanning confirms 0 leaked API keys in working tree and full git history. Script leakage check confirms 0 tracking scripts in all 4,632 indexed chunks. The 10-question latency benchmark achieves a median of 2.28s with 10% instant deterministic emergency triage.
+The pytest suite (78 tests) passes completely offline with zero real secrets required. Secret scanning confirms 0 leaked API keys in working tree and full git history. Script leakage check confirms 0 tracking scripts in all 4,632 indexed chunks. The web test suite passes 12 Vitest tests and 24 Playwright e2e tests (2 live-LLM tests skipped).
 
 ## 6. CURRENT STATE
 
-Only numbers printed by the repository or recorded from actual commands are
-listed here.
+Only numbers printed by the repository or recorded from actual commands are listed here.
 
-### Tests and index
+### Tests, Index & Sourcing
+- **Tests**:
+  - `uv run pytest`: 78 passed in 6.05s offline.
+  - `npm --prefix web test` (Vitest): 12 passed in 4.73s.
+  - `npm --prefix web run test:e2e` (Playwright): 24 passed, 2 skipped (live LLM key not configured).
+- **Index**:
+  - Exactly 4,632 semantic chunks indexed in Chroma (`multilingual-e5-small`).
+  - 76 official sources tracked in `data/sources.yaml` (78 entries in `data/sources.lock.json`), consisting of 35 WHO HTML fact-sheet pages and 44 official government/WHO PDFs (including NCDC and NDMA heat-illness guidelines, WHO SEAR snakebite guideline, and WHO diarrhoea manual).
+  - All 30 target public health conditions indexed with verified depth.
 
-- `uv run pytest -q` printed `31 passed, 15 warnings in 4.62s`.
-- `uv run pytest tests/test_safety.py` printed `19 passed, 15 warnings in 2.77s`.
-- `uv run python scripts/build_index.py` printed `Done. Indexed 191 chunks.`
-- Chroma verification printed `chunks 191` and `unique_texts 191`.
-- The indexed source IDs were:
-  `doc-dengue-guideline-7c8ffb`,
-  `doc-immunization-cf8bd1`,
-  `doc-who-health-topics-8ddec6`,
-  and `doc-who-vector-0eacf9`.
-- The scanned WHO image-only file is registered, but has no indexed text
-  chunks because OCR was not successfully installed or validated.
+### Safety Results & Honest Boundaries
+- **Persistent Emergency Notice**: A permanent "Emergency? call 108" banner is mounted on the chat page at all times with click-to-call link.
+- **Safety Results, Stated Honestly**:
+  - On a fresh set of realistic user messages (typos, slang, Hinglish), the original keyword rules caught only **45% of emergencies (18/40)** and refused **33% of colloquial medicine/dose requests (10/30)**.
+  - Text normalisation (Unicode NFC, repeat collapsing, typo dictionary), fuzzy matching (rapidfuzz), and an urgency/medicine flag in the existing single-call LLM routing call (`route_rewrite_prompt`) were subsequently added.
+  - A second set written by the same AI agent scored **100% recall and 100% refusal with 0 false alarms**, but that set is **development-level evidence, not independent**.
+  - **Do not claim emergency detection is reliable**: Real-world recall on informal phrasing is unknown, and a real-user clinical study is future work. The persistent 108 banner remains the primary safety guardrail.
 
 ### Unique-document coverage
 

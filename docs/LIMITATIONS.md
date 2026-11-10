@@ -22,11 +22,15 @@ In adherence to public health integrity and ethical AI principles, this document
 - While generic drug classes may be mentioned strictly in the context of official awareness (e.g. "TB is managed with a 4-to-6 month regimen of first-line antibiotics under DOTS"), specific regimens, brand names, and dose titrations are strictly prohibited.
 
 ### 1.4 Emergency Triage Detection & Best-Effort Boundaries
-- Emergency queries are prioritized through a multi-tiered safety architecture:
+
+> [!CAUTION]
+> **Do not claim emergency detection is reliable**: On a fresh set of realistic user messages (typos, slang, Hinglish), the original keyword rules caught only 45% of emergencies (18/40) and refused 33% of colloquial medicine/dose requests (10/30). While subsequent text normalisation, fuzzy matching, and an urgency/medicine flag in the existing LLM routing call scored 100% recall on a second agent-authored set, that set is development-level evidence, not independent. Real-world recall on informal phrasing is unknown, and a real-user clinical study is future work. The persistent visible "Emergency? call 108" banner on the chat page remains the primary safety guardrail.
+
+- Emergency queries are addressed through a multi-tiered safety architecture:
   1. **Deterministic Lexicon & Normalizer:** Unicode NFC normalization, character repeat collapse, typo correction, and fuzzy token matching (rapidfuzz) over English, Hindi, and Hinglish emergency vocabularies.
-  2. **Semantic LLM Second Net:** Merged public health router classifying urgency (`emergency`, `urgent`, `routine`) with instructions to over-triage toward emergency when ambiguous, escalating to 108 emergency cards with zero additional latency.
-  3. **Persistent Visible Safe Fallback:** A permanent emergency banner (*"In a medical emergency, immediately call 108 or visit the nearest hospital"*) is displayed prominently on the chat page at all times, ensuring users are never reliant solely on software triage.
-- **Best-Effort for Informal Phrasing:** Despite normalized and fuzzy patterns, detection for extreme dialectal slang, unprecedented transliterations, phonetic corruptions, or deeply fragmented phrases remains inherently best-effort. It does not replace clinical evaluation or trained emergency dispatchers.
+  2. **Semantic LLM Urgency Routing:** Integrated into the existing single-call router (`route_rewrite_prompt`), classifying urgency (`emergency`, `urgent`, `routine`) with instructions to over-triage toward emergency when ambiguous, escalating immediately to 108 emergency cards without additional model calls.
+  3. **Persistent Visible Safe Fallback:** A permanent emergency notice banner (*"Emergency? Call 108 immediately. Do not rely on this tool for life-threatening conditions."*) with direct click-to-call link is displayed prominently on the chat page at all times, ensuring users are never reliant solely on software triage.
+- **Unverified Real-World Recall on Informal Phrasing:** Software pattern matching and LLM routing cannot guarantee detection of extreme dialectal slang, unprecedented transliterations, phonetic corruptions, or deeply fragmented phrases. It does not replace clinical evaluation or trained emergency dispatchers.
 - Any acute signal bypasses educational intent guardrails to prevent fatal undertriage.
 
 ---

@@ -79,19 +79,21 @@ All 20 unrefused queries were audited for clinical leaks in generated answers:
 
 ---
 
-### Unseen Independent Evaluation Set (Evaluated Once, No Tuning)
+### Second Evaluation Set (Agent-Authored, Development-Level Evidence)
 
-To evaluate generalization with real rigor, a new 110-query independent evaluation suite was constructed reflecting realistic rural citizen inputs (severe typos, SMS shorthand, Hinglish colloquialisms, and acute family emergencies), evaluated once without subsequent tuning:
+> [!CAUTION]
+> **Do not claim emergency detection is reliable**:
+> While this second 110-query set scored **100% recall and 100% refusal with 0 false alarms**, it was written by the same AI agent that implemented the rules. Consequently, this benchmark constitutes **development-level evidence, not independent evidence**. Real-world recall on informal colloquial phrasing is unknown, and a formal real-user study remains future work. The persistent "Emergency? call 108" banner on the chat page is the primary safety guardrail.
 
-| Evaluation Suite | Sample Size | Observed Result | Target | Programmatic Status |
-|---|---:|---:|---|:---:|
-| **Unseen Realistic Emergencies** (typos, Hinglish, acute) | 40 | **100.0%** (40/40) | $\ge$ 90.0% | **PASS** |
-| **Unseen Non-Emergency Look-Alikes** (educational, negated) | 40 | **0.0% FP** (0/40) | $\le$ 5.0% | **PASS** |
-| **Unseen Prescription & Dose Requests** (pediatric, Hinglish) | 30 | **100.0%** (30/30) | $\ge$ 95.0% | **PASS** |
-| **Dose & Self-Medication Leaks** | 110 | **0 leaks** | Strictly 0 | **PASS** |
+| Evaluation Suite | Sample Size | Observed Result | Target | Programmatic Status | Evidence Nature |
+|---|---:|---:|---|:---:|---|
+| **Realistic Emergencies (Set 2)** (typos, Hinglish, acute) | 40 | **100.0%** (40/40) | $\ge$ 90.0% | **PASS** | Development-level (Agent-authored) |
+| **Non-Emergency Look-Alikes (Set 2)** (educational, negated) | 40 | **0.0% FP** (0/40) | $\le$ 5.0% | **PASS** | Development-level (Agent-authored) |
+| **Prescription & Dose Requests (Set 2)** (pediatric, Hinglish) | 30 | **100.0%** (30/30) | $\ge$ 95.0% | **PASS** | Development-level (Agent-authored) |
+| **Dose & Self-Medication Leaks** | 110 | **0 leaks** | Strictly 0 | **PASS** | Verified |
 
 ```
-EVALUATING UNSEEN INDEPENDENT TEST SET (RUN ONCE, NO TUNING)
+EVALUATING SECOND EVALUATION SET (AGENT-AUTHORED, DEV EVIDENCE)
 ================================================================================
 1. UNSEEN EMERGENCIES (Target >= 90.0%):
    Caught: 40 / 40 (100.0%)
@@ -104,10 +106,10 @@ EVALUATING UNSEEN INDEPENDENT TEST SET (RUN ONCE, NO TUNING)
 3. UNSEEN PRESCRIPTION REQUESTS (Target Refusal >= 95.0%):
    Refused: 30 / 30 (100.0%)
 
-UNSEEN TEST SET SUMMARY TARGET COMPARISON:
-  Emergency Recall:     100.0%  (Target: >= 90.0%) -> PASS
-  False Positive Rate:  0.0%    (Target: <= 5.0%)  -> PASS
-  Prescription Refusal: 100.0%  (Target: >= 95.0%) -> PASS
+SECOND TEST SET SUMMARY TARGET COMPARISON:
+  Emergency Recall:     100.0%  (Target: >= 90.0%) -> PASS (Dev Evidence)
+  False Positive Rate:  0.0%    (Target: <= 5.0%)  -> PASS (Dev Evidence)
+  Prescription Refusal: 100.0%  (Target: >= 95.0%) -> PASS (Dev Evidence)
   Dose / Advice Leaks:  0       (Target: 0)        -> PASS
 ================================================================================
 ```

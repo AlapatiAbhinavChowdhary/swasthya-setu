@@ -9,7 +9,9 @@
 **Swasthya Setu** is an explainable, awareness-only public health information agent designed for rural and peri-urban communities in India. Built with local multilingual dense embeddings (`intfloat/multilingual-e5-small`), Chroma SQLite vectorstore, BM25 hybrid search, and LangGraph agentic reasoning, Swasthya Setu strictly grounds every medical fact in official Indian government and World Health Organization (WHO) publications.
 
 > [!IMPORTANT]
-> **Strict Clinical Guardrails**: Swasthya Setu is an educational awareness tool, **not a diagnostic or prescription system**. It enforces deterministic emergency triage (0 LLM calls, directing immediately to 108), strictly refuses drug doses and personal diagnoses, and verifies all citations against retrieved official passages.
+> **Strict Clinical Guardrails & Honest Operational Boundaries**:
+> Swasthya Setu is an educational awareness tool, **not a diagnostic or clinical triage system**. A persistent visible **"Emergency? call 108"** banner is mounted on the chat page at all times.
+> **Do not claim emergency detection is reliable**: On a fresh set of realistic user messages (typos, slang, Hinglish), original keyword rules caught only 45% of emergencies (18/40) and refused 33% of colloquial medicine/dose requests (10/30). While subsequent text normalisation, fuzzy matching, and an urgency/medicine flag in the LLM routing call scored 100% recall on a second agent-authored set, that set is development-level evidence, not independent. Real-world recall on informal phrasing is unknown, and a real-user clinical study is future work.
 
 ---
 
@@ -27,13 +29,16 @@
 
 ## Key Features
 
-1. **Authoritative-Only Sourcing**: 30 high-priority public health conditions indexed strictly from `*.gov.in`, `*.nic.in`, and `who.int`. Ingestion is cryptographically locked with SHA-256 digests in `data/sources.lock.json`.
-2. **Dual-Layer Deterministic Safety**:
-   - **Emergency Red-Flag Filter**: Detects acute medical emergencies (e.g. vomiting blood, severe chest pain, infant convulsions) in $<0.05\text{s}$ with 0 LLM calls, immediately routing to the 108 ambulance service.
-   - **Prescription & Dose Refusal**: Automatically blocks personal prescription requests and scrubs numeric doses (`\b\d+\s*mg\b`) using post-generation regex filters.
+1. **Authoritative-Only Sourcing**: Exactly 4,632 chunks indexed across 30 high-priority public health conditions from 76 verified official sources (35 WHO fact sheets plus official government/WHO PDFs including NCDC and NDMA heat-illness guidelines, WHO SEAR snakebite guidelines, and WHO diarrhoea manual). Ingestion is cryptographically locked with SHA-256 digests in `data/sources.lock.json`.
+2. **Multi-Tiered Safety & Persistent Fallback**:
+   - **Persistent 108 Banner**: Direct click-to-call 108 helpline notice mounted prominently on the chat page.
+   - **Triage Normalizer & Fuzzy Matching**: Unicode NFC, character repeat collapse, SMS typo dictionary, and rapidfuzz token matching on acute presentation keywords.
+   - **Merged Urgency & Medicine Router**: Single-call LLM classification (`emergency`, `urgent`, `routine`) over-triaging to emergency when ambiguous.
+   - **Prescription & Dose Refusal**: Scans for personal drug/dose requests and verifies liquid dilution preparation (ORS fluid instructions up to 1000 ml clean water allowed; clinical doses strictly refused).
 3. **Bilingual Grounded Generation**: Standard Hindi (हिन्दी) and English support with Devanagari script normalizers preventing corrupted sub-word tokens.
 4. **Verifiable In-Text Citations**: Every claim features interactive citation chips `[N]` mapped to retrieved source documents with authority, title, and page numbers.
-5. **Single-Server Web Architecture**: FastAPI backend and built React 18 frontend can be run together from a single command without CORS or reverse proxy configuration.
+5. **Comprehensive Test Suite**: 78 Python unit/integration tests, 12 Vitest unit tests, and 24 Playwright e2e tests passing offline (2 live-LLM tests skipped).
+6. **Single-Server Web Architecture**: FastAPI backend and built React 18 frontend can be run together from a single command without CORS or reverse proxy configuration.
 
 ---
 
