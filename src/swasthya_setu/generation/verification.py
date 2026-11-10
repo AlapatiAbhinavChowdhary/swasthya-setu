@@ -267,6 +267,85 @@ def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
     return True
 
 
+def is_heading_or_label_line(line: str) -> bool:
+    """Detect markdown headings (#), standalone bold headings (**Header:** or **Header**), or label lines ending in colons."""
+    s = line.strip()
+    if not s:
+        return False
+    # Markdown headings # to ######
+    if re.match(r"^#{1,6}\s+\S+", s):
+        return True
+    # Standalone bold lines: **Title**, **Title:**, **Title**:
+    if re.match(r"^\*\*[^*:\n]+(?::\*\*|\*\*:?)\s*$", s):
+        return True
+    # Unbolded label line ending with colon: e.g. "Critical DO NOTs:" or "चेतावनी लक्षण:"
+    if re.match(r"^[A-Z\u0900-\u097f][^.!?।\n]{2,60}:\s*$", s) and not s.startswith("http"):
+        return True
+    # Empty bullet label e.g. "* **Title:**", "* **Title**:", "- Title:" with nothing after colon
+    if re.match(r"^[-*•]\s+(?:\*\*[^*:\n]+(?::\*\*|\*\*:?)|[A-Z\u0900-\u097f][^.!?।\n]{1,60}:)\s*$", s):
+        return True
+    return False
+
+
+def drop_empty_headings(text: str) -> str:
+    """Generic post-processing rule: never emit a heading or label line without a body; drop it."""
+    lines = text.split("\n")
+    n = len(lines)
+    keep = [True] * n
+
+    def is_disclaimer(s: str) -> bool:
+        lower = s.lower()
+        return any(d in lower for d in [
+            "health awareness information",
+            "स्वास्थ्य जागरूकता",
+            "emergency, go to",
+            "call 108",
+            "108 पर कॉल करें",
+        ])
+
+    def is_note(s: str) -> bool:
+        lower = s.strip().lower()
+        return (
+            lower.startswith("*(note:")
+            or lower.startswith("(note:")
+            or lower.startswith("*note:")
+            or lower.startswith("*(विशेष:")
+            or lower.startswith("*(ध्यान दें:")
+        )
+
+    # Backward pass: process from bottom to top so parent headings see whether subsequent subheadings have content
+    for i in range(n - 1, -1, -1):
+        if not is_heading_or_label_line(lines[i]):
+            continue
+        has_body = False
+        for j in range(i + 1, n):
+            sub = lines[j].strip()
+            if not sub:
+                continue
+            if is_disclaimer(sub) or is_note(sub):
+                break
+            if is_heading_or_label_line(lines[j]):
+                if keep[j]:
+                    has_body = True
+                break
+            has_body = True
+            break
+        if not has_body:
+            keep[i] = False
+
+    result_lines = [lines[i] for i in range(n) if keep[i]]
+    res = "\n".join(result_lines)
+    return re.sub(r"\n{3,}", "\n\n", res).strip()
+
+
+def clean_redundant_phrasing(text: str) -> str:
+    """Remove redundant parenthetical alternate phrases e.g. '(or ...)' and dual temperature mentions."""
+    text = re.sub(r"\s*\(or\s+[^)]+\)", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*\(या\s+[^)]+\)", "", text)
+    text = re.sub(r"\]\s*,\s*$", "]", text, flags=re.MULTILINE)
+    return text
+
+
 def verify_citations(
     text: str,
     documents: list[Document],
@@ -347,6 +426,8 @@ def verify_citations(
                 cleaned_lines.append(full_line)
 
     cleaned = "\n".join(cleaned_lines).strip()
+    cleaned = clean_redundant_phrasing(cleaned)
+    cleaned = drop_empty_headings(cleaned)
     if not cited_numbers:
         return localized_message("safe_refusal", language), []
     return cleaned, sorted(set(cited_numbers))

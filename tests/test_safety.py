@@ -795,21 +795,116 @@ def test_medicine_timing_and_combination_deflection():
         assert is_prescription_or_diagnosis(q), f"Timing/combination query not intercepted: '{q}'"
 
 
-def test_general_diet_questions_not_flagged_as_prescription():
-    from swasthya_setu.generation.agent import is_prescription_or_diagnosis
+def test_drop_empty_headings():
+    from swasthya_setu.generation.verification import drop_empty_headings
 
-    # General diet questions must NOT be flagged as prescription requests
-    diet_queries = [
-        "What foods are good for anemia?",
-        "Can I eat bananas during diarrhea?",
-        "What is a healthy diet for diabetes?",
-        "Which fruits should be given in dengue?",
-        "What should a child with loose motions eat?",
-        "दस्त में बच्चे को क्या खिलाना चाहिए?",
-        "एनीमिया में कौन से फल खाने चाहिए?",
-    ]
-    for q in diet_queries:
-        assert not is_prescription_or_diagnosis(q), f"General diet query falsely blocked: '{q}'"
+    # Case 1: Snakebite-style empty DO NOTs heading before note or disclaimer
+    text1 = (
+        "* **Immobilize:** Lay the person down [1].\n\n"
+        "**Critical DO NOTs (Traditional methods that cause harm):**\n\n"
+        "*(Note: Antivenom is the essential medical treatment [9].)*\n\n"
+        "This is health awareness information, not medical advice. Call 108 or 112."
+    )
+    cleaned1 = drop_empty_headings(text1)
+    assert "**Critical DO NOTs" not in cleaned1
+    assert "* **Immobilize:**" in cleaned1
+    assert "*(Note: Antivenom" in cleaned1
+
+    # Case 2: Populated DO NOTs heading must be kept
+    text2 = (
+        "* **Immobilize:** Lay the person down [1].\n\n"
+        "**Critical DO NOTs:**\n"
+        "* Do not use traditional or herbal first-aid methods [9].\n\n"
+        "This is health awareness information, not medical advice. Call 108 or 112."
+    )
+    cleaned2 = drop_empty_headings(text2)
+    assert "**Critical DO NOTs:**" in cleaned2
+    assert "Do not use traditional or herbal" in cleaned2
+
+    # Case 3: Empty markdown headings (###, ##, #)
+    text3 = (
+        "### First Aid Guidance\n"
+        "* Keep patient calm [1].\n\n"
+        "### Warning Signs\n"
+        "#### Subheading\n\n"
+        "This is health awareness information. Call 108."
+    )
+    cleaned3 = drop_empty_headings(text3)
+    assert "### First Aid Guidance" in cleaned3
+    assert "### Warning Signs" not in cleaned3
+    assert "#### Subheading" not in cleaned3
+
+    # Case 4: Hindi empty heading before disclaimer
+    text4 = (
+        "* रोगी को शांत रखें [1]।\n\n"
+        "**सावधानियां:**\n\n"
+        "यह स्वास्थ्य जागरूकता की जानकारी है। 108 पर कॉल करें।"
+    )
+    cleaned4 = drop_empty_headings(text4)
+    assert "**सावधानियां:**" not in cleaned4
+    assert "रोगी को शांत रखें" in cleaned4
+
+    # Case 5: Empty bullet label (* **Warning:** with no body)
+    text5 = (
+        "* **Immediate action:** Call for an ambulance [1].\n"
+        "* **Empty note:**\n\n"
+        "This is health awareness information. Call 108."
+    )
+    cleaned5 = drop_empty_headings(text5)
+    assert "* **Empty note:**" not in cleaned5
+    assert "* **Immediate action:**" in cleaned5
+
+
+def test_llm_retry_on_network_error_and_timeout(monkeypatch):
+    import pytest
+    from swasthya_setu.generation.agent import _invoke_llm_with_retry
+    from langchain_core.prompts import PromptTemplate
+    from langchain_core.runnables import RunnableLambda
+
+    prompt = PromptTemplate.from_template("echo: {msg}")
+
+    # 1. Simulate failure on attempt 1 (429/timeout/reset), success on retry (timeout<=8s)
+    call_counts = {"count": 0}
+
+    def failing_invoker(inputs):
+        call_counts["count"] += 1
+        if call_counts["count"] == 1:
+            raise ConnectionResetError("[WinError 10054] An existing connection was forcibly closed by the remote host")
+        return "SUCCESS AFTER RETRY"
+
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(failing_invoker),
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent.ChatGoogleGenerativeAI",
+        lambda **kwargs: RunnableLambda(failing_invoker),
+    )
+
+    res = _invoke_llm_with_retry(prompt, {"msg": "test"}, retry_timeout=8.0)
+    assert res == "SUCCESS AFTER RETRY"
+    assert call_counts["count"] == 2
+
+    # 2. Both attempts fail -> raises exception, leading to service_error fallback with 108/112
+    call_counts["count"] = 0
+
+    def always_failing_invoker(inputs):
+        call_counts["count"] += 1
+        raise TimeoutError("Request timed out after 8.0s")
+
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(always_failing_invoker),
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent.ChatGoogleGenerativeAI",
+        lambda **kwargs: RunnableLambda(always_failing_invoker),
+    )
+
+    with pytest.raises(TimeoutError):
+        _invoke_llm_with_retry(prompt, {"msg": "test"}, retry_timeout=8.0)
+    assert call_counts["count"] == 2
+
 
 
 

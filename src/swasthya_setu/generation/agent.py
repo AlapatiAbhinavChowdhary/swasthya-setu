@@ -10,6 +10,7 @@ from typing import TypedDict
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import END, START, StateGraph
 
 from swasthya_setu.generation.chain import (
@@ -28,6 +29,7 @@ from swasthya_setu.generation.safety import emergency_response, is_emergency
 from swasthya_setu.generation.triage_normalizer import normalize_triage_text
 from swasthya_setu.generation.verification import (
     PRESCRIPTION_REFUSAL,
+    drop_empty_headings,
     filter_dose_patterns,
     check_post_generation_prescription_leak,
     is_language_consistent,
@@ -198,13 +200,41 @@ def _intent(question: str) -> str:
     return intent
 
 
+def _invoke_llm_with_retry(
+    prompt_template,
+    inputs: dict,
+    retry_timeout: float = 8.0,
+) -> str:
+    """Invoke an LLM chain with a single <=8-second retry on network/API failure."""
+    chain = prompt_template | _llm() | StrOutputParser()
+    try:
+        return chain.invoke(inputs).strip()
+    except Exception as exc:
+        logger.warning(
+            "LLM call failed with %s: %s; retrying once with timeout=%.1fs",
+            type(exc).__name__,
+            exc,
+            retry_timeout,
+        )
+        retry_llm = ChatGoogleGenerativeAI(
+            model=settings.gemini_model,
+            google_api_key=settings.gemini_api_key,
+            max_retries=0,
+            timeout=retry_timeout,
+        )
+        retry_chain = prompt_template | retry_llm | StrOutputParser()
+        return retry_chain.invoke(inputs).strip()
+
+
 def _route_and_rewrite(question: str) -> tuple[str, str, str, bool]:
     try:
-        result = (route_rewrite_prompt | _llm() | StrOutputParser()).invoke(
-            {"question": question}
-        ).strip()
+        result = _invoke_llm_with_retry(
+            route_rewrite_prompt,
+            {"question": question},
+            retry_timeout=8.0,
+        )
     except Exception as exc:
-        logger.warning("route_rewrite failed with upstream error: %s", exc)
+        logger.warning("route_rewrite failed with upstream error after retry: %s", exc)
         return "service_error", question, "routine", False
 
     intent_match = re.search(r"INTENT:\s*([a-z_]+)", result, re.IGNORECASE)
@@ -544,15 +574,17 @@ def _generate_answer(state: AgentState) -> AgentState:
             return {**state, "answer": "\n".join(lines), "citations": []}
 
     try:
-        text = (answer_prompt | _llm() | StrOutputParser()).invoke(
+        text = _invoke_llm_with_retry(
+            answer_prompt,
             {
                 "context": format_context(state.get("documents", [])),
                 "question": state["question"],
                 "language": state.get("language", "en"),
-            }
+            },
+            retry_timeout=8.0,
         )
     except Exception as exc:
-        logger.warning("generation failed with upstream error: %s", exc)
+        logger.warning("generation failed with upstream error after retry: %s", exc)
         lang = state.get("language", "en")
         return {
             **state,
@@ -643,6 +675,7 @@ def _verify_answer(state: AgentState) -> AgentState:
         if urgent_prefix.strip() not in answer:
             answer = f"{urgent_prefix}{answer.lstrip()}"
 
+    answer = drop_empty_headings(answer)
     answer = _append_medicine_disclaimer(answer, language, context)
     if state.get("intent") in {"disease_info", "prevention_tips", "vaccination_schedule"}:
         closing = localized_message("awareness_closing", language)

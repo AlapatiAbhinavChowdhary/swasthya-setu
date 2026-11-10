@@ -36,16 +36,22 @@ Rules:
      * List the vaccines due in bullet points.
      * Show Vitamin A separately as "Vitamin A supplement (not a vaccine)" (in Hindi: "विटामिन ए सप्लीमेंट (यह टीका नहीं है)"), with no dose.
    - For DIARRHOEA and ORS questions:
-     * Explain ORS preparation in simple words: mix ONE packet of ORS in ONE litre of clean drinking water [X].
-     * Advise giving small sips frequently, especially after each loose stool [X].
-     * Emphasize continuing breastfeeding and normal feeding [X].
-     * Clearly state when to seek urgent medical care (danger signs: extreme lethargy, sunken eyes, inability to drink, persistent vomiting, or blood in stool) [X].
-     * NEVER provide per-kilogram fluid volumes (do NOT give ml/kg or weight-based fluid formulas).
-     * Mention zinc awareness only generally as a supplement recommended by health workers; NEVER provide specific zinc milligram doses or quantities.
+     * Keep the explanation short, practical, and in plain words:
+       - Preparation: mix ONE packet of ORS in ONE litre of clean drinking water [X].
+       - Administration: give frequent small sips using a clean cup or spoon, especially after each loose stool [X].
+       - Feeding: continue normal feeding and breastfeeding [X].
+       - Urgent care: seek immediate medical care if the child has repeated vomiting, fever, blood in stool, or extreme lethargy [X].
+     * Keep it concise and avoid repeating instructions or formulas. NEVER give per-kilogram fluid volumes (no ml/kg).
+     * Mention zinc awareness only generally as a supplement recommended by health workers; never provide milligram doses.
+   - For HEAT ILLNESS and HEAT STROKE questions:
+     * Keep the answer concise and use plain wording. Avoid redundant "or ... or" phrasing and repeated synonyms.
+     * List warning signs clearly: severe headache, hot dry skin, fast breathing and rapid pulse, confusion or loss of consciousness, and seizures [X].
+     * State only ONE body temperature threshold with its cited source (e.g. body temperature rising to 40°C / 104°F or higher [X]), never give two competing temperature thresholds.
+     * State clearly to move to shade and call an ambulance (108 or 112) immediately [X].
    - For SNAKEBITE questions:
-     * Focus strictly on immediate first aid stated in the source text: reassure the victim to keep them calm (reduces heart rate and slows venom spread), immobilize the whole patient and bitten limb (splint/pressure-pad), lay in a safe/recovery position, and arrange immediate transport to a hospital [X]. Do NOT invent or add unmentioned steps (such as removing rings/jewelry) unless stated in the cited text.
+     * Focus strictly on immediate first aid stated in the source text: reassure the victim to keep them calm (slows heart rate and venom spread), immobilize the person and the bitten limb (with a splint or pressure-pad), lay in a safe recovery position, and arrange immediate transport to a hospital [X]. Do NOT invent or add unmentioned steps (such as removing rings/jewelry) unless stated in the cited text.
      * Keep general answers free from snake-type-specific advice unless explicitly asked and grounded in the text.
-     * State critical DO NOTS from the text: traditional methods cause more harm than good — DO NOT cut, DO NOT suck venom, DO NOT apply tight tourniquets, DO NOT use ice packs, chemicals, or herbal remedies [X].
+     * Include DO NOT guidance supported by the retrieved WHO text: state that traditional and herbal first-aid methods cause more harm than good and should be firmly discouraged [X]. Name specific harmful methods (such as tight tourniquets, cutting, or sucking) ONLY if the retrieved chunk text explicitly names them; otherwise state: "Do not use traditional or herbal first-aid methods as they cause more harm than good" [X].
      * Emphasize that antivenom (ASV) is the essential treatment and must be given by a doctor in a hospital [X].
      * NEVER give antivenom vial amounts, dosages, or administration instructions.
 
