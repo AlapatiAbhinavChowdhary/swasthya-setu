@@ -52,8 +52,8 @@ _NUMERIC_DOSE_PATTERN = re.compile(
     r"\d+\s*(?:मिग्रा|एमजी|गोलियां|गोली)|"
     r"\b\d+(?:\.\d+)?\s*(?:drops?)\b|"
     r"\b\d+(?:\.\d+)?\s*(?:to|-)\s*\d+\s*(?:drops?)\b|"
-    r"\b\d+(?:\.\d+)?\s*ml\b(?!\s+(?:of\s+)?(?:clean\s+)?(?:drinking\s+)?(?:water|ors|solution|liquid|fluid))\b|"
-    r"\d+\s*मिली(?![\s\w\u0900-\u097f]*(?:पानी|ओआरएस|घोल))",
+    r"\b\d+(?:\.\d+)?\s*(?:ml|milliliters?|millilitres?)\b(?!\s*(?:\([^)]*\)\s*)?(?:of\s+)?(?:clean\s+|drinking\s+|safe\s+|boiled\s+|potable\s+|fresh\s+|prepared\s+|cool(?:ed)?\s+|lukewarm\s+)*(?:water|ors|solution|liquid|fluid|fluids|drink))\b|"
+    r"\d+\s*(?:मिली|एमएल|मिलीलीटर)(?![\s\w\u0900-\u097f]*(?:पानी|जल|ओआरएस|घोल|तरल))",
     re.IGNORECASE,
 )
 
@@ -71,6 +71,78 @@ def filter_dose_patterns(text: str, language: str = "en") -> tuple[str, bool]:
     if has_numeric_dose(text):
         return localized_message("dose_refusal", language), False
     return text, True
+
+
+_PRESCRIPTION_LEAK_DRUGS = re.compile(
+    r"\b("
+    r"paracetamol|crocin|calpol|ibuprofen|combiflam|aspirin|disprin|"
+    r"azithromycin|amoxicillin|ciprofloxacin|doxycycline|metronidazole|"
+    r"chloroquine|artesunate|artemether|lumefantrine|"
+    r"cetirizine|allegra|montelukast|cough\s+syrup|antibiotic"
+    r")\b",
+    re.IGNORECASE,
+)
+
+_PRESCRIPTION_LEAK_ADVICE = re.compile(
+    r"\b("
+    r"you\s+should\s+take|i\s+recommend(?:\s+taking)?|take\s+(?:the\s+following|\d+|this)\s+(?:medicine|tablet|drug)|"
+    r"you\s+can\s+take|you\s+may\s+take|start\s+taking|"
+    r"give\s+(?:the\s+child|him|her)\s+\w+|"
+    r"aapko\s+.*leni\s+chahiye|aap\s+.*len|आप\s+.*लें|आपको\s+.*लेनी\s+चाहिए"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def check_post_generation_prescription_leak(
+    question: str, answer: str, language: str = "en"
+) -> tuple[str, bool]:
+    """Post-generation safety net:
+
+    If the user's question asks what to take/give, and the generated answer
+    names a specific drug with a quantity or frequency, or says 'you should take / I recommend',
+    replace the answer with the prescription refusal before returning to the user.
+    Legitimate awareness answers (e.g. dengue avoid aspirin, TB 6 months duration) are kept.
+    """
+    from swasthya_setu.generation.triage_normalizer import normalize_triage_text
+
+    norm_q = normalize_triage_text(question)
+
+    # Check if question asks what to take/give for personal treatment
+    asks_what_to_take = bool(
+        re.search(
+            r"\b(what\s+(?:medicine|tablet|drug|syrup)?\s*(?:should|can)\s*i\s*(?:take|give)|"
+            r"which\s+(?:medicine|tablet|drug|syrup)\s*(?:should|can)\s*i\s*(?:take|give)|"
+            r"kya\s*(?:dawai|tablet|medicine)\s*(?:lu|loon|khaun|du|doon)|"
+            r"konsi\s*(?:dawai|tablet|goli|medicine)\s*(?:lu|khaun|du|deni)|"
+            r"kaunsi\s*(?:dawai|tablet|goli|medicine)\s*(?:lu|khaun|du|deni)|"
+            r"कौन\s*सी\s*(?:दवा|गोली|सिरप)\s*(?:लूँ|लूं|खानी|दूँ|दू)|"
+            r"क्या\s*(?:दवा|गोली)\s*(?:लूँ|लूं|खानी|दूँ|दू))\b",
+            norm_q,
+            re.IGNORECASE,
+        )
+    )
+
+    if not asks_what_to_take:
+        return answer, True
+
+    has_advice = bool(_PRESCRIPTION_LEAK_ADVICE.search(answer))
+    has_drug_with_freq = bool(
+        _PRESCRIPTION_LEAK_DRUGS.search(answer)
+        and (
+            has_numeric_dose(answer)
+            or re.search(
+                r"\b(?:once|twice|thrice|\d+\s*times)\s+(?:daily|a\s+day)|every\s+\d+\s*hours|\bदिन\s*में\s*(?:एक|दो|तीन|\d+)\s*बार\b",
+                answer,
+                re.IGNORECASE,
+            )
+        )
+    )
+
+    if has_advice or has_drug_with_freq:
+        return localized_message("prescription_refusal", language), False
+
+    return answer, True
 
 
 def localized_message(message: str, language: str) -> str:

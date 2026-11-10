@@ -547,6 +547,67 @@ def test_ors_preparation_volume_is_not_falsely_refused():
     assert "1000 मिली" in hi_filtered
 
 
+def test_ors_preparation_mocked_llm_generation(monkeypatch):
+    from langchain_core.runnables import RunnableLambda
+    from swasthya_setu.generation.agent import _generate_answer
+
+    # English ORS generation
+    en_mock_answer = (
+        "To prepare ORS:\n"
+        "* Wash your hands with soap and clean water [1].\n"
+        "* Pour the entire contents of 1 packet of ORS into 1 litre (1000 ml) of clean drinking water [1].\n"
+        "* Stir well until the powder is completely dissolved [1].\n"
+        "* Do not boil the prepared solution and use it within 24 hours [1]."
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: en_mock_answer),
+    )
+    en_state = _generate_answer(
+        {
+            "question": "How is ORS prepared?",
+            "intent": "disease_info",
+            "language": "en",
+            "documents": [
+                Document(
+                    page_content="Mix one packet of ORS in 1 litre (1000 ml) of clean drinking water and stir well.",
+                    metadata={"source": "who-diarrhoeal-disease.html", "page_label": "1"},
+                )
+            ],
+        }
+    )
+    assert "1000 ml" in en_state["answer"] or "1 litre" in en_state["answer"]
+    assert en_state["citations"] == [1]
+
+    # Hindi ORS generation
+    hi_mock_answer = (
+        "ओआरएस घोल तैयार करने का तरीका:\n"
+        "* सबसे पहले साबुन और साफ पानी से हाथ धोएं [1]।\n"
+        "* ओआरएस का पूरा पैकेट 1 लीटर (1000 मिली) साफ पीने के पानी में डालें [1]।\n"
+        "* चम्मच से अच्छी तरह हिलाकर पूरी तरह घोल लें [1]।\n"
+        "* तैयार घोल को 24 घंटे के भीतर इस्तेमाल करें [1]।"
+    )
+    monkeypatch.setattr(
+        "swasthya_setu.generation.agent._llm",
+        lambda: RunnableLambda(lambda _input: hi_mock_answer),
+    )
+    hi_state = _generate_answer(
+        {
+            "question": "ओआरएस का घोल कैसे तैयार किया जाता है?",
+            "intent": "disease_info",
+            "language": "hi",
+            "documents": [
+                Document(
+                    page_content="ओआरएस का पैकेट 1 लीटर (1000 मिली) साफ पीने के पानी में मिलाकर अच्छी तरह घोल लें।",
+                    metadata={"source": "who-diarrhoeal-disease.html", "page_label": "1"},
+                )
+            ],
+        }
+    )
+    assert "1000 मिली" in hi_state["answer"] or "1 लीटर" in hi_state["answer"]
+    assert hi_state["citations"] == [1]
+
+
 def test_ordinary_awareness_queries_not_falsely_blocked():
     from swasthya_setu.generation.safety import is_emergency
     from swasthya_setu.generation.agent import is_prescription_or_diagnosis
