@@ -16,4 +16,12 @@
 
 ## Exact Resume Point
 
-All prompt requirements for fix/snake-and-retry complete. Secret scan passed, branch ready for commit, push, CI check, and fast-forward merge to main.
+All prompt requirements for `fix/snake-and-retry` complete and verified:
+1. Empty section bug resolved via generic `drop_empty_headings` post-processor with unit tests across all heading and label styles.
+2. Network retry (`_invoke_llm_with_retry`, $\le 8\text{s}$) implemented and verified with simulated 429, timeouts, and disconnects.
+3. Degraded-mode rule-only recall evaluated across 100 emergencies (47.0%) and documented in LIMITATIONS.md and EVALUATION.md.
+4. Style polished: shortened ORS and heat stroke answers, removed redundant parenthetical alternates, single cited temperature threshold.
+5. All 88 Python tests, 12 Vitest tests, and 24 Playwright e2e tests passing.
+6. Branch `fix/snake-and-retry` merged into `main` and pushed to `origin/main`.
+7. GitHub Actions CI runs verified green on both `fix/snake-and-retry` (Run ID `42860600242`, commit `ce7d474`) and `main` (Run ID `42861136209`, commit `ce7d474`).
+8. No new features; project ready for final acceptance.
