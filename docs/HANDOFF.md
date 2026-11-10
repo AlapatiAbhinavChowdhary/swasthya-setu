@@ -282,7 +282,7 @@ uv run python scripts/check_script_leakage.py
 uv run python scripts/benchmark_latency.py
 ```
 
-The pytest suite (64 tests) passes completely offline with zero real secrets required. Secret scanning confirms 0 leaked API keys in working tree and full git history. Script leakage check confirms 0 tracking scripts in all 3,633 indexed chunks. The 10-question latency benchmark achieves a median of 2.28s with 10% instant deterministic emergency triage.
+The pytest suite (78 tests) passes completely offline with zero real secrets required. Secret scanning confirms 0 leaked API keys in working tree and full git history. Script leakage check confirms 0 tracking scripts in all 4,632 indexed chunks. The 10-question latency benchmark achieves a median of 2.28s with 10% instant deterministic emergency triage.
 
 ## 6. CURRENT STATE
 
@@ -404,7 +404,7 @@ original brief was delivered.
 |---|---|---|---|
 | 0 Safety | complete | `5d037a4` | Deterministic localized safety closings, emergency checks, dose filter edge cases, and sentence citation support check verified by safety suite. |
 | 1 Sources and coverage | complete | `55d9f44` | 72 official sources in manifest. 30/30 target diseases have verified official disease-specific documentation. Honest depth tiers enforced (`specific_docs_count >= 2` & `specific_chunks >= 50` for `deep`). Optional OCR fallback implemented. |
-| 2 Chroma and incremental ingestion | complete | `0780cb3` | Chroma has 3,633 section-level granular vectors indexed from verified official sources across all 30 diseases; section-level HTML heading extraction with strictly 0 boilerplate tokens in vectorstore. |
+| 2 Chroma and incremental ingestion | complete | `fix/triage` | Chroma has 4,632 section-level granular vectors indexed from verified official sources across all 30 diseases; section-level HTML heading extraction with strictly 0 boilerplate tokens in vectorstore. |
 | 3 Retrieval, agent and tools | complete | `2d1d936` | Deterministic dose filter blocks numeric doses while preserving legitimate volume/timing; structured `vaccination_schedule`, `outbreak_alerts` (demo data), and `find_hospital` (sample data) tools implemented; hybrid BM25+RRF reaches 96.1% hit-rate@4 across all 30 diseases. |
 | 4 API | complete | `d8b12ed` | Endpoints: `GET /health` (with llm_configured flag), `GET /sources`, `GET /coverage`, `GET /diseases`, `GET /vaccination`, `GET /alerts`, `GET /facilities`, `POST /chat`, `POST /chat/stream` (safe verified SSE sentence streaming), and `POST /feedback`. |
 | 5 Website | partial | `1c7b8bb` | React + Vite + TypeScript + Tailwind frontend built; Playwright/browser checks unverified, lint is tsc only. |

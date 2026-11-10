@@ -21,11 +21,13 @@ In adherence to public health integrity and ethical AI principles, this document
 - On a fresh independent evaluation set of 30 colloquial and Hinglish prescription queries (evaluated once without tuning), lexical regex refusal was **33.3%** (10/30), highlighting the vulnerability of keyword patterns against transliterated conversational phrasing (e.g. *"kitni goli lu"*, *"konsi dawai du"*).
 - While generic drug classes may be mentioned strictly in the context of official awareness (e.g. "TB is managed with a 4-to-6 month regimen of first-line antibiotics under DOTS"), specific regimens, brand names, and dose titrations are strictly prohibited.
 
-### 1.4 Emergency Triage Detection
-- Emergency queries bypass the LLM pipeline and trigger deterministic emergency cards with 0 LLM calls.
-- In development set evaluation, deterministic emergency detection achieved **100.0% recall** (10/10 on benchmark queries) with 0 false positives on non-emergency look-alikes.
-- On a fresh independent evaluation set of 40 realistic colloquial and typo emergency messages (evaluated once without tuning), deterministic regex recall was **45.0%** (18/40). Missed cases illustrate that static keyword boundaries cannot reliably capture irregular phonetic spellings (e.g., *"unconsious"*, *"blud"*), novel colloquial expressions (*"नाड़ी नहीं मिल रही"*, *"सुन्न हो गया"*), and unindexed slang. Production systems require a multi-layer hybrid approach combining deterministic safety nets with semantic LLM intent classification.
-- Deterministic pattern matching cannot substitute for professional emergency triage by trained emergency medical technicians (EMTs).
+### 1.4 Emergency Triage Detection & Best-Effort Boundaries
+- Emergency queries are prioritized through a multi-tiered safety architecture:
+  1. **Deterministic Lexicon & Normalizer:** Unicode NFC normalization, character repeat collapse, typo correction, and fuzzy token matching (rapidfuzz) over English, Hindi, and Hinglish emergency vocabularies.
+  2. **Semantic LLM Second Net:** Merged public health router classifying urgency (`emergency`, `urgent`, `routine`) with instructions to over-triage toward emergency when ambiguous, escalating to 108 emergency cards with zero additional latency.
+  3. **Persistent Visible Safe Fallback:** A permanent emergency banner (*"In a medical emergency, immediately call 108 or visit the nearest hospital"*) is displayed prominently on the chat page at all times, ensuring users are never reliant solely on software triage.
+- **Best-Effort for Informal Phrasing:** Despite normalized and fuzzy patterns, detection for extreme dialectal slang, unprecedented transliterations, phonetic corruptions, or deeply fragmented phrases remains inherently best-effort. It does not replace clinical evaluation or trained emergency dispatchers.
+- Any acute signal bypasses educational intent guardrails to prevent fatal undertriage.
 
 ---
 

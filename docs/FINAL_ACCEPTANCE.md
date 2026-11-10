@@ -10,9 +10,9 @@ This document records the verification results across all 11 acceptance criteria
   uv run python scripts/build_index.py
   ```
 - **Observed Counts**:
-  - Authoritative sources tracked in `data/sources.lock.json`: 74 tracked sources (72 in `data/sources.yaml`, 75 raw files: 40 official PDFs and 35 WHO HTML fact sheets).
+  - Authoritative sources tracked in `data/sources.lock.json`: 78 tracked entries (76 in `data/sources.yaml`, 79 raw files: 44 official PDFs and 35 WHO HTML fact sheets, including NCDC Heat Plan, NDMA Heat Wave Guidelines, WHO SEAR Snakebites Guidelines, and WHO Diarrhoea Treatment Manual).
   - Diseases indexed: Exactly 30 conditions.
-  - Chunks generated & indexed: 3,633 semantic chunks (verified in Chroma `swasthya_setu` collection and `vectorstore/index-manifest.json`).
+  - Chunks generated & indexed: 4,632 semantic chunks (verified in Chroma `swasthya_setu` collection and `vectorstore/index-manifest.json`).
   - Ingestion idempotency: Running `build_index.py` repeatedly performs deterministic upserts matching document SHA-256 hashes without duplicating chunks, guarded against unintended index shrinkage (>10% drop threshold).
 
 ---
