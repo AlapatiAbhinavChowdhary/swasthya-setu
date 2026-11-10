@@ -116,3 +116,40 @@ def test_local_source_files_are_present():
 
 def test_page_normalization_removes_page_number_lines():
     assert normalize_page_text("Page 12\nUseful health text") == "Useful health text"
+
+
+def test_build_index_shrink_guard(monkeypatch, tmp_path):
+    import importlib.util
+    import json
+    import sys
+    from langchain_core.documents import Document
+
+    # Load build_index module dynamically
+    spec = importlib.util.spec_from_file_location("build_index", Path(__file__).resolve().parent.parent / "scripts" / "build_index.py")
+    build_index = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_index)
+
+    # Create dummy manifest under vectorstore/index-manifest.json
+    vs_dir = tmp_path / "vectorstore"
+    vs_dir.mkdir(parents=True, exist_ok=True)
+    manifest_file = vs_dir / "index-manifest.json"
+    manifest_file.write_text(json.dumps({"chunks": 100, "files": []}), encoding="utf-8")
+
+    # Mock ROOT and all_files to point to tmp_path
+    monkeypatch.setattr(build_index, "ROOT", tmp_path)
+    monkeypatch.setattr(build_index, "all_files", [])
+    # Mock prepare_documents and unique_chunks to return only 50 chunks (< 90 threshold)
+    dummy_chunks = [Document(page_content="test", metadata={"source_id": "test", "source": "test.pdf"}) for _ in range(50)]
+    monkeypatch.setattr(build_index, "prepare_documents", lambda paths: [])
+    monkeypatch.setattr(build_index, "unique_chunks", lambda chunks: dummy_chunks)
+    monkeypatch.setattr(build_index, "build_index", lambda chunks: None)
+
+    # Calling without --allow-shrink must exit non-zero (SystemExit)
+    with pytest.raises(SystemExit) as exc_info:
+        build_index.main([])
+    assert exc_info.value.code == 1
+
+    # Calling with --allow-shrink must succeed
+    build_index.main(["--allow-shrink"])
+    new_manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert new_manifest["chunks"] == 50

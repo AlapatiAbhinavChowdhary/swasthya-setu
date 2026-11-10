@@ -10,10 +10,10 @@ This document records the verification results across all 11 acceptance criteria
   uv run python scripts/build_index.py
   ```
 - **Observed Counts**:
-  - Authoritative sources tracked in `data/sources.lock.json`: 37 files (33 official PDFs, 4 WHO fact sheets).
+  - Authoritative sources tracked in `data/sources.lock.json`: 74 tracked sources (72 in `data/sources.yaml`, 75 raw files: 40 official PDFs and 35 WHO HTML fact sheets).
   - Diseases indexed: Exactly 30 conditions.
-  - Chunks generated & indexed: 572 semantic chunks.
-  - Ingestion idempotency: Running `build_index.py` repeatedly performs deterministic upserts matching document SHA-256 hashes without duplicating chunks.
+  - Chunks generated & indexed: 3,633 semantic chunks (verified in Chroma `swasthya_setu` collection and `vectorstore/index-manifest.json`).
+  - Ingestion idempotency: Running `build_index.py` repeatedly performs deterministic upserts matching document SHA-256 hashes without duplicating chunks, guarded against unintended index shrinkage (>10% drop threshold).
 
 ---
 

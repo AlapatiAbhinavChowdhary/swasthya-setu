@@ -1,8 +1,10 @@
+import argparse
 import hashlib
 import json
 import logging
 from pathlib import Path
 import shutil
+import sys
 import yaml
 
 from swasthya_setu.config import settings
@@ -85,19 +87,49 @@ def unique_chunks(chunks):
     return result
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Rebuild Swasthya Setu vectorstore index.")
+    parser.add_argument(
+        "--allow-shrink",
+        action="store_true",
+        help="Allow chunk count to drop by more than 10% against previous manifest.",
+    )
+    args = parser.parse_args(argv)
+
     marker_path = ROOT / "vectorstore" / "index-manifest.json"
     chroma_dir = ROOT / "vectorstore" / "chroma"
+
+    previous_chunks = 0
+    if marker_path.exists():
+        try:
+            prev_manifest = json.loads(marker_path.read_text(encoding="utf-8"))
+            previous_chunks = int(prev_manifest.get("chunks", 0))
+        except Exception as e:
+            logging.warning("Could not read previous index-manifest.json: %s", e)
+
+    logging.info("Preparing documents from %d input files...", len(all_files))
+    documents = prepare_documents(all_files)
+    chunks = unique_chunks(chunk_documents(documents))
+    chunks_count = len(chunks)
+
+    if previous_chunks > 0 and not args.allow_shrink:
+        threshold = previous_chunks * 0.90
+        if chunks_count < threshold:
+            logging.error(
+                "Chunk count dropped by more than 10%% (%d -> %d, threshold %.0f). Pass --allow-shrink to override.",
+                previous_chunks,
+                chunks_count,
+                threshold,
+            )
+            sys.exit(1)
+
     if marker_path.exists():
         marker_path.unlink()
     if chroma_dir.exists():
         shutil.rmtree(chroma_dir)
 
     logging.info("Rebuilding index from scratch with %d input files...", len(all_files))
-    documents = prepare_documents(all_files)
-    chunks = unique_chunks(chunk_documents(documents))
     build_index(chunks)
-    chunks_count = len(chunks)
     chunks_by_source = {}
     for doc in chunks:
         source_id = doc.metadata.get("source_id", Path(doc.metadata["source"]).name)
