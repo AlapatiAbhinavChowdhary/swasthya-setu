@@ -233,6 +233,12 @@ def is_chunk_supporting_sentence(sentence: str, doc: Document) -> bool:
 
     doc_text = doc.page_content.lower()
 
+    # Helplines: 108 and 112 must never be supported by documents that do not explicitly mention them
+    if re.search(r"\b108\b", sentence) and "108" not in doc_text:
+        return False
+    if re.search(r"\b112\b", sentence) and "112" not in doc_text:
+        return False
+
     # Acronyms (e.g. RNTCP, NTEP, DOTS) in the sentence must exist in the cited doc
     acronyms = re.findall(r"\b[A-Z]{2,}\b", sentence)
     for ac in acronyms:
@@ -393,6 +399,15 @@ def verify_citations(
         for sent in sentences:
             if not sent.strip():
                 continue
+
+            # Helplines (108 and 112) must be fixed, uncited text in every answer type and language
+            if re.search(r"\b(108|112)\b", sent):
+                clean_sent = re.sub(r"\[(?:\d+\s*,\s*)*\d+\]", "", sent)
+                clean_sent = re.sub(r"[ \t]{2,}", " ", clean_sent).strip()
+                if clean_sent:
+                    kept_sentences.append(clean_sent)
+                continue
+
             had_citation = bool(re.search(r"\[((?:\d+\s*,\s*)*\d+)\]", sent))
 
             def replace_cite(match: re.Match[str]) -> str:

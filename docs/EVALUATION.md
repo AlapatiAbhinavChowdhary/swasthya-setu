@@ -294,3 +294,47 @@ Both unseen Gemini hold-out emergency sets (Hold-out 1: 40 emergencies; Hold-out
   * *Generic Post-Processing Rule*: Added `drop_empty_headings(text)` which traverses sections and automatically strips any heading or label line (`#`, `**Header:**`, `Header:`) that lacks content or bullet points under it before the next heading or disclaimer.
   * *Supported Guidance*: Prompt updated to instruct inclusion of DO NOT guidance strictly supported by retrieved text (e.g. traditional/herbal methods cause more harm than good), mentioning specific methods (cutting, sucking, tourniquets) only if present in the chunk text.
   * *Answer Style*: Streamlined ORS and Heat Stroke answers, removed redundant "or ... or" phrasing, and presented a single cited temperature threshold ($\ge 40^\circ\text{C}$ / $\ge 104^\circ\text{F}$).
+
+
+---
+
+### 7. Final Verification Pass (`fix/final-verify`)
+
+#### 1. Chroma Store Evidence & Pagination Discrepancy
+- **Chroma Storage Retrieval by Code**:
+  * Chunks cited by English and Hindi snakebite answers were inspected directly from Chroma vectorstore metadata:
+    - *Page 168 (WHO SEAR Snakebite Guidelines, p. 168)*: `3. First-aid: immobilize the whole patient as far as possible by laying him/her down in a relaxed but safe position (e.g. recovery position)...`
+    - *Page 119 (WHO SEAR Snakebite Guidelines, p. 119)*: `MOST TRADITIONAL FIRST-AID METHODS SHOULD BE DISCOURAGED: THEY DO MORE HARM THAN GOOD!... Reassure the victim who may be very anxious...`
+    - *Page 118 (WHO SEAR Snakebite Guidelines, p. 118)*: `chemicals, herbs or ice packs. Local people may have great confidence in traditional (herbal) treatments, but they must not be allowed to delay medical treatment...`
+    - *Page 17 (WHO SEAR Snakebite Guidelines, p. 17)*: `Recommended first-aid methods emphasise reassurance, application of a pressure-pad over the bite wound, immobilization of the bitten limb and transport of the patient to a place where they can receive medical care without delay...`
+- **Explanation of Discrepancy**:
+  * In the prior run, text was manually referenced against PDF section tables and printed chapter footers. In Chroma, the document loader extracts and chunks text in ~1000-character windows, tagging chunks with 0-indexed or 1-indexed document parser page numbers (`page: 17, 110, 118, 119, 168, 171`).
+  * Any claim without explicit lexical support in the exact stored chunk window is pruned by `verify_citations`.
+
+#### 2. ORS Packet Size Phrasing
+- Replaced "mix 1 entire packet into 1 litre" with:
+  * *English*: `"Follow the instructions printed on the ORS packet (most packets are mixed in one litre of clean water)"`
+  * *Hindi*: `"ओआरएस (ORS) के पैकेट पर लिखे निर्देशों का पालन करें (अधिकांश पैकेट 1 लीटर साफ पानी में मिलाए जाते हैं)"`
+- Added explicit awareness exemption in `_route_and_rewrite` so that general ORS preparation queries are never misrouted as prescription dose requests.
+
+#### 3. Helpline Fixed Uncited Text
+- Emergency helplines **108** and **112** are enforced as fixed, uncited text in every answer and language:
+  * In `is_chunk_supporting_sentence`, chunks that do not mention "108" or "112" return `False` if cited by a helpline claim.
+  * In `verify_citations`, any citations accidentally attached to lines mentioning 108 or 112 are stripped, keeping the helpline sentence intact without citations.
+  * Verified in `tests/test_safety.py::test_helplines_108_and_112_always_uncited`.
+
+#### 4. Retry Path with Real Settings & Chain Support
+- Validated `_invoke_llm_with_retry`:
+  * Real settings object has lowercase attributes (`settings.gemini_model`, `settings.gemini_api_key`).
+  * Supports both `ChatPromptTemplate` and `RunnableSequence` (where `prompt_template.first` accesses the prompt).
+  * Unit tests verify failure on attempt 1 with success on retry, and failure on attempt 2 propagating to fallback.
+  * Verified in `tests/test_safety.py::test_retry_path_real_settings_and_chain_first`.
+
+#### 5. Gemini Emergency Holdouts Re-Run (100 Emergencies with Retry Active)
+Both unseen Gemini hold-out emergency sets were re-evaluated with the retry layer active and free-tier pacing (4.2s interval):
+
+| Dataset | Total Emergencies | Caught by Both (Rule + LLM) | Caught by Rule Only | Caught by LLM Only | Misses | System Recall |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hold-Out 1** (Rural & Dialectal) | 40 | 20 | 1 | 19 | 0 | **100.0%** (40 / 40) |
+| **Hold-Out 2** (Severe Multi-Domain) | 60 | 26 | 0 | 34 | 0 | **100.0%** (60 / 60) |
+| **Combined System Recall** | 100 | 46 | 1 | 53 | 0 | **100.0%** (100 / 100) |

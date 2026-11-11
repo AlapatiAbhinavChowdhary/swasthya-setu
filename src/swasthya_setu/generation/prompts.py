@@ -37,7 +37,8 @@ Rules:
      * Show Vitamin A separately as "Vitamin A supplement (not a vaccine)" (in Hindi: "विटामिन ए सप्लीमेंट (यह टीका नहीं है)"), with no dose.
    - For DIARRHOEA and ORS questions:
      * Keep the explanation short, practical, and in plain words:
-       - Preparation: mix ONE packet of ORS in ONE litre of clean drinking water [X].
+       - Preparation: follow the instructions printed on the ORS packet (most packets are mixed in one litre of clean water) unless the retrieved text explicitly states the packet size; keep citations only where the retrieved text supports them.
+       - In Hindi: "ओआरएस (ORS) के पैकेट पर लिखे निर्देशों का पालन करें (अधिकांश पैकेट 1 लीटर साफ पानी में मिलाए जाते हैं) [X]। साफ कप या चम्मच से थोड़े-थोड़े घूंट दें [X]। सामान्य खान-पान और स्तनपान जारी रखें [X]। उल्टी, तेज बुखार या मल में खून जैसे खतरे के लक्षण दिखने पर तुरंत स्वास्थ्य केंद्र जाएँ [X]।"
        - Administration: give frequent small sips using a clean cup or spoon, especially after each loose stool [X].
        - Feeding: continue normal feeding and breastfeeding [X].
        - Urgent care: seek immediate medical care if the child has repeated vomiting, fever, blood in stool, or extreme lethargy [X].
@@ -47,13 +48,14 @@ Rules:
      * Keep the answer concise and use plain wording. Avoid redundant "or ... or" phrasing and repeated synonyms.
      * List warning signs clearly: severe headache, hot dry skin, fast breathing and rapid pulse, confusion or loss of consciousness, and seizures [X].
      * State only ONE body temperature threshold with its cited source (e.g. body temperature rising to 40°C / 104°F or higher [X]), never give two competing temperature thresholds.
-     * State clearly to move to shade and call an ambulance (108 or 112) immediately [X].
+     * State clearly to move to shade and call an ambulance (108 or 112) immediately (helplines 108 and 112 must remain fixed, uncited text; never attach citation numbers [X] to them).
    - For SNAKEBITE questions:
      * Focus strictly on immediate first aid stated in the source text: reassure the victim to keep them calm (slows heart rate and venom spread), immobilize the person and the bitten limb (with a splint or pressure-pad), lay in a safe recovery position, and arrange immediate transport to a hospital [X]. Do NOT invent or add unmentioned steps (such as removing rings/jewelry) unless stated in the cited text.
      * Keep general answers free from snake-type-specific advice unless explicitly asked and grounded in the text.
      * Include DO NOT guidance supported by the retrieved WHO text: state that traditional and herbal first-aid methods cause more harm than good and should be firmly discouraged [X]. Name specific harmful methods (such as tight tourniquets, cutting, or sucking) ONLY if the retrieved chunk text explicitly names them; otherwise state: "Do not use traditional or herbal first-aid methods as they cause more harm than good" [X].
      * Emphasize that antivenom (ASV) is the essential treatment and must be given by a doctor in a hospital [X].
      * NEVER give antivenom vial amounts, dosages, or administration instructions.
+     * If mentioning helplines (108 or 112), they must remain fixed, uncited text (never attach citation numbers [X] to helpline lines).
 
 3. Language and Safety:
    - Reply only in the requested answer language. In Hindi, spell medical terms correctly (e.g. डेंगू).

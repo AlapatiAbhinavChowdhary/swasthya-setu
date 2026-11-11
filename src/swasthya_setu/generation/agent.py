@@ -74,7 +74,7 @@ route_rewrite_prompt = ChatPromptTemplate.from_messages(
             "  * emergency: active acute life-threatening medical crisis occurring right now (severe breathing trouble, unconsciousness, heavy bleeding, chest pain, convulsions, acute poisoning, active snakebite occurring right now, stroke symptoms, unresponsiveness). When unsure between routine and emergency/urgent, over-triage towards emergency.\n"
             "  * urgent: severe or rapidly worsening acute symptoms, high fever with warning signs, severe dehydration, requiring urgent medical evaluation.\n"
             "  * routine: general public health awareness, prevention, educational first-aid principles, dos and don'ts, disease information, vaccination schedules, chronic illness management. Note: general questions about first-aid dos and don'ts, prevention, or precautions (e.g. 'What are the do's and don'ts of snakebite first aid?', 'How to prepare ORS?', 'How to prevent heat illness?') are routine educational queries, NOT emergency.\n"
-            "- ASKS_MEDICINE_OR_DOSE: true if the user asks what medicine/drug/tablet/syrup to take or give for themselves or another person, asks for a prescription, or asks for specific dosages/mg/ml/frequency. Otherwise false.\n"
+            "- ASKS_MEDICINE_OR_DOSE: true if the user asks what medicine/drug/tablet/syrup to take or give for themselves or another person, asks for a prescription, or asks for specific dosages/mg/ml/frequency. Otherwise false. Note: general questions about how to prepare ORS (Oral Rehydration Solution) or vaccination schedules are routine awareness, NOT dose requests (ASKS_MEDICINE_OR_DOSE: false).\n"
             "- INTENT:\n"
             "  * Use emergency if URGENCY is emergency.\n"
             "  * Use out_of_scope if ASKS_MEDICINE_OR_DOSE is true, or if asking for personal medical diagnosis, or discussing conditions outside public health scope.\n"
@@ -165,7 +165,7 @@ _VACCINE_OR_ORS_AWARENESS_EXEMPTION = re.compile(
     r"\b("
     r"(?:measles|polio|bcg|pentavalent|rotavirus|hepatitis|covid|rabies|je|hpv|tetanus|dpt)\s+vaccine|"
     r"vaccine\s+(?:schedule|due|dose|doses)|"
-    r"ors\s+(?:packet|solution|ghol|mix|water)|water\s+should\s+be\s+mixed|"
+    r"ors\s+(?:packet|solution|ghol|mix|water|prepared|preparation|tayyar|kaise)|how\s+(?:is|to)\s+ors|water\s+should\s+be\s+mixed|"
     r"how\s+long\s+does\s+tb\s+treatment|tb\s+treatment\s+continue|"
     r"prevent\s+malaria|warning\s+signs\s+of\s+dengue|"
     r"paracetamol\s+(?:for|in)\s+dengue|avoid\s+(?:aspirin|ibuprofen)|"
@@ -204,11 +204,21 @@ def _invoke_llm_with_retry(
     prompt_template,
     inputs: dict,
     retry_timeout: float = 8.0,
+    primary_llm=None,
+    retry_llm=None,
 ) -> str:
     """Invoke an LLM chain with a single <=8-second retry on network/API failure."""
-    chain = prompt_template | _llm() | StrOutputParser()
+    # Support both ChatPromptTemplate and RunnableSequence (where .first is the prompt)
+    prompt = prompt_template.first if hasattr(prompt_template, "first") else prompt_template
+    
+    if hasattr(prompt_template, "first") and primary_llm is None:
+        primary_chain = prompt_template
+    else:
+        primary_chain = prompt | (primary_llm or _llm()) | StrOutputParser()
+
     try:
-        return chain.invoke(inputs).strip()
+        res = primary_chain.invoke(inputs)
+        return res.content.strip() if hasattr(res, "content") else str(res).strip()
     except Exception as exc:
         logger.warning(
             "LLM call failed with %s: %s; retrying once with timeout=%.1fs",
@@ -216,14 +226,19 @@ def _invoke_llm_with_retry(
             exc,
             retry_timeout,
         )
-        retry_llm = ChatGoogleGenerativeAI(
-            model=settings.gemini_model,
-            google_api_key=settings.gemini_api_key,
-            max_retries=0,
-            timeout=retry_timeout,
-        )
-        retry_chain = prompt_template | retry_llm | StrOutputParser()
-        return retry_chain.invoke(inputs).strip()
+        if retry_llm is None:
+            # Use real settings object with safe attribute access (case-insensitive)
+            model_name = getattr(settings, "gemini_model", None) or getattr(settings, "GEMINI_MODEL", "")
+            api_key = getattr(settings, "gemini_api_key", None) or getattr(settings, "GEMINI_API_KEY", "")
+            retry_llm = ChatGoogleGenerativeAI(
+                model=model_name,
+                google_api_key=api_key,
+                max_retries=0,
+                timeout=retry_timeout,
+            )
+        retry_chain = prompt | retry_llm | StrOutputParser()
+        res = retry_chain.invoke(inputs)
+        return res.content.strip() if hasattr(res, "content") else str(res).strip()
 
 
 def _route_and_rewrite(question: str) -> tuple[str, str, str, bool]:
@@ -247,6 +262,8 @@ def _route_and_rewrite(question: str) -> tuple[str, str, str, bool]:
     asks_dose = (dose_match.group(1).lower() == "true") if dose_match else False
     search_query = query_match.group(1).strip() if query_match else question
 
+    if asks_dose and _VACCINE_OR_ORS_AWARENESS_EXEMPTION.search(question):
+        asks_dose = False
     if asks_dose:
         model_intent = "out_of_scope"
     if urgency == "emergency":

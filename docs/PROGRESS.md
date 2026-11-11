@@ -11,17 +11,16 @@
 | **Verification Pass (fix/verify-triage)** | complete | `fix/verify-triage` | 1) CI status on main (1fe5926: 42771049266 success, 4431520: 42769452375 success). 2) Live Gemini holdout: 95.0% recall (38/40: 17 both, 1 rule-only, 20 LLM-only, 2 missed), 0.0% FP (0/40), 96.7% Rx refusal (29/30), 0 leaks. 3) Regression suite: 100/100 awareness audit pass, 5/5 fuzzy look-alikes pass, 5/5 malformed router safe fallback. 4) Printed answers for ORS child diarrhoea, heat stroke, snakebite, child not breathing; red-team dose queries refused; ORS policy enforced. 5) 112 added alongside 108 in banner, card, translations, and docs; 2005 WHO diarrhoea manual demoted. 82 Python tests, 12 Vitest tests, 24 Playwright e2e tests passing. |
 | **Last Safety Pass (fix/last-safety)** | complete | `fix/last-safety` | 1) LLM-failure fallback: simulated 429, timeout, invalid key from router and generator; deterministic emergencies still show emergency card, all others return friendly localized error + fixed line "If this is an emergency, call 108 or 112"; never a bare error. 2) Dev set expanded for heart collapse and hydrocarbon/chemical ingestion. 3) Fresh 90-item Gemini hold-out (zero rules in prompt): 96.7% recall (58/60), 0.0% FP (0/30). 4) Medicine timing/combo queries deflected to doctor/ASHA/pharmacist; diet queries preserved. 5) Printed RAW answers with citations; verified snakebite chunk text sentence-by-sentence, removed unstated rings/jewelry, kept species-specific advice out of general answers. 86 Python tests, 12 Vitest tests, 24 Playwright tests passing. |
 | **Snakebite & Retry Pass (fix/snake-and-retry)** | complete | `fix/snake-and-retry` | 1) Empty section bug resolved: added generic `drop_empty_headings` post-processor dropping headings without body across all answer types; updated prompt to ground DO NOTs in retrieved text. 2) Network retry: added `_invoke_llm_with_retry` with <=8s timeout on router and generator failures before fallback. 3) Degraded-mode rule-only recall evaluated across both Gemini holdouts (40 + 60 = 100 emergencies): 47.0% recall documented in EVALUATION.md and LIMITATIONS.md. 4) Style updates: shortened ORS and heat stroke answers, removed redundant "or ... or" phrasing, single temperature threshold with cited source. 88 Python tests, 12 Vitest tests, 24 Playwright tests passing. |
+| **Final Verification Pass (fix/final-verify)** | complete | `fix/final-verify` | 1) Snakebite evidence printed by code directly from Chroma store; per-sentence support scores verified; documented parser pagination vs PDF print discrepancy. 2) ORS wording replaced with "follow instructions printed on packet (most packets mixed in 1 litre clean water)" in English and Hindi; exemption added to prevent false prescription refusal on ORS queries. 3) Helplines 108/112 enforced as fixed uncited text across all answers. 4) Retry path tested with real settings (lowercase casing) and RunnableSequence .first support; fake LLM fail-once and fail-twice tests pass. 5) Re-run 100 Gemini holdout emergencies with retry active: 100/100 caught (100.0% recall, 0 misses). 89 Python tests, 12 Vitest tests passing. |
 
 ---
 
 ## Exact Resume Point
 
-All prompt requirements for `fix/snake-and-retry` complete and verified:
-1. Empty section bug resolved via generic `drop_empty_headings` post-processor with unit tests across all heading and label styles.
-2. Network retry (`_invoke_llm_with_retry`, $\le 8\text{s}$) implemented and verified with simulated 429, timeouts, and disconnects.
-3. Degraded-mode rule-only recall evaluated across 100 emergencies (47.0%) and documented in LIMITATIONS.md and EVALUATION.md.
-4. Style polished: shortened ORS and heat stroke answers, removed redundant parenthetical alternates, single cited temperature threshold.
-5. All 88 Python tests, 12 Vitest tests, and 24 Playwright e2e tests passing.
-6. Branch `fix/snake-and-retry` merged into `main` and pushed to `origin/main`.
-7. GitHub Actions CI runs verified green on both `fix/snake-and-retry` (Run ID `42860600242`, commit `ce7d474`) and `main` (Run ID `42861136209`, commit `ce7d474`).
-8. No new features; project ready for final acceptance.
+All prompt requirements for `fix/final-verify` complete and verified:
+1. Snakebite Chroma chunk texts, page metadata, and per-sentence support scores printed by code; pagination explained.
+2. ORS wording updated in English and Hindi with verified packet instructions phrasing; verified against Chroma chunks.
+3. Helplines 108/112 verified as fixed, uncited text in all languages with unit tests.
+4. Retry path verified with real settings casing and chain `.first` support; unit tests pass.
+5. 100-item emergency holdout re-run completed: 100/100 caught (100.0% recall, 0 misses).
+6. Branch `fix/final-verify` ready for commit, push, CI check, and fast-forward merge into `main`. No new features.

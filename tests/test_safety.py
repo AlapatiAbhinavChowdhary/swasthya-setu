@@ -906,8 +906,98 @@ def test_llm_retry_on_network_error_and_timeout(monkeypatch):
     assert call_counts["count"] == 2
 
 
+def test_helplines_108_and_112_always_uncited():
+    from swasthya_setu.generation.verification import verify_citations, is_chunk_supporting_sentence
+    from langchain_core.documents import Document
+
+    # Document that does NOT mention 108 or 112
+    doc_without_helpline = Document(
+        page_content="Keep the patient at rest, immobilize the bitten limb, and transfer immediately to a hospital.",
+        metadata={"source": "who-snakebite.pdf", "page_label": "118"},
+    )
+    # Document that DOES mention 108
+    doc_with_108 = Document(
+        page_content="In India, call the national ambulance service at 108 for emergency medical transport.",
+        metadata={"source": "nhm-guideline.pdf", "page_label": "5"},
+    )
+
+    # 1. is_chunk_supporting_sentence checks
+    assert not is_chunk_supporting_sentence("Call 108 immediately for an ambulance.", doc_without_helpline)
+    assert not is_chunk_supporting_sentence("तुरंत 112 पर कॉल करें।", doc_without_helpline)
+    assert is_chunk_supporting_sentence("Call 108 immediately for an ambulance.", doc_with_108)
+
+    # 2. English answer: citations on 108/112 lines must be stripped, leaving clean uncited text
+    en_answer = (
+        "* Keep patient calm and immobilize limb [1].\n"
+        "* Call 108 or 112 immediately for emergency medical transport [1, 2].\n"
+        "* Antivenom is the essential treatment [1]."
+    )
+    en_cleaned, cites = verify_citations(en_answer, [doc_without_helpline, doc_with_108], language="en")
+    assert "Call 108 or 112 immediately for emergency medical transport" in en_cleaned
+    # Ensure no citation bracket exists on the helpline line
+    for line in en_cleaned.split("\n"):
+        if "108" in line or "112" in line:
+            assert "[" not in line, f"Helpline line contains citation: {line}"
+
+    # 3. Hindi answer: citations on 108/112 lines must be stripped, leaving clean uncited text
+    hi_answer = (
+        "* मरीज को शांत रखें और अंग को स्थिर रखें [1]।\n"
+        "* तुरंत 108 या 112 पर कॉल करें और अस्पताल ले जाएँ [1]।\n"
+        "* अस्पताल में एंटीवेनम ही मुख्य उपचार है [1]।"
+    )
+    hi_cleaned, cites = verify_citations(hi_answer, [doc_without_helpline], language="hi")
+    assert "तुरंत 108 या 112 पर कॉल करें और अस्पताल ले जाएँ" in hi_cleaned
+    for line in hi_cleaned.split("\n"):
+        if "108" in line or "112" in line:
+            assert "[" not in line, f"Hindi helpline line contains citation: {line}"
 
 
+def test_retry_path_real_settings_and_chain_first(monkeypatch):
+    import pytest
+    from swasthya_setu.config import get_settings
+    from swasthya_setu.generation.agent import _invoke_llm_with_retry
+    from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.runnables import RunnableLambda
 
+    # 1. Verify real settings object attribute casing
+    settings = get_settings()
+    assert hasattr(settings, "gemini_model"), "settings must have lowercase gemini_model"
+    assert hasattr(settings, "gemini_api_key"), "settings must have lowercase gemini_api_key"
+    assert getattr(settings, "gemini_model") != "", "gemini_model must not be empty"
 
+    prompt = ChatPromptTemplate.from_messages([("human", "query: {q}")])
 
+    # 2. Test when prompt_template is a RunnableSequence (chain) where prompt_template.first is the prompt
+    attempts = {"count": 0}
+
+    def failing_once_func(inputs):
+        attempts["count"] += 1
+        if attempts["count"] == 1:
+            raise ConnectionError("Connection reset by peer (WinError 10054)")
+        return "SUCCESS FROM RETRY CHAIN"
+
+    fake_flaky_llm = RunnableLambda(failing_once_func)
+    chain = prompt | fake_flaky_llm
+
+    # Verify that chain has .first
+    assert hasattr(chain, "first"), "RunnableSequence must have .first"
+    assert chain.first == prompt, "chain.first must be the prompt"
+
+    # Run with fake flaky LLM that fails once then succeeds
+    result = _invoke_llm_with_retry(chain, {"q": "test query"}, retry_timeout=6.0, retry_llm=RunnableLambda(failing_once_func))
+    assert result == "SUCCESS FROM RETRY CHAIN"
+    assert attempts["count"] == 2
+
+    # 3. Test when fake LLM fails twice -> raises exception out to caller
+    fail_attempts = {"count": 0}
+
+    def failing_twice_func(inputs):
+        fail_attempts["count"] += 1
+        raise TimeoutError("Upstream timeout 504")
+
+    fake_dead_llm = RunnableLambda(failing_twice_func)
+    dead_chain = prompt | fake_dead_llm
+
+    with pytest.raises(TimeoutError):
+        _invoke_llm_with_retry(dead_chain, {"q": "test query"}, retry_timeout=6.0, retry_llm=RunnableLambda(failing_twice_func))
+    assert fail_attempts["count"] == 2
