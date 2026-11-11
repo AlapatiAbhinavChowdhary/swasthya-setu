@@ -1,7 +1,7 @@
 import json
 import urllib.request
 
-COMMITS = ["ce7d474", "464cc35", "0cf55c2", "108d063", "d5702d4", "1fe5926", "4431520"]
+COMMITS = ["ecdf4f2", "ce7d474", "464cc35", "0cf55c2", "108d063", "d5702d4", "1fe5926", "4431520"]
 
 def check_runs():
     url = "https://api.github.com/repos/AlapatiAbhinavChowdhary/swasthya-setu/actions/runs?per_page=20"
